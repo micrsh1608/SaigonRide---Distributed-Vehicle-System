@@ -1,0 +1,497 @@
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SaigonRide - Thuê xe thông minh</title>
+    <!-- Nhúng Bootstrap 5 & FontAwesome -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <style>
+        :root {
+            --sg-primary: #00897b;
+            --sg-primary-dark: #00695c;
+            --sg-text: #1e293b;
+            --sg-light: #f4f7f6;
+            --sg-card-bg: #fbf8f1;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--sg-light);
+            overflow-x: hidden;
+        }
+
+        /* --- HERO SECTION (Khu vực có ảnh nền) --- */
+        .hero-wrap {
+            position: relative;
+            min-height: 100vh;
+            background: url('@Url.Content("~/Content/Images/customer-bg.jpg")') no-repeat center center;
+            background-color: #e0f2f1; /* Nền dự phòng */
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Lớp phủ gradient chỉ áp dụng cho Hero Wrap */
+        .bg-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(90deg, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.7) 45%, rgba(0,137,123,0.3) 100%);
+            z-index: 1;
+        }
+
+        /* Navigation */
+        .customer-nav { position: relative; z-index: 10; padding: 1.5rem 5%; display: flex; justify-content: space-between; align-items: center; }
+        .brand-logo { color: var(--sg-primary); font-size: 1.8rem; font-weight: 900; text-decoration: none; display: flex; align-items: center; }
+        .lang-switch { background: rgba(255,255,255,0.8); border-radius: 30px; padding: 4px; display: flex; gap: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); backdrop-filter: blur(5px); }
+        .lang-btn { background: transparent; border: none; color: #64748b; padding: 6px 16px; border-radius: 20px; cursor: pointer; font-weight: 700; font-size: 0.85rem; transition: all 0.3s; }
+        .lang-btn.active { background: var(--sg-primary); color: white; }
+
+        /* Main Content Layout */
+        .main-container { position: relative; z-index: 10; flex-grow: 1; display: flex; align-items: center; padding: 2rem 0; }
+        .left-content { height: calc(100vh - 120px); }
+        .hero-title { font-size: 3.8rem; font-weight: 900; color: #115e59; line-height: 1.2; margin-bottom: 1.5rem; letter-spacing: -1px; }
+        .hero-desc { font-size: 1.1rem; color: #334155; line-height: 1.6; margin-bottom: 2rem; max-width: 480px; font-weight: 500; }
+
+        /* 3 Feature Cards */
+        .features-wrapper { display: flex; gap: 1.5rem; }
+        .feature-card { background-color: var(--sg-card-bg); border-radius: 20px; padding: 1.8rem 1.5rem; flex: 1; box-shadow: 0 10px 25px rgba(0,0,0,0.06); transition: transform 0.3s; }
+        .feature-card:hover { transform: translateY(-5px); }
+        .fc-icon { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 1rem; color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .fc-icon.green { background-color: #4ade80; }
+        .fc-icon.blue { background-color: #60a5fa; }
+        .fc-icon.orange { background-color: #fbbf24; }
+        .fc-title { font-weight: 800; color: #1e293b; margin-bottom: 0.5rem; font-size: 1.15rem; }
+        .fc-desc { font-size: 0.85rem; color: #475569; margin: 0; line-height: 1.5; }
+
+        /* Login Box */
+        .login-box { background: white; border-radius: 24px; padding: 3rem 2.5rem; box-shadow: 0 25px 50px rgba(0,0,0,0.1); width: 100%; max-width: 450px; margin-left: auto; }
+        .login-title { color: #1e293b; font-weight: 800; margin-bottom: 2rem; text-align: center; font-size: 1.8rem; }
+        .user-type-tabs { display: flex; background: #f1f5f9; border-radius: 50px; padding: 5px; margin-bottom: 2rem; }
+        .tab-btn { flex: 1; border: none; background: transparent; padding: 12px; border-radius: 50px; font-weight: 600; color: #64748b; transition: all 0.3s; font-size: 0.95rem; }
+        .tab-btn.active { background: white; color: var(--sg-primary); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .input-group-custom { margin-bottom: 1.2rem; }
+        .input-group-custom label { display: block; font-weight: 700; color: #475569; margin-bottom: 0.5rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        .input-group-custom input { width: 100%; padding: 14px 16px; border: 1px solid #f1f5f9; border-radius: 12px; transition: all 0.3s; background: #f8fafc; font-size: 0.95rem; }
+        .input-group-custom input:focus { border-color: var(--sg-primary); outline: none; background: white; box-shadow: 0 0 0 3px rgba(0, 137, 123, 0.15); }
+        .btn-auth { width: 100%; background: var(--sg-primary); color: white; border: none; padding: 16px; border-radius: 12px; font-size: 1.1rem; font-weight: 700; margin-top: 1rem; transition: all 0.3s; }
+        .btn-auth:hover { background: var(--sg-primary-dark); transform: translateY(-2px); box-shadow: 0 8px 15px rgba(0, 137, 123, 0.3); }
+        .mode-switch-text { text-align: center; margin-top: 1.5rem; font-size: 0.95rem; color: #64748b; }
+        .mode-switch-link { color: var(--sg-primary); font-weight: 800; text-decoration: none; cursor: pointer; transition: color 0.2s; }
+        .mode-switch-link:hover { color: var(--sg-primary-dark); text-decoration: underline; }
+        .fade-in { animation: fadeIn 0.4s; }
+        @@keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- CÁC SECTION BÊN DƯỚI --- */
+        .section-padding { padding: 100px 0; position: relative; z-index: 10; }
+        .section-title-alt { font-weight: 900; color: var(--sg-text); margin-bottom: 1rem; font-size: 2.5rem; text-align: center; }
+        .section-subtitle { color: #64748b; text-align: center; max-width: 700px; margin: 0 auto 4rem auto; font-size: 1.1rem; }
+
+        /* How it works */
+        .step-card { text-align: center; padding: 2rem; }
+        .step-icon { width: 80px; height: 80px; background: #e0f2f1; color: var(--sg-primary); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 1.5rem auto; transition: all 0.3s; }
+        .step-card:hover .step-icon { background: var(--sg-primary); color: white; transform: rotate(10deg); }
+        .step-card h4 { font-weight: 800; color: var(--sg-text); margin-bottom: 1rem; }
+
+        /* Vehicles */
+        .vehicle-card-alt { background: white; border-radius: 20px; padding: 2.5rem 2rem; border: 1px solid #e2e8f0; transition: all 0.3s; height: 100%; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .vehicle-card-alt:hover { border-color: var(--sg-primary); transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.06); }
+        .v-icon { font-size: 3rem; color: #f39c12; margin-bottom: 1.5rem; display: block; }
+        .price-tag { color: var(--sg-primary); font-weight: 800; font-size: 1.25rem; }
+
+        /* Footer */
+        footer { background: #1e293b; color: white; padding: 60px 0 30px 0; position: relative; z-index: 10; }
+        .footer-brand { font-size: 1.5rem; font-weight: 800; margin-bottom: 1.5rem; display: block; color: white; text-decoration: none; }
+        .footer-link { color: #94a3b8; text-decoration: none; display: block; margin-bottom: 0.8rem; transition: color 0.3s; }
+        .footer-link:hover { color: white; }
+
+        @@media (max-width: 991px) {
+            .bg-overlay { background: rgba(255,255,255,0.9); }
+            .left-content { height: auto; padding-right: 0; margin-bottom: 3rem; text-align: center; }
+            .hero-title { font-size: 2.8rem; }
+            .hero-desc { margin: 0 auto 2rem auto; }
+            .features-wrapper { flex-direction: column; margin-top: 2rem !important; }
+            .login-box { margin: 0 auto; }
+            .brand-logo { color: var(--sg-primary); text-shadow: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HERO WRAPPER: Chứa Ảnh nền và Form Đăng nhập -->
+    <div class="hero-wrap">
+        <div class="bg-overlay"></div>
+
+        <!-- Thanh Navigation -->
+        <nav class="customer-nav">
+            <a href="#" class="brand-logo">
+                <i class="fas fa-leaf me-2" style="color: #f39c12;"></i> SaigonRide
+            </a>
+            <div class="lang-switch">
+                <button class="lang-btn active" onclick="switchLang('vi')" id="btn-vi">VN</button>
+                <button class="lang-btn" onclick="switchLang('en')" id="btn-en">EN</button>
+            </div>
+        </nav>
+
+        <div class="container main-container">
+            <div class="row w-100 align-items-center h-100">
+
+                <!-- CỘT TRÁI: TEXT & TÍNH NĂNG -->
+                <div class="col-lg-7 left-content d-flex flex-column">
+                    <div class="my-auto pt-4 pt-lg-0">
+                        <h1 class="hero-title" data-i18n="hero_title">Khám phá Sài Gòn<br>Theo cách của bạn.</h1>
+                        <p class="hero-desc" data-i18n="hero_desc">Hệ thống xe đạp công cộng thông minh, tiện lợi và thân thiện với môi trường. Đăng nhập ngay để bắt đầu hành trình xanh!</p>
+                    </div>
+
+                    <div class="features-wrapper mt-auto pb-lg-4">
+                        <div class="feature-card">
+                            <div class="fc-icon green"><i class="fas fa-bicycle"></i></div>
+                            <h4 class="fc-title" data-i18n="feat1_title">Tiện lợi</h4>
+                            <p class="fc-desc" data-i18n="feat1_desc">Dễ dàng tìm và sử dụng xe mọi lúc, mọi nơi.</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="fc-icon blue"><i class="fas fa-leaf"></i></div>
+                            <h4 class="fc-title" data-i18n="feat2_title">Xanh</h4>
+                            <p class="fc-desc" data-i18n="feat2_desc">Giảm khí thải CO2, bảo vệ môi trường.</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="fc-icon orange"><i class="fas fa-heartbeat"></i></div>
+                            <h4 class="fc-title" data-i18n="feat3_title">Khỏe mạnh</h4>
+                            <p class="fc-desc" data-i18n="feat3_desc">Đạp xe mỗi ngày - nâng cao sức khỏe, tinh thần và chất lượng sống.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CỘT PHẢI: FORM ĐĂNG NHẬP -->
+                <div class="col-lg-5 mt-4 mt-lg-0">
+                    <div class="login-box" id="auth-card">
+                        <h3 class="login-title" id="auth-title" data-i18n="title_login">Đăng Nhập</h3>
+
+                        <div class="user-type-tabs">
+                            <button class="tab-btn active" onclick="switchTab('local')" id="tab-local" data-i18n="tab_local">Người địa phương</button>
+                            <button class="tab-btn" onclick="switchTab('foreign')" id="tab-foreign" data-i18n="tab_foreign">Du khách nước ngoài</button>
+                        </div>
+
+                        <form id="authForm" method="post" action="@Url.Action("PortalAuth", "Account")">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="AuthMode" id="authMode" value="login" />
+
+                            @if (TempData["ErrorMessage"] != null)
+                            {
+                                <div class="alert alert-danger" style="border-radius: 12px; font-size: 0.95rem;">
+                                    @TempData["ErrorMessage"]
+                                </div>
+                            }
+
+                            <div id="register-fields" style="display: none;" class="fade-in">
+                                <div class="input-group-custom">
+                                    <label data-i18n="lbl_fullname">Họ và tên</label>
+                                    <input type="text" id="fullname" name="FullName">
+                                </div>
+                            </div>
+                            <div id="form-local" class="fade-in">
+                                <div class="input-group-custom">
+                                    <label data-i18n="lbl_phone">Số điện thoại</label>
+                                    <input type="tel" id="phone" name="Phone">
+                                </div>
+                                <div class="input-group-custom" id="cccd-group" style="display: none;">
+                                    <label data-i18n="lbl_cccd">Số CCCD / CMND</label>
+                                    <input type="text" id="cccd" name="CCCD">
+                                </div>
+                            </div>
+                            <div id="form-foreign" style="display: none;" class="fade-in">
+                                <div class="input-group-custom">
+                                    <label data-i18n="lbl_email">Địa chỉ Email</label>
+                                    <input type="email" id="email" name="Email">
+                                </div>
+                                <div class="input-group-custom" id="passport-group" style="display: none;">
+                                    <label data-i18n="lbl_passport">Số Hộ chiếu</label>
+                                    <input type="text" id="passport" name="Passport">
+                                </div>
+                            </div>
+                            <div class="input-group-custom fade-in">
+                                <label data-i18n="lbl_password">Mật khẩu</label>
+                                <input type="password" id="password" name="Password">
+                            </div>
+
+                            <button type="submit" class="btn-auth" id="btn-submit" data-i18n="btn_login">Đăng Nhập</button>
+                        </form>
+
+                        <div class="mode-switch-text">
+                            <span id="mode-question" data-i18n="txt_no_account">Chưa có tài khoản?</span>
+                            <a class="mode-switch-link" id="mode-action" onclick="toggleMode()" data-i18n="link_register">Đăng ký ngay</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- HOW IT WORKS -->
+    <section class="section-padding bg-white">
+        <div class="container">
+            <h2 class="section-title-alt" data-i18n="steps_title">4 Bước Đơn Giản</h2>
+            <p class="section-subtitle" data-i18n="steps_desc">Chỉ mất chưa đầy 1 phút để bạn có thể bắt đầu di chuyển cùng SaigonRide.</p>
+
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <div class="step-card">
+                        <div class="step-icon"><i class="fas fa-search-location"></i></div>
+                        <h4 data-i18n="step1_h">Tìm trạm</h4>
+                        <p class="text-muted" data-i18n="step1_p">Mở ứng dụng để tìm trạm xe gần bạn nhất trong thành phố.</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="step-card">
+                        <div class="step-icon"><i class="fas fa-qrcode"></i></div>
+                        <h4 data-i18n="step2_h">Quét mã</h4>
+                        <p class="text-muted" data-i18n="step2_p">Sử dụng điện thoại để quét mã QR trên xe để mở khóa.</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="step-card">
+                        <div class="step-icon"><i class="fas fa-bicycle"></i></div>
+                        <h4 data-i18n="step3_h">Di chuyển</h4>
+                        <p class="text-muted" data-i18n="step3_p">Tận hưởng hành trình của bạn một cách xanh và sạch.</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="step-card">
+                        <div class="step-icon"><i class="fas fa-parking"></i></div>
+                        <h4 data-i18n="step4_h">Trả xe</h4>
+                        <p class="text-muted" data-i18n="step4_p">Đưa xe về trạm bất kỳ và khóa xe để kết thúc chuyến đi.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- VEHICLES -->
+    <section class="section-padding" style="background-color: #f8fafc;">
+        <div class="container">
+            <h2 class="section-title-alt" data-i18n="v_title">Phương Tiện Đa Dạng</h2>
+            <p class="section-subtitle" data-i18n="v_desc">Chúng tôi cung cấp nhiều loại phương tiện phù hợp với mọi nhu cầu di chuyển của bạn.</p>
+
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <div class="vehicle-card-alt">
+                        <i class="fas fa-bicycle v-icon"></i>
+                        <h4 class="fw-bold" data-i18n="v1_h">Xe đạp thường</h4>
+                        <p class="text-muted" data-i18n="v1_p">Phù hợp cho những chuyến đi ngắn và rèn luyện sức khỏe cơ bản.</p>
+                        <hr>
+                        <div class="price-tag">500đ <small class="text-muted fw-normal">/ phút</small></div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="vehicle-card-alt" style="border-top: 4px solid var(--sg-primary);">
+                        <i class="fas fa-bolt v-icon" style="color: var(--sg-primary);"></i>
+                        <h4 class="fw-bold" data-i18n="v2_h">Xe đạp điện</h4>
+                        <p class="text-muted" data-i18n="v2_p">Di chuyển nhanh hơn, ít tốn sức hơn, lý tưởng cho đi làm hoặc dạo phố.</p>
+                        <hr>
+                        <div class="price-tag">1,500đ <small class="text-muted fw-normal">/ phút</small></div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="vehicle-card-alt">
+                        <i class="fas fa-motorcycle v-icon"></i>
+                        <h4 class="fw-bold" data-i18n="v3_h">Scooter điện</h4>
+                        <p class="text-muted" data-i18n="v3_p">Cực kỳ linh hoạt trong các con ngõ nhỏ và mang lại trải nghiệm mới lạ.</p>
+                        <hr>
+                        <div class="price-tag">1,000đ <small class="text-muted fw-normal">/ phút</small></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <div class="row g-4 mb-4">
+                <div class="col-lg-4">
+                    <a href="#" class="footer-brand"><i class="fas fa-leaf me-2 text-warning"></i> SaigonRide</a>
+                    <p style="color: #94a3b8; line-height: 1.8;" data-i18n="f_about">SaigonRide là dự án giao thông xanh hàng đầu tại TP.HCM, hướng tới một cộng đồng văn minh, hiện đại và bền vững.</p>
+                </div>
+                <div class="col-lg-2 offset-lg-1">
+                    <h5 class="fw-bold mb-4" data-i18n="f_link_title">Liên kết</h5>
+                    <a href="#" class="footer-link">Trang chủ</a>
+                    <a href="#" class="footer-link">Về chúng tôi</a>
+                    <a href="#" class="footer-link">Hướng dẫn</a>
+                    <a href="#" class="footer-link">Tin tức</a>
+                </div>
+                <div class="col-lg-2">
+                    <h5 class="fw-bold mb-4" data-i18n="f_support_title">Hỗ trợ</h5>
+                    <a href="#" class="footer-link">Trung tâm trợ giúp</a>
+                    <a href="#" class="footer-link">Điều khoản</a>
+                    <a href="#" class="footer-link">Bảo mật</a>
+                    <a href="#" class="footer-link">Báo hỏng xe</a>
+                </div>
+                <div class="col-lg-3">
+                    <h5 class="fw-bold mb-4" data-i18n="f_contact_title">Liên hệ</h5>
+                    <p class="footer-link"><i class="fas fa-phone-alt me-2"></i> 028.38.546.110</p>
+                    <p class="footer-link"><i class="fas fa-envelope me-2"></i> hotro@saigonride.vn</p>
+                    <div class="d-flex gap-3 mt-4">
+                        <a href="#" class="text-white fs-5"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-white fs-5"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-white fs-5"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-top border-secondary pt-4 text-center text-muted">
+                <small>© 2026 SaigonRide Project. All rights reserved.</small>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        let isLoginMode = true;
+        let currentLang = 'vi';
+
+        function switchTab(type) {
+            document.getElementById('tab-local').classList.remove('active');
+            document.getElementById('tab-foreign').classList.remove('active');
+            document.getElementById('tab-' + type).classList.add('active');
+
+            if (type === 'local') {
+                document.getElementById('form-local').style.display = 'block';
+                document.getElementById('form-foreign').style.display = 'none';
+
+                document.getElementById('phone').required = true;
+                document.getElementById('cccd').required = !isLoginMode;
+                document.getElementById('email').required = false;
+                document.getElementById('passport').required = false;
+            } else {
+                document.getElementById('form-local').style.display = 'none';
+                document.getElementById('form-foreign').style.display = 'block';
+
+                document.getElementById('phone').required = false;
+                document.getElementById('cccd').required = false;
+                document.getElementById('email').required = true;
+                document.getElementById('passport').required = !isLoginMode;
+            }
+        }
+
+        function toggleMode() {
+            isLoginMode = !isLoginMode;
+
+            const regFields = document.getElementById('register-fields');
+            const fullnameInput = document.getElementById('fullname');
+            const authModeInput = document.getElementById('authMode');
+            const cccdGroup = document.getElementById('cccd-group');
+            const passportGroup = document.getElementById('passport-group');
+
+            if (!isLoginMode) {
+                regFields.style.display = 'block';
+                cccdGroup.style.display = 'block';
+                passportGroup.style.display = 'block';
+                fullnameInput.required = true;
+                authModeInput.value = 'register';
+
+                document.getElementById('auth-title').setAttribute('data-i18n', 'title_register');
+                document.getElementById('btn-submit').setAttribute('data-i18n', 'btn_register');
+                document.getElementById('mode-question').setAttribute('data-i18n', 'txt_has_account');
+                document.getElementById('mode-action').setAttribute('data-i18n', 'link_login');
+            } else {
+                regFields.style.display = 'none';
+                cccdGroup.style.display = 'none';
+                passportGroup.style.display = 'none';
+                fullnameInput.required = false;
+                authModeInput.value = 'login';
+
+                document.getElementById('auth-title').setAttribute('data-i18n', 'title_login');
+                document.getElementById('btn-submit').setAttribute('data-i18n', 'btn_login');
+                document.getElementById('mode-question').setAttribute('data-i18n', 'txt_no_account');
+                document.getElementById('mode-action').setAttribute('data-i18n', 'link_register');
+            }
+            // Trigger switchTab to correctly update 'required' attributes based on current mode
+            switchTab(document.getElementById('tab-local').classList.contains('active') ? 'local' : 'foreign');
+            updateTextByLang(currentLang);
+        }
+
+        const dictionary = {
+            'vi': {
+                'hero_title': 'Khám phá Sài Gòn<br>Theo cách của bạn.',
+                'hero_desc': 'Hệ thống xe đạp công cộng thông minh, tiện lợi và thân thiện với môi trường. Đăng nhập ngay để bắt đầu hành trình xanh!',
+                'feat1_title': 'Tiện lợi', 'feat1_desc': 'Dễ dàng tìm và sử dụng xe mọi lúc, mọi nơi.',
+                'feat2_title': 'Xanh', 'feat2_desc': 'Giảm khí thải CO2, bảo vệ môi trường.',
+                'feat3_title': 'Khỏe mạnh', 'feat3_desc': 'Đạp xe mỗi ngày - nâng cao sức khỏe, tinh thần và chất lượng sống.',
+                'title_login': 'Đăng Nhập', 'title_register': 'Đăng Ký',
+                'tab_local': 'Người địa phương', 'tab_foreign': 'Du khách nước ngoài',
+                'lbl_fullname': 'HỌ VÀ TÊN', 'lbl_password': 'MẬT KHẨU',
+                'lbl_phone': 'SỐ ĐIỆN THOẠI', 'lbl_cccd': 'SỐ CCCD / CMND',
+                'lbl_email': 'ĐỊA CHỈ EMAIL', 'lbl_passport': 'SỐ HỘ CHIẾU',
+                'btn_login': 'Đăng Nhập', 'btn_register': 'Đăng Ký',
+                'txt_no_account': 'Chưa có tài khoản?', 'txt_has_account': 'Đã có tài khoản?',
+                'link_register': 'Đăng ký ngay', 'link_login': 'Đăng nhập ngay',
+
+                // Phần nội dung bên dưới
+                'steps_title': '4 Bước Đơn Giản',
+                'steps_desc': 'Chỉ mất chưa đầy 1 phút để bạn có thể bắt đầu di chuyển cùng SaigonRide.',
+                'step1_h': 'Tìm trạm', 'step1_p': 'Mở ứng dụng để tìm trạm xe gần bạn nhất trong thành phố.',
+                'step2_h': 'Quét mã', 'step2_p': 'Sử dụng điện thoại để quét mã QR trên xe để mở khóa.',
+                'step3_h': 'Di chuyển', 'step3_p': 'Tận hưởng hành trình của bạn một cách xanh và sạch.',
+                'step4_h': 'Trả xe', 'step4_p': 'Đưa xe về trạm bất kỳ và khóa xe để kết thúc chuyến đi.',
+                'v_title': 'Phương Tiện Đa Dạng',
+                'v_desc': 'Chúng tôi cung cấp nhiều loại phương tiện phù hợp với mọi nhu cầu di chuyển của bạn.',
+                'v1_h': 'Xe đạp thường', 'v1_p': 'Phù hợp cho những chuyến đi ngắn và rèn luyện sức khỏe cơ bản.',
+                'v2_h': 'Xe đạp điện', 'v2_p': 'Di chuyển nhanh hơn, ít tốn sức hơn, lý tưởng cho đi làm hoặc dạo phố.',
+                'v3_h': 'Scooter điện', 'v3_p': 'Cực kỳ linh hoạt trong các con ngõ nhỏ và mang lại trải nghiệm mới lạ.',
+                'f_about': 'SaigonRide là dự án giao thông xanh hàng đầu tại TP.HCM, hướng tới một cộng đồng văn minh, hiện đại và bền vững.',
+                'f_link_title': 'Liên kết', 'f_support_title': 'Hỗ trợ', 'f_contact_title': 'Liên hệ'
+            },
+            'en': {
+                'hero_title': 'Explore Saigon<br>Your own way.',
+                'hero_desc': 'Smart, convenient, and eco-friendly public bike system. Log in now to start your green journey!',
+                'feat1_title': 'Convenient', 'feat1_desc': 'Easy to find and use bikes anytime, anywhere.',
+                'feat2_title': 'Green', 'feat2_desc': 'Reduce CO2 emissions, protect the environment.',
+                'feat3_title': 'Healthy', 'feat3_desc': 'Cycling everyday - improve health, mind and life quality.',
+                'title_login': 'Login', 'title_register': 'Register',
+                'tab_local': 'Local Resident', 'tab_foreign': 'Foreign Tourist',
+                'lbl_fullname': 'FULL NAME', 'lbl_password': 'PASSWORD',
+                'lbl_phone': 'PHONE NUMBER', 'lbl_cccd': 'NATIONAL ID',
+                'lbl_email': 'EMAIL ADDRESS', 'lbl_passport': 'PASSPORT NUMBER',
+                'btn_login': 'Login', 'btn_register': 'Register',
+                'txt_no_account': 'No account?', 'txt_has_account': 'Have an account?',
+                'link_register': 'Register now', 'link_login': 'Login now',
+
+                // Phần nội dung bên dưới
+                'steps_title': '4 Simple Steps',
+                'steps_desc': 'It takes less than a minute to start moving with SaigonRide.',
+                'step1_h': 'Find Station', 'step1_p': 'Open the app to find the nearest station in the city.',
+                'step2_h': 'Scan QR', 'step2_p': 'Use your phone to scan the QR code on the bike to unlock.',
+                'step3_h': 'Enjoy Ride', 'step3_p': 'Enjoy your journey in a green and clean way.',
+                'step4_h': 'Return Bike', 'step4_p': 'Park at any station and lock the bike to end your trip.',
+                'v_title': 'Diverse Vehicles',
+                'v_desc': 'We provide a variety of vehicles to suit all your mobility needs.',
+                'v1_h': 'Standard Bike', 'v1_p': 'Perfect for short trips and basic daily exercise.',
+                'v2_h': 'Electric Bike', 'v2_p': 'Move faster with less effort, ideal for commuting or city tours.',
+                'v3_h': 'Electric Scooter', 'v3_p': 'Highly flexible in narrow alleys and offers a fresh experience.',
+                'f_about': 'SaigonRide is a leading green transport project in HCMC, aiming for a modern and sustainable community.',
+                'f_link_title': 'Links', 'f_support_title': 'Support', 'f_contact_title': 'Contact'
+            }
+        };
+
+        function updateTextByLang(lang) {
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (dictionary[lang][key]) el.innerHTML = dictionary[lang][key];
+            });
+        }
+
+        function switchLang(lang) {
+            currentLang = lang;
+            document.getElementById('btn-vi').classList.toggle('active', lang === 'vi');
+            document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+            updateTextByLang(lang);
+        }
+    </script>
+</body>
+</html>

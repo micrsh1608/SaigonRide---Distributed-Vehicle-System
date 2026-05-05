@@ -1,0 +1,443 @@
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Saigon EcoRide - Thanh toán chuyến đi</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <style>
+        :root {
+            --sg-primary: #00897b;
+            --sg-primary-dark: #00695c;
+            --sg-danger: #ef4444;
+            --sg-success: #10b981;
+            --sg-bg: #f8fafc;
+            --sg-text: #1e293b;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--sg-bg);
+            color: var(--sg-text);
+        }
+
+        /* App Bar */
+        .top-bar {
+            background-color: white;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+            .top-bar .back-btn {
+                color: var(--sg-text);
+                font-size: 1.2rem;
+                text-decoration: none;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                transition: background 0.2s;
+            }
+
+                .top-bar .back-btn:hover {
+                    background-color: #f1f5f9;
+                }
+
+            .top-bar .title {
+                font-weight: 700;
+                font-size: 1.1rem;
+                margin: 0;
+            }
+
+        /* Invoice Section */
+        .invoice-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin: 20px auto;
+            max-width: 600px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+
+        .invoice-header {
+            text-align: center;
+            margin-bottom: 24px;
+            border-bottom: 2px dashed #e2e8f0;
+            padding-bottom: 20px;
+        }
+
+        .invoice-amount {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--sg-primary);
+            margin: 10px 0 0 0;
+        }
+
+        .invoice-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+        }
+
+            .invoice-row.total {
+                border-top: 1px solid #e2e8f0;
+                padding-top: 12px;
+                margin-top: 12px;
+                font-weight: 700;
+                font-size: 1.1rem;
+            }
+
+        /* Payment Methods */
+        .payment-methods {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .method-title {
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 12px;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .method-option {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+            .method-option:hover {
+                border-color: #cbd5e1;
+            }
+
+            .method-option.selected {
+                border-color: var(--sg-primary);
+                background: #f0fdfa;
+                box-shadow: 0 4px 10px rgba(0, 137, 123, 0.1);
+            }
+
+                .method-option.selected::after {
+                    content: '\f058';
+                    font-family: 'Font Awesome 6 Free';
+                    font-weight: 900;
+                    color: var(--sg-primary);
+                    position: absolute;
+                    right: 16px;
+                    font-size: 1.2rem;
+                }
+
+        .method-icon {
+            width: 45px;
+            height: 45px;
+            object-fit: contain;
+            margin-right: 15px;
+            border-radius: 8px;
+        }
+
+        .method-info {
+            flex-grow: 1;
+        }
+
+        .method-name {
+            font-weight: 700;
+            color: var(--sg-text);
+            margin-bottom: 2px;
+        }
+
+        .method-desc {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin: 0;
+        }
+
+        /* Fixed Bottom Button */
+        .bottom-action {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: white;
+            padding: 16px 20px;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.05);
+            text-align: center;
+            z-index: 100;
+        }
+
+        .btn-pay {
+            background: var(--sg-primary);
+            color: white;
+            border: none;
+            width: 100%;
+            max-width: 600px;
+            padding: 16px;
+            border-radius: 14px;
+            font-weight: 800;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+
+            .btn-pay:hover {
+                background: var(--sg-primary-dark);
+                transform: translateY(-2px);
+            }
+
+            .btn-pay:disabled {
+                background: #cbd5e1;
+                cursor: not-allowed;
+                transform: none;
+            }
+
+        /* Overlay Loading */
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(255,255,255,0.9);
+            z-index: 9999;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #e2e8f0;
+            border-top-color: var(--sg-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @@keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top App Bar -->
+    <div class="top-bar">
+        <a href="@Url.Action("UserDashboard", "Home")" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+        <h1 class="title">Thanh toán chuyến đi</h1>
+        <div style="width: 40px;"></div> <!-- Spacer for center alignment -->
+    </div>
+
+    <div class="container pb-5 mb-5 mt-3">
+        <!-- Hóa đơn -->
+        <div class="invoice-card">
+            <div class="invoice-header">
+                <div class="text-muted small">Mã giao dịch: <strong>#RT-<span id="display-id">...</span></strong></div>
+                <div class="invoice-amount" id="display-total">0 ₫</div>
+            </div>
+
+            <div class="invoice-row">
+                <span class="text-muted">Phương tiện:</span>
+                <span class="fw-bold" id="display-type">---</span>
+            </div>
+            <div class="invoice-row">
+                <span class="text-muted">Thời gian sử dụng:</span>
+                <span class="fw-bold" id="display-duration">0 phút</span>
+            </div>
+            <div class="invoice-row">
+                <span class="text-muted">Đơn giá:</span>
+                <span class="fw-bold" id="display-rate">0đ/phút</span>
+            </div>
+            <div class="invoice-row total">
+                <span>Tổng cần thanh toán:</span>
+                <span class="text-success" id="display-total-bottom">0 ₫</span>
+            </div>
+        </div>
+
+        <!-- Cổng thanh toán -->
+        <div class="payment-methods">
+            <div class="method-title">Nguồn tiền thanh toán</div>
+
+            <div class="method-option selected" onclick="selectMethod(this, 'wallet')">
+                <div class="method-icon bg-success bg-opacity-10 text-success d-flex align-items-center justify-content-center" style="font-size: 1.5rem;">
+                    <i class="fas fa-wallet"></i>
+                </div>
+                <div class="method-info">
+                    <p class="method-name">Ví Saigon EcoRide</p>
+                    <p class="method-desc">Số dư: <span id="wallet-balance-text" class="fw-bold text-dark">150.000 ₫</span></p>
+                </div>
+            </div>
+
+            <div class="method-title mt-4">Ví điện tử & Thẻ liên kết</div>
+
+            <div class="method-option" onclick="selectMethod(this, 'momo')">
+                <img src="https://img.mservice.com.vn/app/img/portal_documents/mini-app_design-guideline_branding-guide-2-2.png" class="method-icon">
+                <div class="method-info">
+                    <p class="method-name">Ví MoMo</p>
+                    <p class="method-desc">Thanh toán tự động qua ứng dụng</p>
+                </div>
+            </div>
+
+            <div class="method-option" onclick="selectMethod(this, 'zalopay')">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTlp4qW2M8xPofmuZHwEfGi9mNMWUG0zs53A&s" class="method-icon" style="border-radius: 5px;">
+                <div class="method-info">
+                    <p class="method-name">ZaloPay</p>
+                    <p class="method-desc">Thanh toán nhanh một chạm</p>
+                </div>
+            </div>
+
+            <div class="method-option" onclick="selectMethod(this, 'visa')">
+                <div class="method-icon bg-light d-flex align-items-center justify-content-center text-primary border" style="font-size: 1.5rem;">
+                    <i class="fab fa-cc-visa"></i>
+                </div>
+                <div class="method-info">
+                    <p class="method-name">Thẻ Visa / Mastercard</p>
+                    <p class="method-desc">Dành cho du khách (For Foreigners)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Thanh nút chốt -->
+    <div class="bottom-action">
+        <button class="btn-pay" id="btn-process-pay" onclick="processPayment()">Thanh toán <span id="btn-total">0 ₫</span></button>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+        <h5 class="fw-bold text-dark mt-3" id="loading-text">Đang kết nối cổng thanh toán...</h5>
+        <p class="text-muted small">Vui lòng không đóng trình duyệt</p>
+    </div>
+
+    <script>
+        // Hàm format tiền
+        function formatVND(amt) { return new Intl.NumberFormat('vi-VN').format(amt) + ' ₫'; }
+
+        // Khởi tạo dữ liệu từ LocalStorage (Được gửi từ trang UserDashboard)
+        let rideTotal = parseInt(localStorage.getItem('checkout_total')) || 0;
+        let rideDiscount = parseInt(localStorage.getItem('checkout_discount')) || 0;
+        let rideFinal = parseInt(localStorage.getItem('checkout_final')) || rideTotal;
+        let rideMins = parseInt(localStorage.getItem('checkout_mins')) || 0;
+        let rideRate = parseInt(localStorage.getItem('checkout_rate')) || 0;
+        let rideType = localStorage.getItem('checkout_type') || "Không xác định";
+        let userBalance = parseInt(localStorage.getItem('user_balance')) || 150000;
+
+        let selectedMethod = 'wallet';
+
+        // Gắn dữ liệu lên giao diện khi tải trang
+        window.onload = function () {
+            document.getElementById('display-id').innerText = Math.floor(Math.random() * 9000) + 1000; // Fake ID
+            document.getElementById('display-type').innerText = rideType;
+            document.getElementById('display-duration').innerText = rideMins + " phút";
+            document.getElementById('display-rate').innerText = formatVND(rideRate) + "/phút";
+
+            const invoiceContainer = document.querySelector('.invoice-card');
+            if (rideDiscount > 0) {
+                // Chèn dòng giảm giá vào trước dòng Tổng cộng
+                const totalRow = document.querySelector('.invoice-row.total');
+                const discountHtml = `
+                        <div class="invoice-row text-danger fw-bold">
+                            <span><i class="fas fa-gift me-2"></i>Giảm giá 15% (Hỗ trợ điều phối):</span>
+                            <span>- ${formatVND(rideDiscount)}</span>
+                        </div>
+                    `;
+                totalRow.insertAdjacentHTML('beforebegin', discountHtml);
+            }
+
+            let formattedFinal = formatVND(rideFinal);
+            document.getElementById('display-total').innerText = formattedFinal;
+            document.getElementById('display-total-bottom').innerText = formattedFinal;
+            document.getElementById('btn-total').innerText = formattedFinal;
+
+            document.getElementById('wallet-balance-text').innerText = formatVND(userBalance);
+
+            // Cảnh báo nếu số dư ví không đủ
+            if (userBalance < rideFinal) {
+                document.getElementById('wallet-balance-text').innerHTML += ` <span class="text-danger">(Không đủ số dư)</span>`;
+            }
+        };
+
+        // Hàm chọn cổng thanh toán
+        function selectMethod(element, method) {
+            if (method === 'wallet' && userBalance < rideTotal) {
+                alert("Số dư ví Saigon EcoRide không đủ. Vui lòng chọn phương thức khác (MoMo/Zalo/Visa)!");
+                return;
+            }
+
+            document.querySelectorAll('.method-option').forEach(el => el.classList.remove('selected'));
+            element.classList.add('selected');
+            selectedMethod = method;
+        }
+
+        // Hàm xử lý thanh toán
+        function processPayment() {
+            document.getElementById('loading-overlay').style.display = 'flex';
+            document.getElementById('loading-text').innerText = 'Đang đồng bộ dữ liệu về máy chủ Admin...';
+
+            const startStationId = localStorage.getItem('start_station_id') || 0;
+            const endStationId = localStorage.getItem('end_station_id') || 0;
+
+            // Dùng AJAX gửi dữ liệu chuyến đi về C# Backend
+            fetch('/RentalTransactions/SaveTrip', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    vehicleType: rideType,
+                    duration: rideMins,
+                    totalCost: rideTotal,
+                    startStationId: parseInt(startStationId),
+                    endStationId: parseInt(endStationId),
+                    paymentMethod: selectedMethod
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Nếu DB lưu thành công thật sự
+                        if (selectedMethod === 'wallet') {
+                            localStorage.setItem('user_balance', userBalance - rideFinal);
+                        }
+                        setTimeout(() => {
+                            alert("Thanh toán thành công! Giao dịch đã được ghi nhận trên hệ thống.");
+                            window.location.href = '/Home/UserDashboard';
+                        }, 1000);
+                    } else {
+                        // BÁO LỖI THỰC TẾ TỪ SQL SERVER RA MÀN HÌNH
+                        alert("Lỗi từ CSDL: " + data.message);
+                        document.getElementById('loading-overlay').style.display = 'none';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert("Lỗi kết nối Server! Vui lòng thử lại.");
+                    document.getElementById('loading-overlay').style.display = 'none';
+                });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,310 @@
+﻿@model SaigonBus.Models.RentalTransaction
+
+@{
+    ViewBag.Title = "Trả xe & Thanh toán";
+}
+
+<!-- Nhúng thư viện FontAwesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+<style>
+    body {
+        background-color: #f4f7f6;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    :root {
+        --saigonbus-primary: #00838F;
+        --saigonbus-primary-dark: #006064;
+        --saigonbus-accent: #F39C12;
+        --saigonbus-accent-hover: #E67E22;
+        --saigonbus-light: #E0F7FA;
+        --saigonbus-success: #28a745;
+    }
+
+    /* Tùy chỉnh thanh Nav (Breadcrumb) đồng bộ */
+    .custom-breadcrumb-container {
+        background-color: #ffffff;
+        border-radius: 10px;
+        padding: 0.8rem 1.5rem;
+        box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(0,0,0,0.03);
+        margin-bottom: 1.5rem;
+        display: inline-flex;
+        width: 100%;
+    }
+
+    .custom-breadcrumb-container .breadcrumb {
+        margin-bottom: 0;
+        background: transparent;
+        padding: 0;
+    }
+
+    .custom-breadcrumb-container .breadcrumb-item a {
+        color: #6c757d;
+        font-weight: 500;
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+
+        .custom-breadcrumb-container .breadcrumb-item a:hover {
+            color: var(--saigonbus-accent);
+        }
+
+    .custom-breadcrumb-container .breadcrumb-item.active {
+        color: var(--saigonbus-success);
+    }
+
+    .custom-breadcrumb-container .breadcrumb-item + .breadcrumb-item::before {
+        content: "›";
+        font-size: 1.4em;
+        color: #adb5bd;
+        padding: 0 0.5rem;
+    }
+
+    /* Card Layout */
+    .checkout-card {
+        border-radius: 15px;
+        border: none;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        background-color: #fff;
+    }
+
+    .checkout-header {
+        background: linear-gradient(135deg, #2b5876 0%, #4e4376 100%);
+        color: white;
+        padding: 2rem 2rem;
+        position: relative;
+    }
+
+    /* Form & Input Styles */
+    .custom-label {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .form-control, .form-select {
+        border-radius: 8px;
+        border: 1px solid #ced4da;
+        padding: 0.7rem 1rem;
+        background-color: #f8f9fa;
+        transition: all 0.3s;
+    }
+
+    .form-control:focus, .form-select:focus {
+        background-color: #fff;
+        border-color: var(--saigonbus-primary);
+        box-shadow: 0 0 0 0.25rem rgba(0, 131, 143, 0.25);
+    }
+
+    /* Input Group cho Tiền tệ */
+    .input-group-text.money-icon {
+        background-color: #e8f5e9;
+        color: #2e7d32;
+        border: 1px solid #ced4da;
+        border-right: none;
+        font-weight: bold;
+        border-radius: 8px 0 0 8px;
+    }
+
+    .money-input {
+        border-radius: 0 8px 8px 0;
+        font-weight: bold;
+        color: #2e7d32;
+        font-size: 1.1rem;
+    }
+
+    /* Receipt Box (Hóa đơn mờ) */
+    .receipt-box {
+        background-color: #f8f9fa;
+        border: 2px dashed #ced4da;
+        border-radius: 12px;
+        padding: 1.5rem;
+        height: 100%;
+    }
+
+    /* Readonly Text */
+    .readonly-text {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #495057;
+        background: #e9ecef;
+        padding: 0.6rem 1rem;
+        border-radius: 8px;
+        display: block;
+    }
+
+    /* Nút bấm */
+    .btn-checkout {
+        background-color: var(--saigonbus-success);
+        color: white;
+        border: none;
+        padding: 0.8rem 2rem;
+        border-radius: 8px;
+        font-weight: bold;
+        font-size: 1.1rem;
+        transition: all 0.3s;
+        width: 100%;
+    }
+
+    .btn-checkout:hover {
+        background-color: #218838;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(40, 167, 69, 0.3);
+        color: white;
+    }
+
+    .btn-outline-back {
+        border: 2px solid #dee2e6;
+        color: #6c757d;
+        font-weight: bold;
+        padding: 0.8rem 1.5rem;
+        border-radius: 8px;
+        transition: all 0.3s;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+        width: 100%;
+    }
+
+    .btn-outline-back:hover {
+        background-color: #f8f9fa;
+        color: #343a40;
+    }
+</style>
+
+<div class="container mt-4 mb-5">
+    <!-- Breadcrumb điều hướng -->
+    <nav aria-label="breadcrumb" class="custom-breadcrumb-container">
+        <ol class="breadcrumb align-items-center">
+            <li class="breadcrumb-item"><a href="/"><i class="fas fa-home me-1"></i> Trang chủ</a></li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Index")">Quản lý Giao dịch</a></li>
+            <li class="breadcrumb-item active fw-bold" aria-current="page">Thanh toán cuốc xe #RT-@Model.TransactionId</li>
+        </ol>
+    </nav>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="checkout-card">
+                <div class="checkout-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="m-0 fw-bold"><i class="fas fa-flag-checkered me-2"></i> Trả xe & Chốt cước phí</h3>
+                        <p class="mb-0 mt-1" style="opacity: 0.85;">Mã giao dịch: <strong>#RT-@Model.TransactionId</strong></p>
+                    </div>
+                    <div class="text-end d-none d-sm-block">
+                        <i class="fas fa-qrcode" style="font-size: 3rem; opacity: 0.3;"></i>
+                    </div>
+                </div>
+
+                <div class="card-body p-4 p-md-5">
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger mb-3 p-3 bg-danger bg-opacity-10 rounded border border-danger border-opacity-25" })
+
+                        <!-- RẤT QUAN TRỌNG: Giữ lại các dữ liệu gốc để không bị mất khi Lưu (Submit) -->
+                        @Html.HiddenFor(model => model.TransactionId)
+                        @Html.HiddenFor(model => model.UserId)
+                        @Html.HiddenFor(model => model.VehicleId)
+                        @Html.HiddenFor(model => model.StartStationId)
+                        @Html.HiddenFor(model => model.StartTime)
+
+                        <div class="row g-5">
+                            <!-- CỘT TRÁI: THÔNG TIN TRẢ XE -->
+                            <div class="col-md-7">
+                                <h5 class="fw-bold mb-4 border-bottom pb-2 text-primary"><i class="fas fa-route me-2"></i> Lộ trình & Thời gian</h5>
+
+                                <div class="row mb-3">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <label class="custom-label">Giờ nhận xe (Bắt đầu)</label>
+                                        <span class="readonly-text"><i class="far fa-clock text-muted me-1"></i> @Model.StartTime.ToString("dd/MM/yyyy HH:mm")</span>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label class="custom-label text-danger">Giờ trả xe (Hiện tại) *</label>
+                                        <!-- Sử dụng input type datetime-local để dễ chọn giờ -->
+                                        @Html.TextBoxFor(model => model.EndTime, "{0:yyyy-MM-ddTHH:mm}", new { @class = "form-control border-danger", type = "datetime-local", required = "required" })
+                                        @Html.ValidationMessageFor(model => model.EndTime, "", new { @class = "text-danger small mt-1" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group mb-4">
+                                    <label class="custom-label text-danger">Chọn trạm trả xe *</label>
+                                    <!-- Dropdown chọn trạm kết thúc -->
+                                    <div class="input-group shadow-sm">
+                                        <span class="input-group-text bg-white border-end-0 text-danger"><i class="fas fa-map-marker-alt"></i></span>
+                                        @Html.DropDownList("EndStationId", null, "-- Vui lòng chọn trạm khách trả xe --", htmlAttributes: new { @class = "form-select border-start-0", required = "required" })
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.EndStationId, "", new { @class = "text-danger small mt-1" })
+                                </div>
+
+                                <div class="alert alert-info border-0 shadow-sm" style="background-color: #e3f2fd;">
+                                    <small><i class="fas fa-info-circle me-1 text-primary"></i> <strong>Lưu ý:</strong> Vị trí hiện tại của phương tiện <strong>#@Model.VehicleId</strong> sẽ tự động được cập nhật về trạm trả xe sau khi bạn chốt giao dịch.</small>
+                                </div>
+                            </div>
+
+                            <!-- CỘT PHẢI: HÓA ĐƠN TIỀN TỆ -->
+                            <div class="col-md-5">
+                                <div class="receipt-box">
+                                    <h5 class="fw-bold mb-4 border-bottom pb-2 text-success"><i class="fas fa-file-invoice-dollar me-2"></i> Bảng tính cước phí</h5>
+
+                                    <div class="form-group mb-3">
+                                        <label class="custom-label text-muted">Cước phí gốc (VNĐ)</label>
+                                        <div class="input-group shadow-sm">
+                                            <span class="input-group-text money-icon">₫</span>
+                                            @Html.EditorFor(model => model.CalculatedFare, new { htmlAttributes = new { @class = "form-control money-input", placeholder = "0" } })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group mb-3">
+                                        <label class="custom-label text-muted">Mức giảm giá (VNĐ)</label>
+                                        <div class="input-group shadow-sm">
+                                            <span class="input-group-text money-icon text-warning">₫</span>
+                                            @Html.EditorFor(model => model.AppliedDiscount, new { htmlAttributes = new { @class = "form-control money-input text-warning", placeholder = "0" } })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group mb-4">
+                                        <label class="custom-label text-success fs-6">Tổng thanh toán (VNĐ)</label>
+                                        <div class="input-group shadow-sm">
+                                            <span class="input-group-text money-icon bg-success text-white border-success">₫</span>
+                                            @Html.EditorFor(model => model.TotalAmount, new { htmlAttributes = new { @class = "form-control money-input border-success fs-5", placeholder = "0" } })
+                                        </div>
+                                    </div>
+
+                                    <div class="text-center text-muted mb-2">
+                                        <small><i class="fas fa-magic me-1"></i> Nếu để trống, hệ thống Backend sẽ tự động tính toán số tiền.</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Nút Thao tác Cuối Form -->
+                        <hr class="mt-5 mb-4">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <a href="@Url.Action("Index")" class="btn btn-outline-back">
+                                    <i class="fas fa-arrow-left me-1"></i> Trở về danh sách
+                                </a>
+                            </div>
+                            <div class="col-md-8">
+                                <button type="submit" class="btn btn-checkout shadow">
+                                    <i class="fas fa-check-circle me-2"></i> Xác nhận Trả xe & Lưu giao dịch
+                                </button>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

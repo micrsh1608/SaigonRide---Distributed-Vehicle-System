@@ -1,0 +1,200 @@
+@model IEnumerable<SaigonBus.Models.GroupRental>
+
+@{
+    ViewBag.Title = "Thuê Xe Nhóm";
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+<style>
+    body {
+        background-color: #f4f7f6;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    :root {
+        --saigonbus-primary: #00838F;
+        --saigonbus-cyan: #17a2b8;
+    }
+
+    .custom-breadcrumb-container {
+        background-color: #ffffff;
+        border-radius: 10px;
+        padding: 0.8rem 1.5rem;
+        box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(0,0,0,0.03);
+        margin-bottom: 1.5rem;
+        display: inline-flex;
+        width: 100%;
+    }
+
+        .custom-breadcrumb-container .breadcrumb {
+            margin-bottom: 0;
+            background: transparent;
+            padding: 0;
+        }
+
+        .custom-breadcrumb-container .breadcrumb-item a {
+            color: #6c757d;
+            font-weight: 500;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+            .custom-breadcrumb-container .breadcrumb-item a:hover {
+                color: var(--saigonbus-cyan);
+            }
+
+        .custom-breadcrumb-container .breadcrumb-item.active {
+            color: var(--saigonbus-primary);
+        }
+
+        .custom-breadcrumb-container .breadcrumb-item + .breadcrumb-item::before {
+            content: "›";
+            font-size: 1.4em;
+            color: #adb5bd;
+            padding: 0 0.5rem;
+        }
+
+    .table-card {
+        border-radius: 12px;
+        border: none;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        background: #fff;
+    }
+
+        .table-card .card-header {
+            background: linear-gradient(135deg, #17a2b8 0%, #117a8b 100%);
+            padding: 1.5rem;
+            border-bottom: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+
+    .custom-table th {
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+        border-bottom: 2px solid #e9ecef;
+        padding: 1rem 0.5rem;
+    }
+
+    .custom-table td {
+        padding: 1rem 0.5rem;
+        vertical-align: middle;
+        color: #2c3e50;
+        border-bottom: 1px solid #f1f2f4;
+    }
+
+    .action-btn {
+        width: 35px;
+        height: 35px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        margin: 0 2px;
+        transition: all 0.2s;
+        text-decoration: none;
+        border: 1px solid #e2e8f0;
+    }
+
+    .btn-view {
+        color: #17a2b8;
+        background: #e0f7fa;
+        border-color: #a5f3fc;
+    }
+
+        .btn-view:hover {
+            background-color: #17a2b8;
+            color: white;
+        }
+
+    .btn-checkout {
+        background-color: #fff3e0;
+        color: #e65100;
+        font-weight: bold;
+        width: auto;
+        padding: 0 15px;
+        border: 1px solid #ffe0b2;
+    }
+
+        .btn-checkout:hover {
+            background-color: #e65100;
+            color: white;
+            transform: translateY(-1px);
+        }
+</style>
+
+<div class="container mt-4 mb-5">
+    <nav aria-label="breadcrumb" class="custom-breadcrumb-container">
+        <ol class="breadcrumb align-items-center">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")"><i class="fas fa-home me-1"></i> Trang chủ</a></li>
+            <li class="breadcrumb-item active fw-bold" aria-current="page">Giao dịch Thuê Nhóm</li>
+        </ol>
+    </nav>
+
+    <div class="table-card">
+        <div class="card-header">
+            <div>
+                <h4 class="m-0 fw-bold"><i class="fas fa-users-cog me-2"></i> Danh sách Cuốc xe Hội Nhóm</h4>
+                <p class="mb-0 mt-1 text-white-50" style="font-size: 0.9rem;">Quản lý các lượt thuê từ 2 xe trở lên trên cùng 1 tài khoản</p>
+            </div>
+            <a href="@Url.Action("Index", "RentalTransactions")" class="btn btn-light fw-bold" style="border-radius: 8px; color: #117a8b;">
+                <i class="fas fa-exchange-alt me-1"></i> Về Giao dịch Cá nhân
+            </a>
+        </div>
+
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0 custom-table">
+                    <thead class="bg-light text-secondary">
+                        <tr>
+                            <th class="ps-4">Mã Nhóm</th>
+                            <th>Đại diện (Leader)</th>
+                            <th>Số lượng xe</th>
+                            <th>Giờ bắt đầu</th>
+                            <th>Trạng thái chung</th>
+                            <th class="text-end pe-4">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="ps-4 fw-bold text-info">#GRP-@item.GroupRentalId</td>
+                                <td><i class="fas fa-user-circle text-muted me-1"></i> @(item.User != null ? item.User.FullName : "N/A")</td>
+                                <td><span class="badge bg-secondary rounded-pill px-2 fs-6">@item.Quantity xe</span></td>
+                                <td>@item.StartTime.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td>
+                                    @if (item.Status == "Active")
+                                    {
+                                        <span class="badge bg-warning text-dark px-2 py-1 rounded-pill"><i class="fas fa-biking me-1"></i> Đang di chuyển</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-success bg-opacity-25 text-success rounded-pill px-2"><i class="fas fa-check-circle me-1"></i> Hoàn thành</span>
+                                    }
+                                </td>
+                                <td class="text-end pe-4">
+                                    <a href="@Url.Action("Details", "RentalTransactionsGroup", new { id = item.GroupRentalId })" class="action-btn btn-view" title="Xem chi tiết các xe"><i class="fas fa-eye"></i></a>
+                                    <a href="@Url.Action("Delete", "RentalTransactionsGroup", new { id = item.GroupRentalId })" class="action-btn btn-view text-danger border-danger bg-light" title="Xóa giao dịch"><i class="fas fa-trash-alt"></i></a>
+                                </td>
+                            </tr>
+                        }
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center py-4 text-muted">Chưa có giao dịch thuê xe nhóm nào.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

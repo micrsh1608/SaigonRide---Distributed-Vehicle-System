@@ -1,0 +1,51 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - SaigonRide Admin System</title>
+
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <style>
+        /* Thiết lập nền và font chữ chung cho toàn hệ thống */
+        body {
+            background-color: #f4f7f6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* Reset padding của template mặc định */
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+        }
+
+        /* Định nghĩa biến màu CSS Global (Toàn cục) */
+        :root {
+            --saigonbus-primary: #00838F;
+            --saigonbus-primary-dark: #006064;
+            --saigonbus-accent: #F39C12;
+            --saigonbus-accent-hover: #E67E22;
+            --saigonbus-light: #E0F7FA;
+            --saigonbus-danger: #dc3545;
+        }
+
+        /* Chỉnh lại style cho thẻ a mặc định để không bị gạch chân xấu xí */
+        a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <main>
+        @RenderBody()
+    </main>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>

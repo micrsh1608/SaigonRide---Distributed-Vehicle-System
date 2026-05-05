@@ -1,0 +1,156 @@
+@model IEnumerable<SaigonBus.Models.RentalTransaction>
+@using SaigonBus.Models
+
+@{
+    ViewBag.Title = "Quản lý Giao dịch";
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+<style>
+    .navbar {
+        display: none !important;
+    }
+
+    body {
+        background-color: #f4f7f6;
+        font-family: 'Segoe UI', Tahoma, sans-serif;
+    }
+
+    .table-card {
+        border-radius: 15px;
+        border: none;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        background: white;
+        overflow: hidden;
+    }
+
+    .card-header-custom {
+        background: linear-gradient(135deg, #00897b, #00695c);
+        color: white;
+        padding: 20px;
+    }
+
+    .status-badge {
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 700;
+    }
+
+    .action-btn {
+        transition: all 0.2s;
+        border-radius: 6px;
+    }
+
+        .action-btn:hover {
+            transform: scale(1.1);
+        }
+</style>
+
+<div class="container mt-4 mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold text-dark"><i class="fas fa-history me-2 text-primary"></i>Nhật ký Giao dịch</h3>
+        <a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary fw-bold bg-white shadow-sm">
+            <i class="fas fa-arrow-left me-1"></i> Quay lại Dashboard
+        </a>
+    </div>
+
+    <div class="table-card border">
+        <div class="card-header-custom d-flex justify-content-between align-items-center">
+            <h5 class="m-0"><i class="fas fa-list me-2"></i>Danh sách cuốc xe hệ thống</h5>
+            <span class="badge bg-light text-dark shadow-sm">Tổng cộng: @(Model?.Count() ?? 0) giao dịch</span>
+        </div>
+
+        <div class="card-body p-0">
+            @if (Model != null && Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="ps-4">Mã GD</th>
+                                <th>Khách hàng</th>
+                                <th>Phương tiện</th>
+                                <th>Thời gian thuê</th>
+                                <th class="text-end">Tổng tiền</th>
+                                <th class="text-center">Trạng thái</th>
+                                <th class="text-center pe-4">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="ps-4 fw-bold text-muted">#RT-@item.TransactionId</td>
+                                    <td><i class="fas fa-user-circle me-2 text-primary"></i>USER-@item.UserId</td>
+                                    <td>
+                                        @if (item.Vehicle != null)
+                                        {
+                                            if (item.Vehicle.Category == VehicleCategory.EBike)
+                                            {
+                                                <span class="text-warning fw-bold"><i class="fas fa-bolt me-1"></i>Xe điện</span>
+                                            }
+                                            else if (item.Vehicle.Category == VehicleCategory.Scooter)
+                                            {
+                                                <span class="text-primary fw-bold"><i class="fas fa-motorcycle me-1"></i>Scooter</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-success fw-bold"><i class="fas fa-bicycle me-1"></i>Xe đạp</span>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted small">N/A</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div class="small fw-bold">Nhận: <span class="text-primary">@item.StartTime.ToString("HH:mm dd/MM")</span></div>
+                                        <div class="small text-muted mt-1">Trả: @(item.EndTime?.ToString("HH:mm dd/MM") ?? "Đang chạy...")</div>
+                                    </td>
+                                    <td class="text-end">
+                                        <div class="fw-bold text-success fs-6">@string.Format("{0:N0} ₫", item.TotalAmount)</div>
+                                        @if (item.AppliedDiscount > 0)
+                                        {
+                                            <div class="text-danger" style="font-size: 0.7rem;">(Giảm: @string.Format("{0:N0} ₫", item.AppliedDiscount))</div>
+                                        }
+                                    </td>
+                                    <td class="text-center">
+                                        @if (item.EndTime != null)
+                                        {
+                                            <span class="status-badge bg-success bg-opacity-10 text-success border border-success border-opacity-25"><i class="fas fa-check-circle me-1"></i>Hoàn thành</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="status-badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25"><i class="fas fa-spinner fa-spin me-1"></i>Đang chạy</span>
+                                        }
+                                    </td>
+                                    <td class="text-center pe-4">
+                                        <div class="btn-group shadow-sm" role="group">
+                                            <a href="@Url.Action("Details", new { id = item.TransactionId })" class="btn btn-light btn-sm text-info action-btn border" title="Chi tiết">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <a href="@Url.Action("Delete", new { id = item.TransactionId })" class="btn btn-light btn-sm text-danger action-btn border" title="Xóa">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <!-- Giao diện "Trống" khi Database chưa có dữ liệu hoặc lưu thất bại -->
+                <div class="text-center py-5 bg-white">
+                    <i class="fas fa-file-invoice-dollar text-muted mb-3" style="font-size: 4rem; opacity: 0.3;"></i>
+                    <h5 class="text-secondary font-weight-bold">Chưa có giao dịch nào được lưu</h5>
+                    <p class="text-muted mb-0">Hãy kiểm tra Database xem đã có Khách hàng (ID=1) và Xe (ID=1) chưa nhé!</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>

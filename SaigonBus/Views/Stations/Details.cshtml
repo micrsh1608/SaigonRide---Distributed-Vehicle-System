@@ -1,0 +1,251 @@
+﻿@model SaigonBus.Models.Station
+
+@{
+    ViewBag.Title = "Chi tiết trạm đỗ";
+}
+
+<!-- Nhúng thư viện FontAwesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+<style>
+    body {
+        background-color: #f4f7f6;
+    }
+
+    :root {
+        --saigonbus-primary: #00838F;
+        --saigonbus-primary-dark: #006064;
+        --saigonbus-accent: #F39C12;
+        --saigonbus-accent-hover: #E67E22;
+        --saigonbus-light: #E0F7FA;
+    }
+
+    /* Tùy chỉnh thanh Nav (Breadcrumb) đồng bộ toàn hệ thống */
+    .custom-breadcrumb-container {
+        background-color: #ffffff;
+        border-radius: 10px;
+        padding: 0.8rem 1.5rem;
+        box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(0,0,0,0.03);
+        margin-bottom: 1.5rem;
+        display: inline-flex;
+        width: 100%;
+    }
+
+    .custom-breadcrumb-container .breadcrumb {
+        margin-bottom: 0;
+        background: transparent;
+        padding: 0;
+    }
+
+    .custom-breadcrumb-container .breadcrumb-item a {
+        color: #6c757d;
+        font-weight: 500;
+        text-decoration: none;
+        transition: color 0.2s ease-in-out;
+    }
+
+        .custom-breadcrumb-container .breadcrumb-item a:hover {
+            color: var(--saigonbus-accent);
+        }
+
+    .custom-breadcrumb-container .breadcrumb-item.active {
+        color: var(--saigonbus-primary);
+    }
+
+    .custom-breadcrumb-container .breadcrumb-item + .breadcrumb-item::before {
+        content: "›";
+        font-size: 1.4em;
+        line-height: 1;
+        color: #adb5bd;
+        vertical-align: middle;
+        padding: 0 0.5rem;
+    }
+
+    /* Card & Header Styles */
+    .station-card {
+        border-radius: 12px;
+        border: none;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+        .station-card .card-header {
+            background: linear-gradient(135deg, var(--saigonbus-primary) 0%, var(--saigonbus-primary-dark) 100%);
+            border-bottom: none;
+            padding: 1.5rem;
+            color: white;
+        }
+
+    /* Button Styles */
+    .btn-accent {
+        background-color: var(--saigonbus-accent);
+        color: white;
+        border: none;
+        padding: 0.7rem 1.5rem;
+        transition: all 0.3s ease;
+        border-radius: 8px;
+        font-weight: bold;
+    }
+
+        .btn-accent:hover {
+            background-color: var(--saigonbus-accent-hover);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(243, 156, 18, 0.3);
+        }
+
+    .btn-outline-back {
+        border: 2px solid #dee2e6;
+        color: #6c757d;
+        font-weight: bold;
+        padding: 0.7rem 1.5rem;
+        border-radius: 8px;
+        transition: all 0.3s;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+        .btn-outline-back:hover {
+            background-color: #fff;
+            color: #343a40;
+            border-color: #ced4da;
+        }
+
+    .text-brand {
+        color: var(--saigonbus-primary) !important;
+    }
+
+    /* Stats Box Styles */
+    .stat-box {
+        background-color: #fff;
+        border: 1px solid #e9ecef;
+        border-radius: 10px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        transition: transform 0.2s;
+    }
+
+        .stat-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+
+    .stat-label {
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #6c757d;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-value {
+        font-size: 2.5rem;
+        font-weight: 700;
+        line-height: 1;
+    }
+</style>
+
+<div class="container mt-5 mb-5">
+    <!-- Breadcrumb điều hướng -->
+    <nav aria-label="breadcrumb" class="custom-breadcrumb-container">
+        <ol class="breadcrumb bg-transparent px-0 pb-2">
+            <li class="breadcrumb-item"><a href="/" class="text-decoration-none text-muted"><i class="fas fa-home"></i> Trang chủ</a></li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Index")" class="text-decoration-none text-muted">Quản lý Trạm</a></li>
+            <li class="breadcrumb-item active text-brand fw-bold" aria-current="page">Hồ sơ trạm #@Model.StationId</li>
+        </ol>
+    </nav>
+
+    <!-- Ép Form vào giữa màn hình -->
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="card station-card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <h4 class="m-0 text-white" style="font-weight: 600; letter-spacing: 0.5px;">
+                            <i class="fas fa-info-circle me-2"></i> Hồ sơ Trạm đỗ
+                        </h4>
+                        <p class="mb-0 mt-1" style="font-size: 0.9em; opacity: 0.85;">Dữ liệu giám sát chi tiết của điểm đỗ xe</p>
+                    </div>
+                    <div class="text-white-50" style="font-size: 2.5rem;">
+                        <i class="fas fa-map-marked-alt"></i>
+                    </div>
+                </div>
+
+                <div class="card-body p-4 p-md-5 bg-white">
+
+                    <!-- Phần hiển thị Tên trạm nổi bật -->
+                    <div class="text-center mb-4 pb-4 border-bottom">
+                        <span class="badge bg-light text-secondary border px-3 py-2 mb-3 fs-6 rounded-pill">Mã định danh: #ST-@Model.StationId</span>
+                        <h3 class="fw-bold text-dark mb-2">
+                            <i class="fas fa-map-marker-alt text-danger me-2"></i>@Html.DisplayFor(model => model.LocationName)
+                        </h3>
+                    </div>
+
+                    <!-- Logic tính toán thanh tiến trình -->
+                    @{
+                        double capacityPercentage = 0;
+                        if (Model.CapacityLimit > 0)
+                        {
+                            capacityPercentage = Math.Round((double)Model.CurrentInventoryCount / Model.CapacityLimit * 100);
+                        }
+
+                        // Cấu hình màu sắc của thanh tiến trình tùy theo tình trạng
+                        string progressColor = capacityPercentage < 20 ? "bg-warning" : (capacityPercentage >= 80 ? "bg-danger" : "bg-success");
+                    }
+
+                    <!-- Khối thống kê 2 cột -->
+                    <div class="row text-center mb-4">
+                        <div class="col-sm-6 mb-3 mb-sm-0">
+                            <div class="stat-box">
+                                <div class="stat-label"><i class="fas fa-th-large me-1"></i> Sức chứa tối đa</div>
+                                <div class="stat-value text-secondary">
+                                    @Html.DisplayFor(model => model.CapacityLimit) <span style="font-size: 1rem; font-weight: normal;">xe</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="stat-box" style="border-bottom: 4px solid var(--saigonbus-primary);">
+                                <div class="stat-label"><i class="fas fa-bicycle me-1"></i> Số xe đang đỗ</div>
+                                <div class="stat-value text-brand">
+                                    @Html.DisplayFor(model => model.CurrentInventoryCount) <span style="font-size: 1rem; font-weight: normal;">xe</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Thanh tiến trình (Progress Bar) -->
+                    <div class="mb-5 px-2">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="fw-bold text-secondary" style="font-size: 0.95rem;">Mức độ lấp đầy trạm (Tình trạng kho)</span>
+                            <span class="fw-bold @(capacityPercentage >= 80 ? "text-danger" : "text-brand")">@capacityPercentage%</span>
+                        </div>
+                        <div class="progress shadow-sm" style="height: 16px; border-radius: 8px;">
+                            <div class="progress-bar @progressColor progress-bar-striped progress-bar-animated" role="progressbar" style="width: @capacityPercentage%;" aria-valuenow="@capacityPercentage" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        @if (capacityPercentage < 20)
+                        {
+                            <small class="text-warning fw-bold mt-2 d-block"><i class="fas fa-exclamation-triangle me-1"></i> Lượng xe đang ở mức thấp. Trạm này được áp dụng giảm giá 15% khi khách trả xe.</small>
+                        }
+                        else if (capacityPercentage >= 80)
+                        {
+                            <small class="text-danger fw-bold mt-2 d-block"><i class="fas fa-exclamation-circle me-1"></i> Trạm sắp hết chỗ trống. Cần chú ý điều phối xe.</small>
+                        }
+                    </div>
+
+                    <!-- Nút Thao tác -->
+                    <hr class="mb-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a href="@Url.Action("Index")" class="btn btn-outline-back">
+                            <i class="fas fa-arrow-left me-1"></i> Trở về danh sách
+                        </a>
+                        <a href="@Url.Action("Edit", new { id = Model.StationId })" class="btn btn-accent shadow-sm">
+                            <i class="fas fa-edit me-1"></i> Chỉnh sửa thông tin
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

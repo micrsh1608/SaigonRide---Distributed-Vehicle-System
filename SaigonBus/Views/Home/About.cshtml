@@ -1,0 +1,206 @@
+﻿@{
+    ViewBag.Title = "Về chúng tôi";
+}
+
+<!-- Nhúng thư viện FontAwesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+<style>
+    body {
+        background-color: #f4f7f6;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    :root {
+        --saigonbus-primary: #00838F;
+        --saigonbus-primary-dark: #006064;
+        --saigonbus-accent: #F39C12;
+    }
+
+    .custom-breadcrumb-container {
+        background-color: #ffffff;
+        border-radius: 10px;
+        padding: 0.8rem 1.5rem;
+        box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(0,0,0,0.03);
+        margin-bottom: 1.5rem;
+        display: inline-flex;
+        width: 100%;
+    }
+
+        .custom-breadcrumb-container .breadcrumb {
+            margin-bottom: 0;
+            background: transparent;
+            padding: 0;
+        }
+
+        .custom-breadcrumb-container .breadcrumb-item a {
+            color: #6c757d;
+            font-weight: 500;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+            .custom-breadcrumb-container .breadcrumb-item a:hover {
+                color: var(--saigonbus-accent);
+            }
+
+        .custom-breadcrumb-container .breadcrumb-item.active {
+            color: var(--saigonbus-primary);
+        }
+
+        .custom-breadcrumb-container .breadcrumb-item + .breadcrumb-item::before {
+            content: "›";
+            font-size: 1.4em;
+            line-height: 1;
+            color: #adb5bd;
+            vertical-align: middle;
+            padding: 0 0.5rem;
+        }
+
+    .about-card {
+        border-radius: 15px;
+        border: none;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        background-color: #fff;
+    }
+
+    .about-header {
+        background: linear-gradient(135deg, var(--saigonbus-primary) 0%, var(--saigonbus-primary-dark) 100%);
+        color: white;
+        padding: 4rem 2rem;
+        text-align: center;
+    }
+
+    .stat-box {
+        text-align: center;
+        padding: 1.5rem;
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 900;
+        color: var(--saigonbus-primary);
+    }
+
+    .stat-text {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #6c757d;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .mission-box {
+        background-color: #f8f9fa;
+        border-left: 4px solid var(--saigonbus-accent);
+        padding: 1.5rem;
+        border-radius: 0 8px 8px 0;
+        margin-bottom: 2rem;
+    }
+</style>
+
+<div class="container mt-4 mb-5">
+
+    <!-- Breadcrumb điều hướng DYNAMIC -->
+    <nav aria-label="breadcrumb" class="custom-breadcrumb-container">
+        <ol class="breadcrumb align-items-center">
+            <li class="breadcrumb-item">
+                <a href="#" id="dynamic-home-link-about">
+                    <i class="fas fa-spinner fa-spin me-1"></i> Đang tải...
+                </a>
+            </li>
+            <li class="breadcrumb-item active fw-bold" aria-current="page" style="color: var(--saigonbus-primary);">
+                Về chúng tôi
+            </li>
+        </ol>
+    </nav>
+
+    <div class="card about-card">
+        <div class="about-header">
+            <h1 class="fw-bold mb-3"><i class="fas fa-leaf text-warning me-2"></i> Dự án SaigonRide</h1>
+            <p class="fs-5 mb-0 opacity-75">Nền tảng chia sẻ phương tiện di chuyển thông minh và thân thiện với môi trường tại TP.Hồ Chí Minh.</p>
+        </div>
+
+        <div class="card-body p-4 p-md-5">
+            <div class="row align-items-center mb-5">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <h3 class="fw-bold text-dark mb-3">Câu chuyện của chúng tôi</h3>
+                    <p class="text-muted" style="line-height: 1.8;">
+                        Bắt nguồn từ ý tưởng giảm thiểu ùn tắc giao thông và ô nhiễm môi trường, <strong>SaigonRide</strong> được phát triển nhằm cung cấp một giải pháp di chuyển linh hoạt, chi phí thấp cho người dân và du khách tại TP.Hồ Chí Minh.
+                    </p>
+                    <p class="text-muted" style="line-height: 1.8;">
+                        Hệ thống ứng dụng công nghệ định vị GPS và khóa thông minh IoT, giúp người dùng dễ dàng tìm kiếm, thuê và trả xe tại bất kỳ trạm đỗ nào trong mạng lưới.
+                    </p>
+                </div>
+                <div class="col-lg-6">
+                    <div class="mission-box shadow-sm">
+                        <h5 class="fw-bold text-dark mb-2"><i class="fas fa-bullseye text-warning me-2"></i> Tầm nhìn & Sứ mệnh</h5>
+                        <p class="mb-0 text-muted" style="line-height: 1.6;">
+                            Xây dựng một hệ sinh thái giao thông xanh, đưa TP.HCM trở thành một trong những đô thị thông minh và phát triển bền vững hàng đầu khu vực Đông Nam Á.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thống kê -->
+            <h4 class="fw-bold text-center mb-4 text-dark">Hệ thống đang không ngừng mở rộng</h4>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="stat-box border rounded-3 shadow-sm">
+                        <div class="stat-number">150+</div>
+                        <div class="stat-text mt-2">Trạm đỗ thông minh</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-box border rounded-3 shadow-sm">
+                        <div class="stat-number">1,200+</div>
+                        <div class="stat-text mt-2">Phương tiện (Xe đạp & Scooter)</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-box border rounded-3 shadow-sm">
+                        <div class="stat-number">50,000+</div>
+                        <div class="stat-text mt-2">Người dùng đăng ký</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SCRIPT ĐIỀU HƯỚNG THÔNG MINH -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var prevUrl = document.referrer.toLowerCase();
+        var homeLink = document.getElementById("dynamic-home-link-about");
+
+        // 1. Phân tích URL nguồn để biết người dùng đến từ Khách hay Admin
+        if (prevUrl.includes("/vehicles") ||
+            prevUrl.includes("/stations") ||
+            prevUrl.includes("/rentaltransactions") ||
+            prevUrl.includes("/home/index") ||
+            (prevUrl !== "" && !prevUrl.includes("userdashboard") && !prevUrl.includes("portal")))
+        {
+            // Lưu trạng thái vào Session để nhớ nếu user F5 trang
+            sessionStorage.setItem("portalMode", "admin");
+        }
+        else if (prevUrl.includes("userdashboard") || prevUrl.includes("portal"))
+        {
+            sessionStorage.setItem("portalMode", "user");
+        }
+
+        // 2. Lấy trạng thái hiện tại (Mặc định là User nếu gõ link trực tiếp)
+        var mode = sessionStorage.getItem("portalMode") || "user";
+
+        // 3. Đổi Link tương ứng
+        if (mode === "admin") {
+            homeLink.href = "@Url.Action("Index", "Home")";
+            homeLink.innerHTML = '<i class="fas fa-user-shield me-1"></i> Trang chủ Admin';
+        } else {
+            homeLink.href = "@Url.Action("UserDashboard", "Home")";
+            homeLink.innerHTML = '<i class="fas fa-home me-1"></i> Trang chủ Khách hàng';
+        }
+    });
+</script>

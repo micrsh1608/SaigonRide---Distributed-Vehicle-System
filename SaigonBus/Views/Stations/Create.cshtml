@@ -1,0 +1,234 @@
+﻿@model SaigonBus.Models.Station
+
+@{
+    ViewBag.Title = "Thiết lập trạm mới";
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+<style>
+    body {
+        padding-top: 0 !important;
+        background-color: #f4f7f6;
+    }
+
+    :root {
+        --saigonbus-primary: #00838F;
+        --saigonbus-primary-dark: #006064;
+        --saigonbus-accent: #F39C12;
+        --saigonbus-accent-hover: #E67E22;
+        --saigonbus-light: #E0F7FA;
+    }
+
+    /* Tùy chỉnh thanh Nav (Breadcrumb) đồng bộ toàn hệ thống */
+    .custom-breadcrumb-container {
+        background-color: #ffffff;
+        border-radius: 10px;
+        padding: 0.8rem 1.5rem;
+        box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(0,0,0,0.03);
+        margin-bottom: 1.5rem;
+        display: inline-flex;
+        width: 100%;
+    }
+
+    .custom-breadcrumb-container .breadcrumb {
+        margin-bottom: 0;
+        background: transparent;
+        padding: 0;
+    }
+
+    .custom-breadcrumb-container .breadcrumb-item a {
+        color: #6c757d;
+        font-weight: 500;
+        text-decoration: none;
+        transition: color 0.2s ease-in-out;
+    }
+
+    .custom-breadcrumb-container .breadcrumb-item a:hover {
+        color: var(--saigonbus-accent);
+    }
+
+    .custom-breadcrumb-container .breadcrumb-item.active {
+        color: var(--saigonbus-primary);
+    }
+
+    .custom-breadcrumb-container .breadcrumb-item + .breadcrumb-item::before {
+        content: "›";
+        font-size: 1.4em;
+        line-height: 1;
+        color: #adb5bd;
+        vertical-align: middle;
+        padding: 0 0.5rem;
+    }
+
+    /* Card & Header Styles */
+    .station-card {
+        border-radius: 12px;
+        border: none;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .station-card .card-header {
+        background: linear-gradient(135deg, var(--saigonbus-primary) 0%, var(--saigonbus-primary-dark) 100%);
+        border-bottom: none;
+        padding: 1.5rem;
+        color: white;
+    }
+
+    /* Form Styles */
+    .custom-label {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control {
+        border-radius: 0 8px 8px 0;
+        border: 1px solid #ced4da;
+        padding: 0.65rem 1rem;
+    }
+
+    .form-control:focus {
+        border-color: var(--saigonbus-primary);
+        box-shadow: 0 0 0 0.25rem rgba(0, 131, 143, 0.25);
+    }
+
+    .input-group-text {
+        background-color: var(--saigonbus-light);
+        border: 1px solid #ced4da;
+        border-right: none;
+        border-radius: 8px 0 0 8px;
+        color: var(--saigonbus-primary);
+        width: 45px;
+        justify-content: center;
+    }
+
+    /* Button Styles */
+    .btn-accent {
+        background-color: var(--saigonbus-accent);
+        color: white;
+        border: none;
+        padding: 0.7rem 2rem;
+        transition: all 0.3s ease;
+        border-radius: 8px;
+        font-weight: bold;
+    }
+
+        .btn-accent:hover {
+            background-color: var(--saigonbus-accent-hover);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(243, 156, 18, 0.3);
+        }
+
+    .btn-outline-back {
+        border: 2px solid #dee2e6;
+        color: #6c757d;
+        font-weight: bold;
+        padding: 0.7rem 1.5rem;
+        border-radius: 8px;
+        transition: all 0.3s;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+        .btn-outline-back:hover {
+            background-color: #fff;
+            color: var(--saigonbus-primary-dark);
+            border-color: #ced4da;
+        }
+
+    .text-brand {
+        color: var(--saigonbus-primary) !important;
+    }
+</style>
+
+<div class="container mt-5 mb-5">
+    <nav aria-label="breadcrumb" class="custom-breadcrumb-container">
+        <ol class="breadcrumb bg-transparent px-0 pb-2">
+            <li class="breadcrumb-item"><a href="/" class="text-decoration-none text-muted"><i class="fas fa-home"></i> Trang chủ</a></li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Index")" class="text-decoration-none text-muted">Quản lý Trạm</a></li>
+            <li class="breadcrumb-item active text-brand fw-bold" aria-current="page">Thiết lập trạm mới</li>
+        </ol>
+    </nav>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="card station-card">
+                <div class="card-header">
+                    <h4 class="m-0 text-white" style="font-weight: 600; letter-spacing: 0.5px;">
+                        <i class="fas fa-map-marked-alt me-2"></i> Khai báo trạm đỗ xe mới
+                    </h4>
+                    <p class="mb-0 mt-1" style="font-size: 0.9em; opacity: 0.85;">Hệ thống sẽ ghi nhận vị trí này vào bản đồ thuê xe SaigonRide</p>
+                </div>
+
+                <div class="card-body p-4 p-md-5 bg-white">
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="form-horizontal">
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger mb-4 p-3 bg-danger bg-opacity-10 rounded border border-danger border-opacity-25" })
+
+                            <div class="form-group mb-4">
+                                @Html.LabelFor(model => model.LocationName, "Tên trạm (Địa danh cụ thể)", htmlAttributes: new { @class = "custom-label" })
+                                <div class="input-group shadow-sm">
+                                    <span class="input-group-text"><i class="fas fa-location-dot"></i></span>
+                                    @Html.EditorFor(model => model.LocationName, new { htmlAttributes = new { @class = "form-control", placeholder = "Ví dụ: Trạm Metro Bến Thành..." } })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.LocationName, "", new { @class = "text-danger small mt-1 d-block fw-bold" })
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group mb-4">
+                                        @Html.LabelFor(model => model.CapacityLimit, "Sức chứa tối đa (xe)", htmlAttributes: new { @class = "custom-label" })
+                                        <div class="input-group shadow-sm">
+                                            <span class="input-group-text"><i class="fas fa-th-large"></i></span>
+                                            @Html.EditorFor(model => model.CapacityLimit, new { htmlAttributes = new { @class = "form-control", type = "number", min = "1" } })
+                                        </div>
+                                        @Html.ValidationMessageFor(model => model.CapacityLimit, "", new { @class = "text-danger small mt-1 d-block fw-bold" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group mb-4">
+                                        @Html.LabelFor(model => model.CurrentInventoryCount, "Số xe hiện có", htmlAttributes: new { @class = "custom-label" })
+                                        <div class="input-group shadow-sm">
+                                            <span class="input-group-text"><i class="fas fa-bicycle"></i></span>
+                                            @Html.EditorFor(model => model.CurrentInventoryCount, new { htmlAttributes = new { @class = "form-control", type = "number", min = "0" } })
+                                        </div>
+                                        @Html.ValidationMessageFor(model => model.CurrentInventoryCount, "", new { @class = "text-danger small mt-1 d-block fw-bold" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="alert alert-info mt-2 mb-4 py-2 border-0 shadow-sm" style="background-color: #f0faff; border-left: 4px solid #00838F !important;">
+                                <small class="text-muted">
+                                    <i class="fas fa-info-circle text-brand me-1"></i>
+                                    Hệ thống sẽ tự động tính toán % tình trạng kho dựa trên hai con số này để hiển thị cảnh báo trên trang chủ.
+                                </small>
+                            </div>
+
+                            <hr class="mb-4">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <a href="@Url.Action("Index")" class="btn btn-outline-back">
+                                    <i class="fas fa-arrow-left me-1"></i> Quay lại danh sách
+                                </a>
+                                <button type="submit" class="btn btn-accent shadow-sm">
+                                    <i class="fas fa-check-double me-1"></i> Hoàn tất thiết lập
+                                </button>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

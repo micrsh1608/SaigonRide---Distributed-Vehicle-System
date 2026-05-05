@@ -1,0 +1,235 @@
+﻿@model SaigonBus.Models.Station
+
+@{
+    ViewBag.Title = "Xóa trạm đỗ";
+}
+
+<!-- Nhúng thư viện FontAwesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+<style>
+    body {
+        background-color: #f4f7f6;
+    }
+
+    :root {
+        --saigonbus-primary: #00838F;
+        --saigonbus-danger: #dc3545;
+        --saigonbus-danger-dark: #b02a37;
+    }
+
+    /* Tùy chỉnh thanh Nav (Breadcrumb) đồng bộ toàn hệ thống */
+    .custom-breadcrumb-container {
+        background-color: #ffffff;
+        border-radius: 10px;
+        padding: 0.8rem 1.5rem;
+        box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(0,0,0,0.03);
+        margin-bottom: 1.5rem;
+        display: inline-flex;
+        width: 100%;
+    }
+
+    .custom-breadcrumb-container .breadcrumb {
+        margin-bottom: 0;
+        background: transparent;
+        padding: 0;
+    }
+
+    .custom-breadcrumb-container .breadcrumb-item a {
+        color: #6c757d;
+        font-weight: 500;
+        text-decoration: none;
+        transition: color 0.2s ease-in-out;
+    }
+
+        .custom-breadcrumb-container .breadcrumb-item a:hover {
+            color: var(--saigonbus-accent);
+        }
+
+    .custom-breadcrumb-container .breadcrumb-item.active {
+        color: var(--saigonbus-primary);
+    }
+
+    .custom-breadcrumb-container .breadcrumb-item + .breadcrumb-item::before {
+        content: "›";
+        font-size: 1.4em;
+        line-height: 1;
+        color: #adb5bd;
+        vertical-align: middle;
+        padding: 0 0.5rem;
+    }
+
+    /* Card & Header Styles (Cảnh báo đỏ) */
+    .station-card {
+        border-radius: 12px;
+        border: none;
+        box-shadow: 0 0.5rem 1.5rem rgba(220, 53, 69, 0.15);
+        overflow: hidden;
+        border-top: 4px solid var(--saigonbus-danger);
+    }
+
+        .station-card .card-header {
+            background-color: #fff;
+            border-bottom: 1px solid #f1f2f4;
+            padding: 1.5rem;
+        }
+
+    /* Alert Style */
+    .alert-custom {
+        background-color: #fff5f5;
+        border-left: 4px solid var(--saigonbus-danger);
+        color: #842029;
+        border-radius: 8px;
+    }
+
+    /* Info Grid */
+    .info-label {
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #6c757d;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+    }
+
+    .info-value {
+        font-size: 1.1rem;
+        color: #2b3d51;
+        font-weight: 500;
+        margin-bottom: 1.2rem;
+    }
+
+    .info-box {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 1.2rem;
+        border: 1px solid #e9ecef;
+    }
+
+    /* Button Styles */
+    .btn-danger-custom {
+        background-color: var(--saigonbus-danger);
+        color: white;
+        border: none;
+        padding: 0.7rem 1.5rem;
+        transition: all 0.3s ease;
+        border-radius: 8px;
+        font-weight: bold;
+    }
+
+        .btn-danger-custom:hover {
+            background-color: var(--saigonbus-danger-dark);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+        }
+
+    .btn-outline-back {
+        border: 2px solid #dee2e6;
+        color: #6c757d;
+        font-weight: bold;
+        padding: 0.7rem 1.5rem;
+        border-radius: 8px;
+        transition: all 0.3s;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+        .btn-outline-back:hover {
+            background-color: #fff;
+            color: #343a40;
+            border-color: #ced4da;
+        }
+
+    .text-brand {
+        color: var(--saigonbus-primary) !important;
+    }
+</style>
+
+<div class="container mt-5 mb-5">
+    <!-- Breadcrumb điều hướng -->
+    <nav aria-label="breadcrumb" class="custom-breadcrumb-container">
+        <ol class="breadcrumb bg-transparent px-0 pb-2">
+            <li class="breadcrumb-item"><a href="/" class="text-decoration-none text-muted"><i class="fas fa-home"></i> Trang chủ</a></li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Index")" class="text-decoration-none text-muted">Quản lý Trạm</a></li>
+            <li class="breadcrumb-item active text-danger fw-bold" aria-current="page">Xóa trạm #@Model.StationId</li>
+        </ol>
+    </nav>
+
+    <!-- Ép Form vào giữa màn hình -->
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-md-9">
+            <div class="card station-card">
+                <div class="card-header text-center pb-2 pt-4">
+                    <div class="mb-3">
+                        <i class="fas fa-radiation-alt text-danger" style="font-size: 3.5rem;"></i>
+                    </div>
+                    <h4 class="m-0 text-dark fw-bold">
+                        Xác nhận gỡ bỏ Trạm đỗ
+                    </h4>
+                </div>
+
+                <div class="card-body p-4 p-md-5 pt-3 bg-white">
+                    <div class="alert alert-custom p-3 mb-4 shadow-sm" role="alert">
+                        <h6 class="alert-heading fw-bold mb-1"><i class="fas fa-exclamation-circle me-1"></i> Cảnh báo hệ thống!</h6>
+                        <p class="mb-0" style="font-size: 0.95rem;">Bạn đang chuẩn bị xóa vĩnh viễn trạm <strong>@Html.DisplayFor(model => model.LocationName)</strong> khỏi hệ thống bản đồ SaigonRide. Hành động này không thể hoàn tác.</p>
+                    </div>
+
+                    <!-- Hiển thị tóm tắt thông tin trạm để kiểm tra chéo -->
+                    <div class="info-box mb-4 shadow-sm">
+                        <h6 class="fw-bold border-bottom pb-2 mb-3 text-secondary">
+                            <i class="fas fa-clipboard-check me-1"></i> Dữ liệu kiểm tra chéo
+                        </h6>
+                        <div class="row">
+                            <div class="col-sm-12 mb-2">
+                                <div class="info-label">Tên trạm / Vị trí</div>
+                                <div class="info-value text-primary fw-bold">
+                                    <i class="fas fa-map-marker-alt text-danger me-1"></i> @Html.DisplayFor(model => model.LocationName)
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="info-label">Mã hệ thống</div>
+                                <div class="info-value">#ST-@Model.StationId</div>
+
+                                <div class="info-label">Sức chứa tối đa</div>
+                                <div class="info-value">
+                                    <i class="fas fa-th-large text-muted me-1"></i> @Html.DisplayFor(model => model.CapacityLimit) xe
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="info-label">Tồn kho hiện tại</div>
+                                <div class="info-value">
+                                    @if (Model.CurrentInventoryCount > 0)
+                                    {
+                                        <span class="text-danger fw-bold d-block"><i class="fas fa-bicycle me-1"></i> Đang có @Html.DisplayFor(model => model.CurrentInventoryCount) xe</span>
+                                        <!-- Đã fix lỗi đè chữ tại đây -->
+                                        <div class="text-danger mt-1" style="font-size: 0.85rem; margin-bottom: 1.2rem;">(Cần di dời xe trước khi xóa)</div>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-success fw-bold"><i class="fas fa-check-circle me-1"></i> Trống (An toàn để xóa)</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Nút Thao tác -->
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="d-flex justify-content-between align-items-center mt-2">
+                            <a href="@Url.Action("Index")" class="btn btn-outline-back">
+                                <i class="fas fa-arrow-left me-1"></i> Hủy lệnh xóa
+                            </a>
+                            <button type="submit" class="btn btn-danger-custom shadow-sm" @(Model.CurrentInventoryCount > 0 ? "onclick=\"return confirm('CẢNH BÁO: Trạm này vẫn đang còn xe đỗ. Bạn có chắc chắn muốn xóa không?');\"" : "")>
+                                <i class="fas fa-trash-alt me-1"></i> Xác nhận xóa trạm
+                            </button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

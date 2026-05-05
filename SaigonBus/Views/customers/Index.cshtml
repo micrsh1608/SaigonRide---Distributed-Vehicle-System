@@ -1,0 +1,238 @@
+@model IEnumerable<SaigonBus.Models.User>
+
+@{
+    ViewBag.Title = "Quản lý Khách hàng";
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+<style>
+    body {
+        background-color: #f4f7f6;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    :root {
+        --saigonbus-primary: #00838F;
+        --saigonbus-primary-dark: #006064;
+        --saigonbus-purple: #6f42c1;
+        --saigonbus-light: #E0F7FA;
+    }
+
+    /* Breadcrumb */
+    .custom-breadcrumb-container {
+        background-color: #ffffff;
+        border-radius: 10px;
+        padding: 0.8rem 1.5rem;
+        box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(0,0,0,0.03);
+        margin-bottom: 1.5rem;
+        display: inline-flex;
+        width: 100%;
+    }
+
+        .custom-breadcrumb-container .breadcrumb {
+            margin-bottom: 0;
+            background: transparent;
+            padding: 0;
+        }
+
+        .custom-breadcrumb-container .breadcrumb-item a {
+            color: #6c757d;
+            font-weight: 500;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+            .custom-breadcrumb-container .breadcrumb-item a:hover {
+                color: var(--saigonbus-purple);
+            }
+
+        .custom-breadcrumb-container .breadcrumb-item.active {
+            color: var(--saigonbus-primary);
+        }
+
+        .custom-breadcrumb-container .breadcrumb-item + .breadcrumb-item::before {
+            content: "›";
+            font-size: 1.4em;
+            color: #adb5bd;
+            padding: 0 0.5rem;
+        }
+
+    /* Card Bảng Dữ Liệu */
+    .table-card {
+        border-radius: 12px;
+        border: none;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        background: #fff;
+    }
+
+        .table-card .card-header {
+            background: linear-gradient(135deg, #6f42c1 0%, #4c2889 100%);
+            padding: 1.5rem;
+            border-bottom: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+
+    /* Tùy chỉnh Table */
+    .custom-table th {
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+        border-bottom: 2px solid #e9ecef;
+        padding: 1rem 0.5rem;
+    }
+
+    .custom-table td {
+        padding: 1rem 0.5rem;
+        vertical-align: middle;
+        color: #2c3e50;
+        border-bottom: 1px solid #f1f2f4;
+    }
+
+    .custom-table tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+
+    .action-btn {
+        width: 35px;
+        height: 35px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        margin: 0 2px;
+        transition: all 0.2s;
+        text-decoration: none;
+        border: 1px solid #e2e8f0;
+    }
+
+    .btn-view {
+        color: #6f42c1;
+        background: #f3e8ff;
+        border-color: #d8b4fe;
+    }
+
+        .btn-view:hover {
+            background-color: #6f42c1;
+            color: white;
+        }
+
+    .btn-lock {
+        color: #dc3545;
+        background: #fee2e2;
+        border-color: #fca5a5;
+    }
+
+        .btn-lock:hover {
+            background-color: #dc3545;
+            color: white;
+        }
+
+    .user-avatar-mini {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        background: #e2e8f0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #64748b;
+        font-weight: bold;
+        margin-right: 10px;
+    }
+</style>
+
+<div class="container mt-4 mb-5">
+    <nav aria-label="breadcrumb" class="custom-breadcrumb-container">
+        <ol class="breadcrumb align-items-center">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")"><i class="fas fa-home me-1"></i> Trang chủ</a></li>
+            <li class="breadcrumb-item active fw-bold" aria-current="page">Quản lý Khách hàng</li>
+        </ol>
+    </nav>
+
+    <div class="table-card">
+        <div class="card-header">
+            <div>
+                <h4 class="m-0 fw-bold"><i class="fas fa-users me-2"></i> Danh sách Khách hàng</h4>
+                <p class="mb-0 mt-1 text-white-50" style="font-size: 0.9rem;">Quản lý tài khoản, số dư ví và trạng thái hoạt động</p>
+            </div>
+            <button class="btn btn-light text-primary fw-bold" style="border-radius: 8px;">
+                <i class="fas fa-file-export me-1"></i> Xuất dữ liệu
+            </button>
+        </div>
+
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0 custom-table">
+                    <thead class="bg-light text-secondary">
+                        <tr>
+                            <th class="ps-4">Khách hàng</th>
+                            <th>Liên hệ</th>
+                            <th>Phân loại</th>
+                            <th>Số dư ví</th>
+                            <th>Trạng thái</th>
+                            <th class="text-end pe-4">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center">
+                                        <div class="user-avatar-mini">@(string.IsNullOrEmpty(item.FullName) ? "U" : item.FullName.Substring(0,1).ToUpper())</div>
+                                        <div>
+                                            <div class="fw-bold text-dark">@item.FullName</div>
+                                            <div class="small text-muted">ID: #CUS-@item.UserId</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(item.Phone))
+                                    {
+                                        <div><i class="fas fa-phone-alt text-muted me-1" style="font-size: 0.8rem;"></i> @item.Phone</div>
+                                        <div class="small text-muted">CCCD: @(string.IsNullOrEmpty(item.CCCD) ? "N/A" : item.CCCD)</div>
+                                    }
+                                    else
+                                    {
+                                        <div><i class="fas fa-envelope text-muted me-1" style="font-size: 0.8rem;"></i> @item.Email</div>
+                                        <div class="small text-muted">Hộ chiếu: @(string.IsNullOrEmpty(item.Passport) ? "N/A" : item.Passport)</div>
+                                    }
+                                </td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(item.Phone))
+                                    {
+                                        <span class="badge bg-info text-dark rounded-pill px-2">Địa phương</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning text-dark rounded-pill px-2">Du khách</span>
+                                    }
+                                </td>
+                                <td class="fw-bold text-success">@item.Balance.ToString("N0") ₫</td>
+                                <td><span class="badge bg-success bg-opacity-25 text-success rounded-pill px-2"><i class="fas fa-check-circle me-1"></i>Đang hoạt động</span></td>
+                                <td class="text-end pe-4">
+                                    <a href="@Url.Action("Details", "Customers", new { id = item.UserId })" class="action-btn btn-view" title="Xem chi tiết"><i class="fas fa-eye"></i></a>
+                                    <a href="@Url.Action("Edit", "Customers", new { id = item.UserId })" class="action-btn btn-view" title="Chỉnh sửa"><i class="fas fa-edit"></i></a>
+                                    <a href="@Url.Action("Delete", "Customers", new { id = item.UserId })" class="action-btn btn-lock" title="Xóa tài khoản"><i class="fas fa-trash-alt"></i></a>
+                                </td>
+                            </tr>
+                        }
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center py-4 text-muted">Chưa có khách hàng nào.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

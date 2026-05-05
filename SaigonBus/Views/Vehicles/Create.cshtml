@@ -1,0 +1,244 @@
+@model SaigonBus.Models.Vehicle
+
+@{
+    ViewBag.Title = "Thêm phương tiện mới";
+}
+
+<!-- Nhúng thư viện FontAwesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+<style>
+    body {
+        background-color: #f4f7f6;
+    }
+
+    :root {
+        --saigonbus-primary: #00838F;
+        --saigonbus-primary-dark: #006064;
+        --saigonbus-accent: #F39C12;
+        --saigonbus-accent-hover: #E67E22;
+        --saigonbus-light: #E0F7FA;
+    }
+
+    /* Tùy chỉnh thanh Nav (Breadcrumb) đồng bộ toàn hệ thống */
+    .custom-breadcrumb-container {
+        background-color: #ffffff;
+        border-radius: 10px;
+        padding: 0.8rem 1.5rem;
+        box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(0,0,0,0.03);
+        margin-bottom: 1.5rem;
+        display: inline-flex;
+        width: 100%;
+    }
+
+        .custom-breadcrumb-container .breadcrumb {
+            margin-bottom: 0;
+            background: transparent;
+            padding: 0;
+        }
+
+        .custom-breadcrumb-container .breadcrumb-item a {
+            color: #6c757d;
+            font-weight: 500;
+            text-decoration: none;
+            transition: color 0.2s ease-in-out;
+        }
+
+            .custom-breadcrumb-container .breadcrumb-item a:hover {
+                color: var(--saigonbus-accent);
+            }
+
+        .custom-breadcrumb-container .breadcrumb-item.active {
+            color: var(--saigonbus-primary);
+        }
+
+        .custom-breadcrumb-container .breadcrumb-item + .breadcrumb-item::before {
+            content: "›";
+            font-size: 1.4em;
+            line-height: 1;
+            color: #adb5bd;
+            vertical-align: middle;
+            padding: 0 0.5rem;
+        }
+
+    /* Card & Header Styles */
+    .vehicle-card {
+        border-radius: 12px;
+        border: none;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+        .vehicle-card .card-header {
+            background: linear-gradient(135deg, var(--saigonbus-primary) 0%, var(--saigonbus-primary-dark) 100%);
+            border-bottom: none;
+            padding: 1.5rem;
+            color: white;
+        }
+
+    /* Form Styles */
+    .custom-label {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control, .form-select {
+        border-radius: 0 8px 8px 0;
+        border: 1px solid #ced4da;
+        padding: 0.6rem 1rem;
+    }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--saigonbus-primary);
+            box-shadow: 0 0 0 0.25rem rgba(0, 131, 143, 0.25);
+        }
+
+    .input-group-text {
+        background-color: var(--saigonbus-light);
+        border: 1px solid #ced4da;
+        border-right: none;
+        border-radius: 8px 0 0 8px;
+        color: var(--saigonbus-primary);
+        width: 45px;
+        justify-content: center;
+    }
+
+    /* Button Styles */
+    .btn-accent {
+        background-color: var(--saigonbus-accent);
+        color: white;
+        border: none;
+        padding: 0.6rem 1.5rem;
+        transition: all 0.3s ease;
+        border-radius: 8px;
+        font-weight: bold;
+    }
+
+        .btn-accent:hover {
+            background-color: var(--saigonbus-accent-hover);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(243, 156, 18, 0.3);
+        }
+
+    .btn-outline-back {
+        border: 2px solid #dee2e6;
+        color: #6c757d;
+        font-weight: bold;
+        padding: 0.6rem 1.5rem;
+        border-radius: 8px;
+        transition: all 0.3s;
+    }
+
+        .btn-outline-back:hover {
+            background-color: #f8f9fa;
+            color: var(--saigonbus-primary-dark);
+            border-color: #ced4da;
+        }
+
+    .text-brand {
+        color: var(--saigonbus-primary) !important;
+    }
+</style>
+
+<div class="container mt-4 mb-5">
+    <!-- Breadcrumb điều hướng (Đã được nâng cấp) -->
+    <nav aria-label="breadcrumb" class="custom-breadcrumb-container">
+        <ol class="breadcrumb align-items-center">
+            <li class="breadcrumb-item">
+                <a href="/"><i class="fas fa-home me-1"></i> Trang chủ</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="@Url.Action("Index")">Quản lý Xe (Fleet)</a>
+            </li>
+            <li class="breadcrumb-item active fw-bold" aria-current="page">
+                Thêm xe mới
+            </li>
+        </ol>
+    </nav>
+
+    <!-- Ép Form vào giữa màn hình để giao diện không bị quá dài -->
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="card vehicle-card">
+                <div class="card-header">
+                    <h4 class="m-0 text-white" style="font-weight: 600; letter-spacing: 0.5px;">
+                        <i class="fas fa-plus-circle me-2"></i> Khai báo phương tiện mới
+                    </h4>
+                    <p class="mb-0 mt-1" style="font-size: 0.9em; opacity: 0.85;">Vui lòng điền thông tin để thêm xe vào hệ thống SaigonRide</p>
+                </div>
+
+                <div class="card-body p-4 p-md-5">
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="form-horizontal">
+                            <!-- Hiển thị lỗi chung (nếu có) -->
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger mb-4 p-3 bg-danger bg-opacity-10 rounded border border-danger border-opacity-25" })
+
+                            <!-- Nhóm nhập liệu: Phân loại xe -->
+                            <div class="form-group mb-4">
+                                @Html.LabelFor(model => model.Category, "Phân loại phương tiện", htmlAttributes: new { @class = "custom-label" })
+                                <div class="input-group shadow-sm">
+                                    <span class="input-group-text"><i class="fas fa-tags"></i></span>
+                                    <!-- Hàm EnumDropDownListFor tự động đọc dữ liệu từ Enum VehicleCategory của bạn -->
+                                    @Html.EnumDropDownListFor(model => model.Category, "--- Chọn loại xe ---", htmlAttributes: new { @class = "form-select", @style = "max-width: 100%;" })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.Category, "", new { @class = "text-danger small mt-1 d-block fw-bold" })
+                            </div>
+
+                            <!-- Nhóm nhập liệu: Trạng thái ban đầu -->
+                            <div class="form-group mb-4">
+                                @Html.LabelFor(model => model.Status, "Trạng thái ban đầu", htmlAttributes: new { @class = "custom-label" })
+                                <div class="input-group shadow-sm">
+                                    <span class="input-group-text"><i class="fas fa-traffic-light"></i></span>
+                                    @Html.EnumDropDownListFor(model => model.Status, "--- Chọn trạng thái ---", htmlAttributes: new { @class = "form-select", @style = "max-width: 100%;" })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger small mt-1 d-block fw-bold" })
+                            </div>
+
+                            <!-- Nhóm nhập liệu: Vị trí Trạm hiện tại -->
+                            <div class="form-group mb-5">
+                                @Html.LabelFor(model => model.CurrentStationId, "Gán vào Trạm (Station)", htmlAttributes: new { @class = "custom-label" })
+                                <div class="input-group shadow-sm">
+                                    <span class="input-group-text"><i class="fas fa-map-marker-alt text-danger"></i></span>
+                                    @Html.DropDownList("CurrentStationId", null, "--- Chọn trạm thả xe ---", htmlAttributes: new { @class = "form-select", @style = "max-width: 100%;" })
+                                </div>
+                                <small class="text-muted mt-1 d-block"><i class="fas fa-info-circle me-1"></i> Có thể bỏ trống nếu xe đang được di chuyển, không nằm tại trạm nào.</small>
+                                @Html.ValidationMessageFor(model => model.CurrentStationId, "", new { @class = "text-danger small mt-1 d-block fw-bold" })
+                            </div>
+
+                            <!-- Nhóm nhập liệu: Số lượng thêm mới -->
+                            <div class="form-group mb-5">
+                                <label class="custom-label">Số lượng phương tiện cần thêm</label>
+                                <div class="input-group shadow-sm">
+                                    <span class="input-group-text"><i class="fas fa-layer-group"></i></span>
+                                    <input type="number" name="quantity" class="form-control" value="1" min="1" max="50">
+                                </div>
+                                <small class="text-muted mt-1 d-block"><i class="fas fa-info-circle me-1"></i> Nhập số lượng xe bạn muốn thêm vào trạm này cùng lúc (Tối đa 50).</small>
+                            </div>
+
+                            <!-- Các nút Thao tác -->
+                            <hr class="mb-4">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <a href="@Url.Action("Index")" class="btn btn-outline-back text-decoration-none">
+                                    <i class="fas fa-arrow-left me-1"></i> Quay lại danh sách
+                                </a>
+                                <button type="submit" class="btn btn-accent shadow-sm">
+                                    <i class="fas fa-save me-1"></i> Lưu phương tiện
+                                </button>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

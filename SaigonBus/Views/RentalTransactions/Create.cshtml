@@ -1,0 +1,277 @@
+﻿@model SaigonBus.Models.RentalTransaction
+
+@{
+    ViewBag.Title = "Bắt đầu chuyến đi";
+}
+
+<!-- Nhúng thư viện FontAwesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+<style>
+    /* Ẩn thanh điều hướng mặc định */
+    .navbar {
+        display: none !important;
+    }
+
+    body {
+        padding-top: 0 !important;
+        background-color: #f4f7f6;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    :root {
+        --saigonbus-primary: #00838F;
+        --saigonbus-primary-dark: #006064;
+        --saigonbus-accent: #F39C12;
+        --saigonbus-accent-hover: #E67E22;
+        --saigonbus-light: #E0F7FA;
+    }
+
+    /* Tùy chỉnh thanh Nav (Breadcrumb) đồng bộ */
+    .custom-breadcrumb-container {
+        background-color: #ffffff;
+        border-radius: 10px;
+        padding: 0.8rem 1.5rem;
+        box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(0,0,0,0.03);
+        margin-bottom: 1.5rem;
+        display: inline-flex;
+        width: 100%;
+    }
+
+        .custom-breadcrumb-container .breadcrumb {
+            margin-bottom: 0;
+            background: transparent;
+            padding: 0;
+        }
+
+        .custom-breadcrumb-container .breadcrumb-item a {
+            color: #6c757d;
+            font-weight: 500;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+            .custom-breadcrumb-container .breadcrumb-item a:hover {
+                color: var(--saigonbus-accent);
+            }
+
+        .custom-breadcrumb-container .breadcrumb-item.active {
+            color: var(--saigonbus-primary);
+        }
+
+        .custom-breadcrumb-container .breadcrumb-item + .breadcrumb-item::before {
+            content: "›";
+            font-size: 1.4em;
+            color: #adb5bd;
+            padding: 0 0.5rem;
+        }
+
+    /* Card & Header Styles */
+    .transaction-card {
+        border-radius: 12px;
+        border: none;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        background-color: #fff;
+    }
+
+        .transaction-card .card-header {
+            background: linear-gradient(135deg, var(--saigonbus-primary) 0%, var(--saigonbus-primary-dark) 100%);
+            border-bottom: none;
+            padding: 1.5rem;
+            color: white;
+        }
+
+    /* Form Styles */
+    .custom-label {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .form-control, .form-select {
+        border-radius: 0 8px 8px 0;
+        border: 1px solid #ced4da;
+        padding: 0.7rem 1rem;
+        background-color: #f8f9fa;
+    }
+
+        .form-control:focus, .form-select:focus {
+            background-color: #fff;
+            border-color: var(--saigonbus-primary);
+            box-shadow: 0 0 0 0.25rem rgba(0, 131, 143, 0.25);
+        }
+
+    .input-group-text {
+        background-color: var(--saigonbus-light);
+        border: 1px solid #ced4da;
+        border-right: none;
+        border-radius: 8px 0 0 8px;
+        color: var(--saigonbus-primary);
+        width: 48px;
+        justify-content: center;
+        font-size: 1.1rem;
+    }
+
+    /* Button Styles */
+    .btn-accent {
+        background-color: var(--saigonbus-accent);
+        color: white;
+        border: none;
+        padding: 0.8rem 2rem;
+        transition: all 0.3s ease;
+        border-radius: 8px;
+        font-weight: bold;
+        width: 100%;
+        font-size: 1.05rem;
+    }
+
+        .btn-accent:hover {
+            background-color: var(--saigonbus-accent-hover);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(243, 156, 18, 0.3);
+        }
+
+    .btn-outline-back {
+        border: 2px solid #dee2e6;
+        color: #6c757d;
+        font-weight: bold;
+        padding: 0.8rem 1.5rem;
+        border-radius: 8px;
+        transition: all 0.3s;
+        text-decoration: none;
+        display: inline-block;
+        width: 100%;
+        text-align: center;
+    }
+
+        .btn-outline-back:hover {
+            background-color: #f8f9fa;
+            color: #343a40;
+            border-color: #ced4da;
+        }
+</style>
+
+<div class="container mt-4 mb-5">
+    <!-- Breadcrumb điều hướng -->
+    <nav aria-label="breadcrumb" class="custom-breadcrumb-container">
+        <ol class="breadcrumb align-items-center">
+            <li class="breadcrumb-item"><a href="/"><i class="fas fa-home me-1"></i> Trang chủ</a></li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Index")">Quản lý Giao dịch</a></li>
+            <li class="breadcrumb-item active fw-bold" aria-current="page">Bắt đầu chuyến mới</li>
+        </ol>
+    </nav>
+
+    <!-- Ép Form vào giữa màn hình -->
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card transaction-card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <h4 class="m-0 text-white" style="font-weight: 600; letter-spacing: 0.5px;">
+                            <i class="fas fa-key me-2"></i> Khởi tạo Giao dịch Thuê xe
+                        </h4>
+                        <p class="mb-0 mt-1" style="font-size: 0.9em; opacity: 0.85;">Ghi nhận xe rời bãi và bắt đầu tính cước phí</p>
+                    </div>
+                    <div class="text-white-50" style="font-size: 2.5rem;">
+                        <i class="fas fa-qrcode"></i>
+                    </div>
+                </div>
+
+                <div class="card-body p-4 p-md-5">
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="form-horizontal">
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger mb-4 p-3 bg-danger bg-opacity-10 rounded border border-danger border-opacity-25" })
+
+                            <!-- Thông báo hướng dẫn -->
+                            <div class="alert alert-info border-0 shadow-sm mb-4" style="background-color: #f0faff; border-left: 4px solid var(--saigonbus-primary) !important;">
+                                <small class="text-dark">
+                                    <i class="fas fa-info-circle text-primary me-1"></i>
+                                    Sau khi tạo mới, phương tiện sẽ tự động chuyển sang trạng thái <strong>Đang di chuyển</strong> và trừ khỏi tồn kho của trạm xuất phát.
+                                </small>
+                            </div>
+
+                            <div class="row g-4 mb-4">
+                                <!-- Khách hàng -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.UserId, "Mã Khách Hàng", htmlAttributes: new { @class = "custom-label" })
+                                        <div class="input-group shadow-sm">
+                                            <span class="input-group-text"><i class="fas fa-user-circle"></i></span>
+                                            @Html.EditorFor(model => model.UserId, new { htmlAttributes = new { @class = "form-control", type = "number", placeholder = "Nhập ID Khách Hàng", required = "required" } })
+                                        </div>
+                                        @Html.ValidationMessageFor(model => model.UserId, "", new { @class = "text-danger small mt-1 fw-bold" })
+                                    </div>
+                                </div>
+
+                                <!-- Phương tiện -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.VehicleId, "Mã Phương tiện", htmlAttributes: new { @class = "custom-label" })
+                                        <div class="input-group shadow-sm">
+                                            <span class="input-group-text"><i class="fas fa-bicycle"></i></span>
+                                            @Html.DropDownList("VehicleId", null, "-- Chọn xe khách thuê --", htmlAttributes: new { @class = "form-select", required = "required" })
+                                        </div>
+                                        @Html.ValidationMessageFor(model => model.VehicleId, "", new { @class = "text-danger small mt-1 fw-bold" })
+                                    </div>
+                                </div>
+
+                                <!-- Trạm nhận xe -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.StartStationId, "Trạm nhận xe (Xuất phát)", htmlAttributes: new { @class = "custom-label" })
+                                        <div class="input-group shadow-sm">
+                                            <span class="input-group-text text-primary"><i class="fas fa-map-marker-alt"></i></span>
+                                            @Html.DropDownList("StartStationId", null, "-- Chọn trạm lấy xe --", htmlAttributes: new { @class = "form-select", required = "required" })
+                                        </div>
+                                        @Html.ValidationMessageFor(model => model.StartStationId, "", new { @class = "text-danger small mt-1 fw-bold" })
+                                    </div>
+                                </div>
+
+                                <!-- Thời gian nhận -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.StartTime, "Thời gian bắt đầu thuê", htmlAttributes: new { @class = "custom-label" })
+                                        <div class="input-group shadow-sm">
+                                            <span class="input-group-text text-warning"><i class="fas fa-clock"></i></span>
+                                            <!-- Mặc định gán giờ hiện tại lúc load form -->
+                                            @Html.TextBoxFor(model => model.StartTime, "{0:yyyy-MM-ddTHH:mm}", new { @class = "form-control", type = "datetime-local", @Value = DateTime.Now.ToString("yyyy-MM-ddTHH:mm"), required = "required" })
+                                        </div>
+                                        @Html.ValidationMessageFor(model => model.StartTime, "", new { @class = "text-danger small mt-1 fw-bold" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Nút Thao tác -->
+                            <hr class="mt-4 mb-4">
+                            <div class="row g-3">
+                                <div class="col-md-5">
+                                    <a href="@Url.Action("Index")" class="btn btn-outline-back shadow-sm">
+                                        <i class="fas fa-arrow-left me-1"></i> Hủy & Quay lại
+                                    </a>
+                                </div>
+                                <div class="col-md-7">
+                                    <button type="submit" class="btn btn-accent shadow">
+                                        <i class="fas fa-play-circle me-2"></i> Xác nhận Bắt đầu chuyến đi
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

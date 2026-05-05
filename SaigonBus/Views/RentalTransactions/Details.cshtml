@@ -1,0 +1,369 @@
+﻿@model SaigonBus.Models.RentalTransaction
+
+@{
+    ViewBag.Title = "Chi tiết chuyến đi";
+}
+
+<!-- Nhúng thư viện FontAwesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+<style>
+    /* Ẩn thanh điều hướng màu đen mặc định */
+    .navbar {
+        display: none !important;
+    }
+
+    body {
+        padding-top: 0 !important;
+        background-color: #f4f7f6;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    :root {
+        --saigonbus-primary: #00838F;
+        --saigonbus-primary-dark: #006064;
+        --saigonbus-accent: #F39C12;
+        --saigonbus-accent-hover: #E67E22;
+        --saigonbus-light: #E0F7FA;
+        --saigonbus-success: #28a745;
+    }
+
+    /* Tùy chỉnh thanh Nav (Breadcrumb) */
+    .custom-breadcrumb-container {
+        background-color: #ffffff;
+        border-radius: 10px;
+        padding: 0.8rem 1.5rem;
+        box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(0,0,0,0.03);
+        margin-bottom: 1.5rem;
+        display: inline-flex;
+        width: 100%;
+    }
+
+        .custom-breadcrumb-container .breadcrumb {
+            margin-bottom: 0;
+            background: transparent;
+            padding: 0;
+        }
+
+        .custom-breadcrumb-container .breadcrumb-item a {
+            color: #6c757d;
+            font-weight: 500;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+            .custom-breadcrumb-container .breadcrumb-item a:hover {
+                color: var(--saigonbus-accent);
+            }
+
+        .custom-breadcrumb-container .breadcrumb-item.active {
+            color: var(--saigonbus-primary);
+        }
+
+        .custom-breadcrumb-container .breadcrumb-item + .breadcrumb-item::before {
+            content: "›";
+            font-size: 1.4em;
+            color: #adb5bd;
+            padding: 0 0.5rem;
+        }
+
+    /* Card Layout */
+    .detail-card {
+        border-radius: 15px;
+        border: none;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        background-color: #fff;
+    }
+
+    .detail-header {
+        background: linear-gradient(135deg, var(--saigonbus-primary) 0%, var(--saigonbus-primary-dark) 100%);
+        color: white;
+        padding: 2rem;
+        position: relative;
+    }
+
+    /* Box hiển thị thông tin */
+    .info-box {
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        padding: 1.5rem;
+        border: 1px solid #e9ecef;
+        height: 100%;
+    }
+
+    .info-label {
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #6c757d;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .info-value {
+        font-size: 1.1rem;
+        color: #2c3e50;
+        font-weight: 600;
+        margin-bottom: 1.2rem;
+    }
+
+    /* Route Timeline */
+    .route-timeline {
+        position: relative;
+        padding-left: 2rem;
+        margin-top: 1rem;
+    }
+
+        .route-timeline::before {
+            content: '';
+            position: absolute;
+            left: 6px;
+            top: 8px;
+            bottom: 8px;
+            width: 2px;
+            background-color: #dee2e6;
+        }
+
+    .route-point {
+        position: relative;
+        margin-bottom: 1.5rem;
+    }
+
+        .route-point:last-child {
+            margin-bottom: 0;
+        }
+
+        .route-point::before {
+            content: '';
+            position: absolute;
+            left: -2rem;
+            top: 4px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background-color: white;
+            border: 3px solid var(--saigonbus-primary);
+            z-index: 1;
+        }
+
+        .route-point.end::before {
+            border-color: var(--saigonbus-danger);
+        }
+
+    /* Receipt Box (Hóa đơn) */
+    .receipt-box {
+        background-color: #fff;
+        border: 2px dashed #ced4da;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: inset 0 0 20px rgba(0,0,0,0.02);
+    }
+
+    .receipt-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.8rem 0;
+        border-bottom: 1px dashed #e9ecef;
+    }
+
+        .receipt-row:last-child {
+            border-bottom: none;
+        }
+
+    .receipt-total {
+        background-color: #e8f5e9;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-top: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border: 1px solid #c8e6c9;
+    }
+
+    /* Buttons */
+    .btn-outline-back {
+        border: 2px solid #dee2e6;
+        color: #6c757d;
+        font-weight: bold;
+        padding: 0.7rem 1.5rem;
+        border-radius: 8px;
+        transition: all 0.3s;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+        .btn-outline-back:hover {
+            background-color: #f8f9fa;
+            color: #343a40;
+        }
+
+    .btn-accent {
+        background-color: var(--saigonbus-accent);
+        color: white;
+        border: none;
+        padding: 0.7rem 1.5rem;
+        transition: all 0.3s ease;
+        border-radius: 8px;
+        font-weight: bold;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+        .btn-accent:hover {
+            background-color: var(--saigonbus-accent-hover);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(243, 156, 18, 0.3);
+        }
+</style>
+
+<div class="container mt-4 mb-5">
+    <!-- Breadcrumb điều hướng -->
+    <nav aria-label="breadcrumb" class="custom-breadcrumb-container">
+        <ol class="breadcrumb align-items-center">
+            <li class="breadcrumb-item"><a href="/"><i class="fas fa-home me-1"></i> Trang chủ</a></li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Index")">Quản lý Giao dịch</a></li>
+            <li class="breadcrumb-item active fw-bold" aria-current="page">Hồ sơ chuyến đi #RT-@Model.TransactionId</li>
+        </ol>
+    </nav>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="detail-card">
+                <!-- Header Card -->
+                <div class="detail-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="m-0 fw-bold"><i class="fas fa-receipt me-2"></i> Tổng kết Chuyến đi</h3>
+                        <p class="mb-0 mt-1" style="opacity: 0.85;">Mã định danh giao dịch: <strong>#RT-@Model.TransactionId</strong></p>
+                    </div>
+                    <div class="text-end">
+                        @if (Model.EndTime != null)
+                        {
+                            <span class="badge bg-white text-success px-3 py-2 rounded-pill fs-6 shadow-sm"><i class="fas fa-check-circle me-1"></i> Đã hoàn tất</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fs-6 shadow-sm"><i class="fas fa-biking me-1"></i> Đang di chuyển</span>
+                        }
+                    </div>
+                </div>
+
+                <div class="card-body p-4 p-md-5">
+                    <div class="row g-4 mb-5">
+                        <!-- Thông tin cơ bản -->
+                        <div class="col-md-6">
+                            <div class="info-box">
+                                <h5 class="fw-bold text-primary border-bottom pb-2 mb-3"><i class="fas fa-id-card me-2"></i> Đối tượng Giao dịch</h5>
+
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="info-label">Khách hàng (ID)</div>
+                                        <div class="info-value"><i class="fas fa-user-circle text-muted me-1"></i> USER-@Model.UserId</div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="info-label">Phương tiện (ID)</div>
+                                        <div class="info-value"><i class="fas fa-bicycle text-muted me-1"></i> VH-@Model.VehicleId</div>
+                                    </div>
+                                </div>
+
+                                <div class="info-label mt-2">Thời lượng thuê xe</div>
+                                <div class="info-value text-accent fw-bold" style="color: var(--saigonbus-accent);">
+                                    <i class="fas fa-stopwatch me-1"></i>
+                                    @if (Model.EndTime.HasValue)
+                                    {
+                                        var duration = Model.EndTime.Value - Model.StartTime;
+                                        if (duration.TotalHours >= 1)
+                                        {
+                                            <span>@Math.Floor(duration.TotalHours) giờ @duration.Minutes phút</span>
+                                        }
+                                        else
+                                        {
+                                            <span>@duration.Minutes phút</span>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        var currentDuration = DateTime.Now - Model.StartTime;
+                                        <span class="fst-italic text-muted fw-normal">Đang chạy (@Math.Floor(currentDuration.TotalMinutes) phút)</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Lộ trình di chuyển -->
+                        <div class="col-md-6">
+                            <div class="info-box">
+                                <h5 class="fw-bold text-primary border-bottom pb-2 mb-3"><i class="fas fa-map-marked-alt me-2"></i> Lộ trình Di chuyển</h5>
+
+                                <div class="route-timeline">
+                                    <div class="route-point">
+                                        <div class="info-label mb-1 text-primary">Điểm nhận xe</div>
+                                        <div class="info-value mb-1">Trạm #@Model.StartStationId</div>
+                                        <div class="text-muted small"><i class="far fa-clock me-1"></i> @Model.StartTime.ToString("dd/MM/yyyy HH:mm")</div>
+                                    </div>
+
+                                    <div class="route-point end">
+                                        <div class="info-label mb-1 text-danger">Điểm trả xe</div>
+                                        @if (Model.EndStationId != null)
+                                        {
+                                            <div class="info-value mb-1">Trạm #@Model.EndStationId</div>
+                                            <div class="text-muted small"><i class="far fa-clock me-1"></i> @Model.EndTime.Value.ToString("dd/MM/yyyy HH:mm")</div>
+                                        }
+                                        else
+                                        {
+                                            <div class="info-value text-muted fst-italic mb-0">Chưa xác định (Đang di chuyển)</div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hóa đơn tính tiền -->
+                    <h5 class="fw-bold text-dark mb-3"><i class="fas fa-file-invoice-dollar text-success me-2"></i> Biên lai Điện tử</h5>
+                    <div class="receipt-box mb-4">
+                        <div class="receipt-row">
+                            <span class="fw-bold text-muted">Cước phí gốc lộ trình</span>
+                            <span class="fw-bold text-dark fs-5">
+                                @(Model.CalculatedFare.HasValue ? string.Format("{0:N0} ₫", Model.CalculatedFare) : "Đang tính...")
+                            </span>
+                        </div>
+                        <div class="receipt-row">
+                            <span class="fw-bold text-muted">Mã giảm giá áp dụng (Khuyến mãi)</span>
+                            <span class="fw-bold text-warning fs-5">
+                                @(Model.AppliedDiscount.HasValue ? string.Format("- {0:N0} ₫", Model.AppliedDiscount) : "0 ₫")
+                            </span>
+                        </div>
+                        <div class="receipt-total shadow-sm">
+                            <span class="fw-bold text-success" style="font-size: 1.2rem; text-transform: uppercase;">Tổng thanh toán</span>
+                            <span class="fw-bold text-success" style="font-size: 1.8rem;">
+                                @(Model.TotalAmount.HasValue ? string.Format("{0:N0} ₫", Model.TotalAmount) : "---")
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Buttons Thao tác -->
+                    <hr class="mt-4 mb-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a href="@Url.Action("Index")" class="btn btn-outline-back">
+                            <i class="fas fa-arrow-left me-1"></i> Quay lại
+                        </a>
+
+                        <!-- Hiển thị nút Thanh toán nếu cuốc xe chưa kết thúc -->
+                        @if (Model.EndTime == null)
+                        {
+                            <a href="@Url.Action("Edit", new { id = Model.TransactionId })" class="btn btn-accent shadow-sm">
+                                <i class="fas fa-flag-checkered me-1"></i> Chốt cước phí (Trả xe)
+                            </a>
+                        }
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

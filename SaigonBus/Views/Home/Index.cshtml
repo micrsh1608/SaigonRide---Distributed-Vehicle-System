@@ -1,0 +1,432 @@
+@{
+    ViewBag.Title = "Bảng điều khiển (Dashboard)";
+}
+
+<!-- Nhúng thư viện FontAwesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+<style>
+    /* Ẩn thanh điều hướng mặc định */
+    .navbar {
+        display: none !important;
+    }
+
+    body {
+        padding-top: 0 !important;
+        background-color: #f4f7f6;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    :root {
+        --saigonbus-primary: #00838F;
+        --saigonbus-primary-dark: #006064;
+        --saigonbus-accent: #F39C12;
+        --saigonbus-accent-hover: #E67E22;
+        --saigonbus-light: #E0F7FA;
+    }
+
+    /* Custom navbar */
+    .custom-navbar {
+        background-color: #ffffff;
+        border-radius: 10px;
+        padding: 1rem 1.5rem;
+        box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(0,0,0,0.03);
+        margin-bottom: 1.5rem;
+        width: 100%;
+    }
+
+    .nav-link-custom {
+        color: #6c757d;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.2s ease-in-out;
+        padding: 0.5rem 0;
+    }
+
+        .nav-link-custom:hover, .nav-link-custom.active {
+            color: var(--saigonbus-primary);
+            font-weight: 700;
+        }
+
+    /* Nút chuyển đổi về trang Khách */
+    .btn-switch-mode {
+        background-color: #f8d7da;
+        color: #842029;
+        font-weight: 700;
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        border: 1px solid #f5c2c7;
+    }
+
+        .btn-switch-mode:hover {
+            background-color: #dc3545;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(220, 53, 69, 0.2);
+        }
+
+    /* Bố cục Banner chính */
+    .main-banner-container {
+        margin-bottom: 2.5rem;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        background-color: var(--saigonbus-primary);
+    }
+
+    .main-banner-img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+
+    /* Dashboard Cards */
+    .dash-card {
+        background: white;
+        border-radius: 12px;
+        border: none;
+        padding: 1.5rem;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .dash-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+        }
+
+        .dash-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--saigonbus-primary);
+        }
+
+    .dash-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        margin-bottom: 1rem;
+    }
+
+    /* Màu sắc Icon cho các thẻ */
+    .icon-blue {
+        background-color: rgba(0, 131, 143, 0.1);
+        color: var(--saigonbus-primary);
+    }
+
+    .icon-orange {
+        background-color: rgba(243, 156, 18, 0.1);
+        color: var(--saigonbus-accent);
+    }
+
+    .icon-green {
+        background-color: rgba(40, 167, 69, 0.1);
+        color: #28a745;
+    }
+
+    .icon-purple {
+        background-color: rgba(111, 66, 193, 0.1);
+        color: #6f42c1;
+    }
+
+    .icon-cyan {
+        background-color: rgba(23, 162, 184, 0.1);
+        color: #17a2b8;
+    }
+
+    .icon-red {
+        background-color: rgba(220, 53, 69, 0.1);
+        color: #dc3545;
+    }
+
+    .dash-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+    }
+
+    .dash-desc {
+        font-size: 0.9rem;
+        color: #6c757d;
+        flex-grow: 1;
+        margin-bottom: 1.5rem;
+    }
+
+    /* Style các nút bấm trong thẻ */
+    .btn-dash {
+        padding: 0.6rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.2s;
+        width: 100%;
+        text-align: center;
+    }
+
+    .btn-primary-dash {
+        background-color: var(--saigonbus-primary);
+        color: white;
+    }
+
+        .btn-primary-dash:hover {
+            background-color: var(--saigonbus-primary-dark);
+            color: white;
+        }
+
+    .btn-accent-dash {
+        background-color: var(--saigonbus-accent);
+        color: white;
+    }
+
+        .btn-accent-dash:hover {
+            background-color: var(--saigonbus-accent-hover);
+            color: white;
+        }
+
+    .btn-outline-dash {
+        border: 2px solid var(--saigonbus-primary);
+        color: var(--saigonbus-primary);
+        background: transparent;
+    }
+
+        .btn-outline-dash:hover {
+            background-color: var(--saigonbus-primary);
+            color: white;
+        }
+
+    .btn-purple-dash {
+        background-color: #6f42c1;
+        color: white;
+    }
+
+        .btn-purple-dash:hover {
+            background-color: #59339d;
+            color: white;
+        }
+
+    .btn-cyan-dash {
+        background-color: #17a2b8;
+        color: white;
+    }
+
+        .btn-cyan-dash:hover {
+            background-color: #117a8b;
+            color: white;
+        }
+
+    .btn-red-dash {
+        background-color: #dc3545;
+        color: white;
+    }
+
+        .btn-red-dash:hover {
+            background-color: #b02a37;
+            color: white;
+        }
+
+    /* Responsive Navbar */
+    @@media (max-width: 991px) {
+        .custom-navbar {
+            flex-direction: column;
+            gap: 1rem;
+            text-align: center;
+        }
+
+        .nav-links-wrap {
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .border-start {
+            border-left: none !important;
+            padding-left: 0 !important;
+            margin-left: 0 !important;
+            margin-top: 0.5rem;
+            width: 100%;
+            text-align: center;
+        }
+
+        .btn-switch-mode {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>
+
+<div class="container mt-4 mb-5">
+
+    <!-- Thanh Menu Ngang của Admin -->
+    <nav class="custom-navbar d-flex justify-content-between align-items-center">
+        <div class="fw-bold text-brand" style="font-size: 1.15rem; color: var(--saigonbus-primary);">
+            <i class="fas fa-bus-alt me-2"></i> SaigonRide Admin
+        </div>
+
+        <div class="d-flex align-items-center nav-links-wrap" style="gap: 1.5rem;">
+            <a href="@Url.Action("Index", "Home")" class="nav-link-custom active">
+                <i class="fas fa-home me-1"></i> Trang chủ
+            </a>
+            <a href="@Url.Action("About", "Home")" class="nav-link-custom">
+                <i class="fas fa-info-circle me-1"></i> Về chúng tôi
+            </a>
+            <a href="@Url.Action("Contact", "Home")" class="nav-link-custom">
+                <i class="fas fa-headset me-1"></i> Liên hệ hỗ trợ
+            </a>
+
+            <!-- Nút quay về trang Khách Hàng -->
+            <div class="border-start ps-3 ms-1">
+                <a href="@Url.Action("Portal", "Home")" class="btn-switch-mode shadow-sm">
+                    <i class="fas fa-exchange-alt me-2"></i> Chuyển tài khoản
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Banner Hình Ảnh -->
+    <div class="main-banner-container">
+        <!-- Chú ý: Đảm bảo đường dẫn này khớp với tên ảnh bạn đã đặt trong thư mục Images -->
+        <img src="@Url.Content("~/Content/Images/banner.png")" alt="SaigonRide Banner" class="main-banner-img" />
+    </div>
+
+    <h4 class="fw-bold text-dark mb-4 border-bottom pb-2">
+        <i class="fas fa-th-large text-muted me-2"></i> Phân hệ Quản lý cốt lõi
+    </h4>
+
+    <!-- Lưới các chức năng chính (Đã mở rộng thành 6 Thẻ) -->
+    <div class="row g-4">
+        <!-- HÀNG 1 -->
+        <!-- Module Quản lý Xe -->
+        <div class="col-md-4">
+            <div class="dash-card">
+                <div class="dash-icon icon-blue">
+                    <i class="fas fa-bicycle"></i>
+                </div>
+                <div class="dash-title">Quản lý Phương tiện</div>
+                <div class="dash-desc">
+                    Quản lý danh sách xe đạp thường, xe đạp điện và scooter. Theo dõi tình trạng bảo trì.
+                </div>
+                <div class="mt-auto">
+                    <a href="@Url.Action("Index", "Vehicles")" class="btn btn-dash btn-primary-dash">
+                        Truy cập phân hệ <i class="fas fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Module Quản lý Trạm -->
+        <div class="col-md-4">
+            <div class="dash-card" style="border-top-color: var(--saigonbus-accent);">
+                <div class="dash-icon icon-orange">
+                    <i class="fas fa-map-marked-alt"></i>
+                </div>
+                <div class="dash-title">Quản lý Trạm đỗ</div>
+                <div class="dash-desc">
+                    Giám sát sức chứa và kiểm soát tình trạng kho bãi (trạm đầy, trạm cạn).
+                </div>
+                <div class="mt-auto">
+                    <a href="@Url.Action("Index", "Stations")" class="btn btn-dash btn-accent-dash">
+                        Truy cập phân hệ <i class="fas fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Module Giao dịch Thuê xe Cá nhân -->
+        <div class="col-md-4">
+            <div class="dash-card" style="border-top-color: #28a745;">
+                <div class="dash-icon icon-green">
+                    <i class="fas fa-exchange-alt"></i>
+                </div>
+                <div class="dash-title">Giao dịch Thuê xe</div>
+                <div class="dash-desc">
+                    Quản lý quy trình nhận/trả xe của cá nhân. Theo dõi doanh thu và lịch sử di chuyển.
+                </div>
+                <div class="mt-auto">
+                    <a href="@Url.Action("Index", "RentalTransactions")" class="btn btn-dash btn-outline-dash">
+                        Truy cập phân hệ <i class="fas fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- HÀNG 2 (TÍNH NĂNG MỚI) -->
+        <!-- Module Quản lý Khách Hàng -->
+        <div class="col-md-4">
+            <div class="dash-card" style="border-top-color: #6f42c1;">
+                <div class="dash-icon icon-purple">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="dash-title">Quản lý Khách hàng</div>
+                <div class="dash-desc">
+                    Quản lý tài khoản, lịch sử nạp tiền và điểm thưởng của khách hàng địa phương/du khách.
+                </div>
+                <div class="mt-auto">
+                    <a href="@Url.Action("Index", "Customers")" class="btn btn-dash btn-purple-dash">
+                        Truy cập phân hệ <i class="fas fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Module Thuê Xe Nhóm (Mới) -->
+        <div class="col-md-4">
+            <div class="dash-card" style="border-top-color: #17a2b8;">
+                <div class="dash-icon icon-cyan">
+                    <i class="fas fa-users-cog"></i>
+                </div>
+                <div class="dash-title">Giao dịch Thuê Nhóm</div>
+                <div class="dash-desc">
+                    Theo dõi và xử lý các cuốc xe hội nhóm (Một tài khoản đại diện thuê nhiều xe cùng lúc).
+                </div>
+                <div class="mt-auto">
+                    <a href="@Url.Action("Index", "RentalTransactionsGroup")" class="btn btn-dash btn-cyan-dash">
+                        Truy cập phân hệ <i class="fas fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Module Hỗ trợ & Phản hồi -->
+        <div class="col-md-4">
+            <div class="dash-card" style="border-top-color: #dc3545;">
+                <div class="dash-icon icon-red">
+                    <i class="fas fa-headset"></i>
+                </div>
+                <div class="dash-title">Yêu cầu Hỗ trợ</div>
+                <div class="dash-desc">
+                    Xử lý các yêu cầu từ khách hàng, phản hồi lỗi xe hỏng, khiếu nại cước phí và sự cố.
+                </div>
+                <div class="mt-auto">
+                    <a href="@Url.Action("Index", "Supports")" class="btn btn-dash btn-red-dash">
+                        Truy cập phân hệ <i class="fas fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="text-center mt-5 pt-3 border-top text-muted">
+        <small>Đồ án Phát triển phần mềm MVC - Nhóm SaigonRide &copy; @DateTime.Now.Year</small>
+    </div>
+
+</div>

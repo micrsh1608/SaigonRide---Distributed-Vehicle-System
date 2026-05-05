@@ -1,0 +1,260 @@
+@model IEnumerable<SaigonBus.Models.Vehicle>
+
+@{
+    ViewBag.Title = "Quản lý Phương tiện";
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+<style>
+    :root {
+        --saigonbus-primary: #00838F;
+        --saigonbus-primary-dark: #006064;
+        --saigonbus-accent: #F39C12;
+        --saigonbus-accent-hover: #E67E22;
+        --saigonbus-light: #E0F7FA;
+    }
+
+    /* Tùy chỉnh thanh Nav (Breadcrumb) */
+    .custom-breadcrumb-container {
+        background-color: #ffffff;
+        border-radius: 10px;
+        padding: 0.8rem 1.5rem;
+        box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(0,0,0,0.03);
+        margin-bottom: 1.5rem;
+        display: inline-flex;
+        width: 100%;
+    }
+
+    .custom-breadcrumb-container .breadcrumb {
+        margin-bottom: 0;
+        background: transparent;
+        padding: 0;
+    }
+
+    .custom-breadcrumb-container .breadcrumb-item a {
+        color: #6c757d;
+        font-weight: 500;
+        text-decoration: none;
+        transition: color 0.2s ease-in-out;
+    }
+
+    .custom-breadcrumb-container .breadcrumb-item a:hover {
+        color: var(--saigonbus-accent);
+    }
+
+    .custom-breadcrumb-container .breadcrumb-item.active {
+        color: var(--saigonbus-primary);
+    }
+
+    .custom-breadcrumb-container .breadcrumb-item + .breadcrumb-item::before {
+        content: "›";
+        font-size: 1.4em;
+        line-height: 1;
+        color: #adb5bd;
+        vertical-align: middle;
+        padding: 0 0.5rem;
+    }
+
+    /* Tùy chỉnh Card */
+    .vehicle-card {
+        border-radius: 12px;
+        border: none;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .vehicle-card .card-header {
+        background: linear-gradient(135deg, var(--saigonbus-primary) 0%, var(--saigonbus-primary-dark) 100%);
+        border-bottom: none;
+        padding: 1.5rem 1.5rem;
+        color: white;
+    }
+
+    /* Tùy chỉnh Nút bấm màu Cam điểm nhấn */
+    .btn-accent {
+        background-color: var(--saigonbus-accent);
+        color: white;
+        border: none;
+        transition: all 0.3s ease;
+    }
+
+    .btn-accent:hover {
+        background-color: var(--saigonbus-accent-hover);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(243, 156, 18, 0.3);
+    }
+
+    /* Tùy chỉnh Bảng */
+    .table-custom-header {
+        background-color: var(--saigonbus-light) !important;
+        color: var(--saigonbus-primary-dark);
+        border-bottom: 2px solid var(--saigonbus-primary);
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #f8fcfd;
+        transition: all 0.2s ease-in-out;
+    }
+
+    /* Nút thao tác nhỏ */
+    .action-btn {
+        transition: all 0.2s;
+        border-radius: 6px;
+        margin: 0 2px;
+    }
+
+    .action-btn:hover {
+        transform: scale(1.1);
+    }
+
+    /* Các style khác */
+    .empty-state-img {
+        opacity: 0.7;
+        filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.1));
+    }
+
+    .badge-status {
+        font-size: 0.85em;
+        padding: 0.5em 0.9em;
+        border-radius: 30px;
+        letter-spacing: 0.5px;
+    }
+
+    .text-brand {
+        color: var(--saigonbus-primary) !important;
+    }
+</style>
+
+<div class="container mt-4 mb-5">
+    <nav aria-label="breadcrumb" class="custom-breadcrumb-container">
+        <ol class="breadcrumb align-items-center">
+            <li class="breadcrumb-item">
+                <a href="/"><i class="fas fa-home me-1"></i> Trang chủ</a>
+            </li>
+            <li class="breadcrumb-item active text-brand fw-bold" aria-current="page">
+                Quản lý Xe (Fleet)
+            </li>
+        </ol>
+    </nav>
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert" style="border-radius: 10px;">
+            <i class="fas fa-exclamation-triangle me-2"></i> @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card vehicle-card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h4 class="m-0 font-weight-bold text-white" style="font-weight: 600; letter-spacing: 0.5px;">
+                <i class="fas fa-bus-alt me-2"></i> Danh sách Phương tiện
+            </h4>
+            <a href="@Url.Action("Create")" class="btn btn-accent fw-bold shadow-sm" style="border-radius: 8px;">
+                <i class="fas fa-plus-circle me-1"></i> Thêm xe mới
+            </a>
+        </div>
+
+        <div class="card-body p-0">
+            @if (Model != null && Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0" style="min-width: 800px;">
+                        <thead class="table-custom-header">
+                            <tr>
+                                <th class="text-center border-0" style="width: 80px; padding-top: 1rem; padding-bottom: 1rem;">STT</th>
+                                <th class="border-0">Phân loại</th>
+                                <th class="border-0">Trạng thái hiện tại</th>
+                                <th class="border-0">Vị trí Trạm</th>
+                                <th class="text-center border-0" style="width: 150px;">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-group-divider">
+                            @{ int stt = 1; }
+
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="text-center fw-bold text-secondary">
+                                        @(stt++)
+                                    </td>
+
+                                    <td>
+                                        @if (item.Category == SaigonBus.Models.VehicleCategory.StandardBike)
+                                        {
+                                            <span class="text-dark fw-bold"><i class="fas fa-bicycle text-brand me-2"></i>Xe đạp thường</span>
+                                        }
+                                        else if (item.Category == SaigonBus.Models.VehicleCategory.EBike)
+                                        {
+                                            <span class="text-dark fw-bold"><i class="fas fa-bolt text-brand me-2"></i>Xe đạp điện</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-dark fw-bold"><i class="fas fa-motorcycle text-brand me-2"></i>Scooter</span>
+                                        }
+                                    </td>
+
+                                    <td>
+                                        @if (item.Status == SaigonBus.Models.VehicleStatus.Available)
+                                        {
+                                            <span class="badge badge-status" style="background-color: #d1e7dd; color: #0f5132; border: 1px solid #badbcc;"><i class="fas fa-check-circle me-1"></i> Sẵn sàng</span>
+                                        }
+                                        else if (item.Status == SaigonBus.Models.VehicleStatus.InTransit)
+                                        {
+                                            <span class="badge badge-status" style="background-color: #cfe2ff; color: #084298; border: 1px solid #b6d4fe;"><i class="fas fa-route me-1"></i> Đang di chuyển</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-status" style="background-color: #f8d7da; color: #842029; border: 1px solid #f5c2c7;"><i class="fas fa-tools me-1"></i> Bảo trì</span>
+                                        }
+                                    </td>
+
+                                    <td>
+                                        @if (item.CurrentStation != null)
+                                        {
+                                            <span class="text-dark fw-medium"><i class="fas fa-map-marker-alt text-danger me-2"></i>@Html.DisplayFor(modelItem => item.CurrentStation.LocationName)</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted fst-italic"><i class="fas fa-info-circle me-1"></i>Đang trên đường</span>
+                                        }
+                                    </td>
+
+                                    <td class="text-center">
+                                        <a href="@Url.Action("Edit", new { id = item.VehicleId })" class="btn btn-light btn-sm text-brand action-btn border" title="Chỉnh sửa">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="@Url.Action("Details", new { id = item.VehicleId })" class="btn btn-light btn-sm text-info action-btn border" title="Chi tiết">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="@Url.Action("Delete", new { id = item.VehicleId })" class="btn btn-light btn-sm text-danger action-btn border" title="Xóa">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5 bg-white">
+                    <img src="https://cdn-icons-png.flaticon.com/512/7486/7486754.png" alt="No Data" width="120" class="empty-state-img mb-3" />
+                    <h5 class="text-brand font-weight-bold">Chưa có phương tiện nào</h5>
+                    <p class="text-muted mb-4">Hệ thống hiện tại chưa có dữ liệu xe. Hãy thêm phương tiện mới để bắt đầu quản lý.</p>
+                    <a href="@Url.Action("Create")" class="btn btn-accent fw-bold px-4 py-2" style="border-radius: 8px;">
+                        <i class="fas fa-plus me-2"></i> Thêm xe đầu tiên
+                    </a>
+                </div>
+            }
+        </div>
+
+        <div class="card-footer bg-light text-end py-3" style="border-radius: 0 0 12px 12px; border-top: 1px solid #e9ecef;">
+            <small class="text-muted">Tổng số: <span class="fw-bold text-brand fs-6 px-1">@(Model?.Count() ?? 0)</span> phương tiện trong hệ thống</small>
+        </div>
+    </div>
+</div>  

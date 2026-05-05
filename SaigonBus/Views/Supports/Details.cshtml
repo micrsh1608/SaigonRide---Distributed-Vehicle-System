@@ -1,0 +1,75 @@
+@model SaigonBus.Models.SupportRequest
+
+@{
+    ViewBag.Title = "Chi tiết Hỗ trợ";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+        <div class="card-header bg-danger text-white p-4">
+            <h4 class="mb-0"><i class="fas fa-headset me-2"></i>Phiếu hỗ trợ #TK-@Model.RequestId</h4>
+        </div>
+        <div class="card-body p-4">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="mb-4">
+                        <label class="small text-muted fw-bold text-uppercase">Khách hàng gửi yêu cầu:</label>
+                        <h5 class="fw-bold">@Model.User.FullName (@Model.User.Username)</h5>
+                    </div>
+                    <div class="mb-4">
+                        <label class="small text-muted fw-bold text-uppercase">Tiêu đề:</label>
+                        <h4 class="fw-bold text-dark">@Model.Subject</h4>
+                    </div>
+                    <div class="p-3 bg-light rounded-3 border mb-4">
+                        <label class="small text-muted fw-bold text-uppercase mb-2 d-block">Nội dung chi tiết:</label>
+                        <p class="mb-0 lead" style="white-space: pre-wrap;">@Model.Content</p>
+                    </div>
+                </div>
+                <div class="col-md-4 border-start ps-4">
+                    <div class="mb-4">
+                        <label class="small text-muted fw-bold text-uppercase">Tình trạng:</label>
+                        <div>
+                            @if (Model.Status == "Pending")
+                            {
+                                <span class="badge bg-danger fs-6 px-3 rounded-pill">Đang chờ xử lý</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success fs-6 px-3 rounded-pill">Đã giải quyết</span>
+                            }
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label class="small text-muted fw-bold text-uppercase">Thời gian tạo:</label>
+                        <div class="fw-bold">@Model.CreatedAt.ToString("HH:mm - dd/MM/yyyy")</div>
+                    </div>
+                </div>
+            </div>
+
+            <hr />
+            <div class="d-flex justify-content-between align-items-center">
+                <a href="@Url.Action("Index")" class="btn btn-outline-secondary px-4 rounded-pill"><i class="fas fa-arrow-left me-2"></i>Quay lại</a>
+                <div class="gap-2 d-flex">
+                    @if (Model.Status == "Pending")
+                    {
+                        <button onclick="resolveDirectly(@Model.RequestId)" class="btn btn-success px-4 rounded-pill fw-bold">Đánh dấu đã giải quyết</button>
+                    }
+                    <a href="@Url.Action("Delete", new { id = Model.RequestId })" class="btn btn-outline-danger px-4 rounded-pill"><i class="fas fa-trash-alt me-2"></i>Xóa phiếu</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function resolveDirectly(id) {
+        if(confirm('Bạn có chắc chắn muốn đánh dấu yêu cầu này đã được giải quyết?')) {
+            fetch('@Url.Action("ResolveRequest", "Supports")/' + id, { method: 'POST' })
+            .then(res => res.json())
+            .then(data => {
+                if(data.success) location.reload();
+                else alert('Có lỗi xảy ra');
+            });
+        }
+    }
+</script>

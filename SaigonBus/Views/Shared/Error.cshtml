@@ -1,0 +1,168 @@
+﻿@model System.Web.Mvc.HandleErrorInfo
+
+@{
+    ViewBag.Title = "Lỗi hệ thống";
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+<style>
+    /* Reset lại khoảng cách mặc định */
+    body { background-color: #f4f7f6; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+    :root {
+        --saigonbus-primary: #00838F;
+        --saigonbus-danger: #dc3545;
+        --saigonbus-accent: #F39C12;
+    }
+
+    /* Container căn giữa màn hình */
+    .error-container {
+        min-height: 75vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 15px;
+    }
+
+    /* Thẻ Card chứa nội dung lỗi */
+    .error-card {
+        border-radius: 15px;
+        border: none;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        padding: 3rem 2rem;
+        max-width: 650px;
+        width: 100%;
+        text-align: center;
+        background-color: #fff;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Vạch đỏ cảnh báo trên cùng của Card */
+    .error-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 6px;
+        background: var(--saigonbus-danger);
+    }
+
+    /* Icon cảnh báo */
+    .error-icon-wrapper {
+        display: inline-block;
+        position: relative;
+        margin-bottom: 1.5rem;
+    }
+
+    .error-icon {
+        font-size: 5.5rem;
+        color: var(--saigonbus-danger);
+        opacity: 0.9;
+    }
+
+    .error-gear {
+        position: absolute;
+        bottom: -5px;
+        right: -10px;
+        font-size: 2.5rem;
+        color: var(--saigonbus-accent);
+        animation: spin 4s linear infinite;
+    }
+
+    @@keyframes spin { 100% { transform: rotate(360deg); } }
+
+    /* Text Styles */
+    .error-title { font-weight: 800; color: #2c3e50; font-size: 2rem; letter-spacing: -0.5px; }
+    .error-desc { font-size: 1.1rem; color: #6c757d; line-height: 1.6; margin-bottom: 2rem; }
+
+    /* Button Styles */
+    .btn-brand {
+        background-color: var(--saigonbus-primary);
+        color: white;
+        border-radius: 8px;
+        padding: 0.7rem 1.8rem;
+        font-weight: 600;
+        transition: all 0.3s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        border: 2px solid var(--saigonbus-primary);
+    }
+
+    .btn-brand:hover {
+        background-color: #006064;
+        border-color: #006064;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 131, 143, 0.2);
+    }
+
+    .btn-outline-custom {
+        background-color: transparent;
+        color: var(--saigonbus-primary);
+        border: 2px solid var(--saigonbus-primary);
+        border-radius: 8px;
+        padding: 0.7rem 1.8rem;
+        font-weight: 600;
+        transition: all 0.3s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .btn-outline-custom:hover {
+        background-color: var(--saigonbus-light);
+        color: var(--saigonbus-primary-dark);
+        transform: translateY(-2px);
+    }
+
+    /* Dev Log Box */
+    .dev-log {
+        background-color: #f8d7da;
+        border: 1px solid #f5c2c7;
+        color: #842029;
+        border-radius: 8px;
+        padding: 1rem;
+        text-align: left;
+        font-size: 0.85rem;
+        margin-bottom: 2rem;
+    }
+</style>
+
+<div class="container error-container">
+    <div class="error-card">
+
+        <div class="error-icon-wrapper">
+            <i class="fas fa-server error-icon"></i>
+            <i class="fas fa-cog error-gear"></i>
+        </div>
+
+        <h1 class="error-title mb-3">Ối! Đã có sự cố xảy ra.</h1>
+        <p class="error-desc">
+            Hệ thống SaigonRide đang gặp một chút gián đoạn kỹ thuật khi xử lý yêu cầu của bạn. Đội ngũ kỹ sư của chúng tôi đã ghi nhận sự cố và đang tiến hành khắc phục.
+        </p>
+
+        @if (Model != null)
+        {
+            <div class="dev-log shadow-sm">
+                <div class="fw-bold mb-2 border-bottom border-danger pb-1"><i class="fas fa-bug me-1"></i> Báo cáo lỗi kỹ thuật (Dành cho Developer):</div>
+                <div class="mb-1"><strong>Controller:</strong> <code class="bg-white px-1 rounded text-dark">@Model.ControllerName</code></div>
+                <div class="mb-1"><strong>Action:</strong> <code class="bg-white px-1 rounded text-dark">@Model.ActionName</code></div>
+                <div class="mt-2 text-break"><strong>Chi tiết Exception:</strong> <br /> <span class="fst-italic text-danger">@Model.Exception.Message</span></div>
+            </div>
+        }
+
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <a href="@Url.Action("Index", "Home")" class="btn btn-brand">
+                <i class="fas fa-home me-2"></i> Về Trang chủ
+            </a>
+            <a href="@Url.Action("Contact", "Home")" class="btn btn-outline-custom">
+                <i class="fas fa-headset me-2"></i> Gửi yêu cầu hỗ trợ
+            </a>
+        </div>
+
+    </div>
+</div>
