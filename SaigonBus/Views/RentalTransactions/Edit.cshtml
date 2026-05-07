@@ -1,4 +1,4 @@
-﻿@model SaigonBus.Models.RentalTransaction
+@model SaigonBus.Models.RentalTransaction
 
 @{
     ViewBag.Title = "Trả xe & Thanh toán";
@@ -307,4 +307,69 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Lấy StartTime từ Model (định dạng ISO)
+            const startStr = '@Model.StartTime.ToString("yyyy-MM-ddTHH:mm:ss")';
+            const startTime = new Date(startStr);
+            const unitPrice = @(ViewBag.UnitPrice != null ? ViewBag.UnitPrice : 500);
+
+            const endStationSelect = document.getElementById("EndStationId");
+            const endTimeInput = document.getElementById("EndTime");
+            const fareInput = document.getElementById("CalculatedFare");
+            const discountInput = document.getElementById("AppliedDiscount");
+            const totalInput = document.getElementById("TotalAmount");
+
+            let stationsData = [];
+
+            // Lấy dữ liệu các trạm để biết sức chứa (Capacity) và số lượng hiện tại
+            fetch('/Stations/GetStationsData')
+                .then(res => res.json())
+                .then(data => {
+                    stationsData = data;
+                });
+
+            function recalculate() {
+                if (stationsData.length === 0) return; // Chưa tải xong data
+
+                const endStationId = endStationSelect.value;
+                const endStr = endTimeInput.value;
+
+                if (!endStationId || !endStr) return;
+
+                const endTime = new Date(endStr);
+                if (endTime < startTime) {
+                    return; // Bỏ qua nếu giờ trả nhỏ hơn giờ nhận (Sẽ có validation ở Controller xử lý)
+                }
+
+                // Tính số phút sử dụng
+                const diffMs = endTime - startTime;
+                let minutes = Math.ceil(diffMs / 60000);
+                if (minutes <= 0) minutes = 1; // Tối thiểu 1 phút
+
+                // Tính cước phí gốc
+                const baseFare = minutes * unitPrice;
+                fareInput.value = baseFare;
+
+                // Kiểm tra điều kiện giảm giá: trạm < 20% sức chứa
+                let discount = 0;
+                const station = stationsData.find(s => s.id == endStationId);
+                if (station && station.capacity > 0) {
+                    const fullness = station.currentCount / station.capacity;
+                    if (fullness < 0.2) {
+                        discount = baseFare * 0.15; // Giảm 15%
+                    }
+                }
+                discountInput.value = discount;
+
+                // Tính tổng cần thanh toán
+                totalInput.value = baseFare - discount;
+            }
+
+            // Gắn sự kiện thay đổi
+            endStationSelect.addEventListener("change", recalculate);
+            endTimeInput.addEventListener("change", recalculate);
+        });
+    </script>
 }
