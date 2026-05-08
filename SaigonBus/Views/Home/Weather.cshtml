@@ -24,7 +24,7 @@
     }
 
     body {
-        background: #eef2f7;
+        background: linear-gradient(180deg, #f6f8fb 0%, #eef2f7 100%);
         font-family: 'Be Vietnam Pro', sans-serif;
         padding-top: 0 !important;
         margin: 0;
@@ -40,7 +40,7 @@
     }
 
     .weather-sidebar {
-        background: linear-gradient(180deg, #006064 0%, #00838F 50%, #00ACC1 100%);
+        background: linear-gradient(180deg, #00897b 0%, #00695c 100%);
         color: white;
         padding: 28px 20px;
         display: flex;
@@ -88,17 +88,19 @@
         text-decoration: none;
         font-size: 0.9rem;
         font-weight: 500;
-        transition: all 0.2s;
+        transition: all 0.2s ease;
         cursor: pointer;
     }
 
         .nav-item:hover, .nav-item.active {
-            background: rgba(255,255,255,0.18);
+            background: rgba(245, 158, 11, 0.18);
             color: white;
+            transform: translateX(2px);
         }
 
         .nav-item.active {
-            background: rgba(255,255,255,0.22);
+            background: rgba(245, 158, 11, 0.18);
+            color: white;
             font-weight: 700;
         }
 
@@ -118,7 +120,7 @@
         font-weight: 700;
         letter-spacing: 1.5px;
         text-transform: uppercase;
-        color: rgba(255,255,255,0.45);
+        color: rgba(255,255,255,0.6);
         padding: 8px 14px 4px;
     }
 
@@ -272,7 +274,7 @@
     }
 
     .hero-card {
-        background: linear-gradient(135deg, #1565C0 0%, #1976D2 30%, #2196F3 60%, #29B6F6 100%);
+        background: linear-gradient(135deg, #00897b 0%, #00a896 40%, rgba(245, 158, 11, 0.85) 120%);
         border-radius: 24px;
         padding: 36px 40px;
         color: white;
@@ -294,7 +296,7 @@
             width: 280px;
             height: 280px;
             border-radius: 50%;
-            background: rgba(255,255,255,0.06);
+            background: rgba(245, 158, 11, 0.15);
         }
 
         .hero-card::after {
@@ -358,11 +360,13 @@
         font-size: 1.1rem;
         font-weight: 600;
         margin-bottom: 4px;
+        color: rgba(255,255,255,0.9);
     }
 
     .hero-feels {
         font-size: 0.82rem;
         opacity: 0.75;
+        color: rgba(255,255,255,0.75);
     }
 
     .hero-right {
@@ -436,10 +440,14 @@
     .w-card {
         background: var(--card-bg);
         border-radius: var(--radius);
-        padding: 22px 24px;
-        box-shadow: var(--shadow-card);
+        box-shadow: var(--shadow);
         border: 1px solid rgba(0,0,0,0.04);
+        transition: 0.2s ease;
     }
+        .w-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
 
     .card-title {
         font-size: 0.8rem;
@@ -478,8 +486,9 @@
     }
 
         .hourly-item:hover, .hourly-item.active {
-            background: var(--primary-light);
-            border-color: var(--primary);
+            background: var(--accent-soft);
+            border-color: var(--accent);
+            color: #1f2937;
         }
 
         .hourly-item.active {
@@ -583,7 +592,7 @@
     .temp-bar-fill {
         height: 100%;
         border-radius: 4px;
-        background: linear-gradient(90deg, #42A5F5, #FF7043);
+        background: linear-gradient(90deg, #00897b, #f59e0b);
     }
 
     .aqi-number {
@@ -597,8 +606,8 @@
 
     .aqi-label {
         display: inline-block;
-        background: #dcfce7;
-        color: #166534;
+        background: var(--accent-soft);
+        color: #92400e;
         font-size: 0.75rem;
         font-weight: 700;
         padding: 3px 10px;
@@ -751,8 +760,8 @@
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        background: #dcfce7;
-        color: #166534;
+        background: var(--accent-soft);
+        color: #92400e;
         font-size: 0.72rem;
         font-weight: 700;
         padding: 4px 10px;

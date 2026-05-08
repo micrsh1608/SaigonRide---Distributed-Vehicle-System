@@ -133,6 +133,7 @@
     <Compile Include="Controllers\StationsController.cs" />
     <Compile Include="Controllers\SupportsController.cs" />
     <Compile Include="Controllers\VehiclesController.cs" />
+    <Compile Include="Controllers\WeatherController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -155,6 +156,10 @@
     <Compile Include="Migrations\202605050850032_FixGroupRental.cs" />
     <Compile Include="Migrations\202605050850032_FixGroupRental.Designer.cs">
       <DependentUpon>202605050850032_FixGroupRental.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202605081742055_AddPointToUser.cs" />
+    <Compile Include="Migrations\202605081742055_AddPointToUser.Designer.cs">
+      <DependentUpon>202605081742055_AddPointToUser.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Admin.cs" />
@@ -244,6 +249,7 @@
     <Content Include="Views\RentalTransactionsGroup\Details.cshtml" />
     <Content Include="Views\RentalTransactionsGroup\Delete.cshtml" />
     <Content Include="Views\Home\Weather.cshtml" />
+    <Content Include="Views\Home\MemberRank.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -290,6 +296,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202605050850032_FixGroupRental.resx">
       <DependentUpon>202605050850032_FixGroupRental.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202605081742055_AddPointToUser.resx">
+      <DependentUpon>202605081742055_AddPointToUser.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
