@@ -278,6 +278,19 @@
             </div>
         </div>
 
+        <!-- Khuyến mãi -->
+        <div class="promo-card bg-white p-3 rounded-4 shadow-sm mb-4" style="max-width: 600px; margin: 0 auto; border: 1px solid #e2e8f0;">
+            <label class="fw-bold small text-muted mb-2 text-uppercase">Mã giảm giá (Khuyến mãi)</label>
+            <div class="d-flex gap-2">
+                <div class="input-group shadow-sm">
+                    <span class="input-group-text bg-light border-end-0"><i class="fas fa-ticket-alt text-warning"></i></span>
+                    <input type="text" id="promo-code-input" class="form-control border-start-0 ps-0 text-uppercase fw-bold" placeholder="Nhập mã...">
+                </div>
+                <button class="btn btn-dark fw-bold px-4 rounded-3 shadow-sm" onclick="applyPromoCode()">Áp dụng</button>
+            </div>
+            <div id="promo-message" class="small mt-2 d-none fw-bold"></div>
+        </div>
+
         <!-- Cổng thanh toán -->
         <div class="payment-methods">
             <div class="method-title">Nguồn tiền thanh toán</div>
@@ -361,11 +374,11 @@
                 // Chèn dòng giảm giá vào trước dòng Tổng cộng
                 const totalRow = document.querySelector('.invoice-row.total');
                 const discountHtml = `
-                        <div class="invoice-row text-danger fw-bold">
-                            <span><i class="fas fa-gift me-2"></i>Giảm giá 15% (Hỗ trợ điều phối):</span>
-                            <span>- ${formatVND(rideDiscount)}</span>
-                        </div>
-                    `;
+                                <div class="invoice-row text-danger fw-bold">
+                                    <span><i class="fas fa-gift me-2"></i>Giảm giá 15% (Hỗ trợ điều phối):</span>
+                                    <span>- ${formatVND(rideDiscount)}</span>
+                                </div>
+                            `;
                 totalRow.insertAdjacentHTML('beforebegin', discountHtml);
             }
 
@@ -378,9 +391,74 @@
 
             // Cảnh báo nếu số dư ví không đủ
             if (userBalance < rideFinal) {
-                document.getElementById('wallet-balance-text').innerHTML += ` <span class="text-danger">(Không đủ số dư)</span>`;
+                document.getElementById('wallet-balance-text').innerHTML += ` <span id="balance-warning" class="text-danger">(Không đủ số dư)</span>`;
             }
         };
+
+        let promoDiscount = 0;
+        let isPromoApplied = false;
+
+        function applyPromoCode() {
+            if (isPromoApplied) {
+                alert("Bạn đã áp dụng một mã khuyến mãi cho chuyến đi này rồi!");
+                return;
+            }
+
+            const codeInput = document.getElementById("promo-code-input");
+            const code = codeInput.value.trim().toUpperCase();
+            const msgEl = document.getElementById("promo-message");
+            msgEl.classList.remove('d-none', 'text-success', 'text-danger');
+
+            if (code === "") {
+                msgEl.innerText = "Vui lòng nhập mã khuyến mãi.";
+                msgEl.classList.add('text-danger');
+                return;
+            }
+
+            // Mock logic: 2 promo codes SAIGON10 (10% off) and GIAMGIA20K (20,000 off)
+            if (code === "SAIGON10" || code === "WELCOME") {
+                promoDiscount = rideTotal * 0.10;
+                msgEl.innerText = "Tuyệt vời! Bạn được giảm thêm 10%.";
+            } else if (code === "GIAMGIA20K") {
+                promoDiscount = 20000;
+                msgEl.innerText = "Áp dụng thành công voucher giảm 20K.";
+            } else {
+                msgEl.innerText = "Mã khuyến mãi không hợp lệ hoặc đã hết hạn.";
+                msgEl.classList.add('text-danger');
+                return;
+            }
+
+            // If it reaches here, promo is successfully applied
+            isPromoApplied = true;
+            codeInput.disabled = true;
+            msgEl.classList.add('text-success');
+
+            // Insert into invoice visually
+            const totalRow = document.querySelector('.invoice-row.total');
+            const promoHtml = `
+                            <div class="invoice-row text-success fw-bold" id="promo-row">
+                                <span><i class="fas fa-tag me-2"></i>Mã KM [${code}]:</span>
+                                <span>- ${formatVND(promoDiscount)}</span>
+                            </div>
+                        `;
+            totalRow.insertAdjacentHTML('beforebegin', promoHtml);
+
+            // Recalculate Final
+            rideFinal = rideTotal - rideDiscount - promoDiscount;
+            if (rideFinal < 0) rideFinal = 0;
+
+            let formattedFinal = formatVND(rideFinal);
+            document.getElementById('display-total').innerText = formattedFinal;
+            document.getElementById('display-total-bottom').innerText = formattedFinal;
+            document.getElementById('btn-total').innerText = formattedFinal;
+
+            // Re-check balance warning
+            const warningEl = document.getElementById('balance-warning');
+            document.getElementById('wallet-balance-text').innerText = formatVND(userBalance);
+            if (userBalance < rideFinal) {
+                document.getElementById('wallet-balance-text').innerHTML += ` <span id="balance-warning" class="text-danger">(Không đủ số dư)</span>`;
+            }
+        }
 
         // Hàm chọn cổng thanh toán
         function selectMethod(element, method) {
@@ -409,7 +487,8 @@
                 body: JSON.stringify({
                     vehicleType: rideType,
                     duration: rideMins,
-                    totalCost: rideTotal,
+                    totalCost: rideTotal, // Gửi cước phí gốc
+                    discountAmount: rideDiscount + promoDiscount, // Gửi tổng mức giảm giá để Backend lưu chuẩn xác
                     startStationId: parseInt(startStationId),
                     endStationId: parseInt(endStationId),
                     paymentMethod: selectedMethod

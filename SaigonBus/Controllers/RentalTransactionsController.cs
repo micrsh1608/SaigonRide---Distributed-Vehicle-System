@@ -82,6 +82,28 @@ namespace SaigonBus.Controllers
             }
             ViewBag.VehicleId = new SelectList(db.Vehicles, "VehicleId", "VehicleId", rentalTransaction.VehicleId);
             ViewBag.EndStationId = new SelectList(db.Stations, "StationId", "LocationName", rentalTransaction.EndStationId);
+
+            // Fetch Vehicle Category to determine Unit Price
+            var vehicle = db.Vehicles.Find(rentalTransaction.VehicleId);
+            decimal unitPrice = 500; // default (StandardBike)
+            if (vehicle != null)
+            {
+                switch (vehicle.Category)
+                {
+                    case VehicleCategory.EBike:
+                        unitPrice = 1500;
+                        break;
+                    case VehicleCategory.Scooter:
+                        unitPrice = 1000;
+                        break;
+                    case VehicleCategory.StandardBike:
+                    default:
+                        unitPrice = 500;
+                        break;
+                }
+            }
+            ViewBag.UnitPrice = unitPrice;
+
             return View(rentalTransaction);
         }
 
@@ -212,7 +234,7 @@ namespace SaigonBus.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public JsonResult SaveTrip(string vehicleType, int duration, decimal totalCost, int startStationId, int endStationId, string paymentMethod = "wallet")
+        public JsonResult SaveTrip(string vehicleType, int duration, decimal totalCost, int startStationId, int endStationId, decimal discountAmount = 0, string paymentMethod = "wallet")
         {
             try
             {
@@ -263,18 +285,10 @@ namespace SaigonBus.Controllers
                         if (vehicle.VehicleId == 0) { db.Vehicles.Add(vehicle); db.SaveChanges(); }
                     }
 
-                    // Tính lại tiền và giảm giá nếu trạm trả đang thiếu xe (<20%)
-                    decimal finalAmount = totalCost;
-                    decimal discount = 0;
-                    if (endStation != null)
-                    {
-                        double fullness = (double)endStation.CurrentInventoryCount / endStation.CapacityLimit;
-                        if (fullness < 0.2)
-                        {
-                            discount = totalCost * 0.15m;
-                            finalAmount = totalCost - discount;
-                        }
-                    }
+                    // Không tự tính lại discount ở Backend nữa vì Client đã gửi lên (bao gồm cả Promo Code và Giảm giá 15% trạm)
+                    // để tránh lỗi Double Discount.
+                    decimal finalAmount = totalCost - discountAmount;
+                    decimal discount = discountAmount;
 
                     // 3. LƯU GIAO DỊCH THUÊ XE
                     var newTransaction = new RentalTransaction
