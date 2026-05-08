@@ -69,6 +69,53 @@
             align-items: center;
         }
 
+        /* === WEATHER WIDGET NAVBAR === */
+        .nav-weather-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: linear-gradient(135deg, #e0f7fa, #b2ebf2);
+            color: #00695c;
+            font-weight: 700;
+            font-size: 0.88rem;
+            border-radius: 20px;
+            padding: 6px 14px;
+            text-decoration: none;
+            border: 1.5px solid rgba(0, 137, 123, 0.2);
+            transition: all 0.25s ease;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+            .nav-weather-pill:hover {
+                background: linear-gradient(135deg, #00897b, #00695c);
+                color: white;
+                border-color: transparent;
+                box-shadow: 0 4px 12px rgba(0, 137, 123, 0.3);
+                transform: translateY(-1px);
+                text-decoration: none;
+            }
+
+        .nav-weather-temp {
+            font-weight: 800;
+            font-size: 0.9rem;
+            letter-spacing: -0.3px;
+        }
+
+        .nav-weather-live {
+            width: 6px;
+            height: 6px;
+            background: #22c55e;
+            border-radius: 50%;
+            animation: live-blink 1.8s infinite;
+            flex-shrink: 0;
+        }
+
+        @@keyframes live-blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.25; }
+        }
+
         .nav-link-custom {
             color: #64748b;
             font-weight: 700;
@@ -753,6 +800,13 @@
                 <a href="javascript:location.reload();" class="nav-link-custom active"><i class="fas fa-home me-1"></i> Trang chủ</a>
                 <a href="@Url.Action("About", "Home")" class="nav-link-custom"><i class="fas fa-info-circle me-1"></i> Về chúng tôi</a>
                 <a href="@Url.Action("Contact", "Home")" class="nav-link-custom"><i class="fas fa-headset me-1"></i> Hỗ trợ</a>
+
+                <!-- Widget Thời tiết Realtime (Task 5) -->
+                <a href="@Url.Action("Weather", "Home")" class="nav-weather-pill" id="navWeatherPill" title="Xem thời tiết chi tiết">
+                    <span id="navWeatherIcon">⛅</span>
+                    <span class="nav-weather-temp" id="navWeatherTemp">--°C</span>
+                    <div class="nav-weather-live"></div>
+                </a>
             </div>
 
             <div class="d-flex align-items-center gap-3">
@@ -1689,6 +1743,33 @@
             // Render toàn bộ lịch sử khi vừa vào web
             renderAllHistory();
         };
+    </script>
+
+    <!-- Script lấy thời tiết realtime cho navbar -->
+    <script>
+        (async function () {
+            function getWeatherIcon(code) {
+                if (code === 0) return '☀️';
+                if (code <= 2) return '⛅';
+                if (code <= 3) return '☁️';
+                if (code <= 48) return '🌫️';
+                if (code <= 67) return '🌧️';
+                if (code <= 99) return '⛈️';
+                return '🌡️';
+            }
+            try {
+                const res = await fetch(
+                    'https://api.open-meteo.com/v1/forecast?latitude=10.8231&longitude=106.6297&current_weather=true&timezone=Asia%2FHo_Chi_Minh'
+                );
+                const data = await res.json();
+                const cw = data.current_weather;
+                document.getElementById('navWeatherTemp').textContent = Math.round(cw.temperature) + '°C';
+                document.getElementById('navWeatherIcon').textContent = getWeatherIcon(cw.weathercode);
+            } catch (e) {
+                document.getElementById('navWeatherTemp').textContent = '32°C';
+                document.getElementById('navWeatherIcon').textContent = '⛅';
+            }
+        })();
     </script>
 </body>
 </html>

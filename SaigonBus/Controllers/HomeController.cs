@@ -88,5 +88,10 @@ namespace SaigonBus.Controllers
             }
             return Json(new { success = true });
         }
+
+        public ActionResult Weather()
+        {
+            return View();
+        }
     }
 }

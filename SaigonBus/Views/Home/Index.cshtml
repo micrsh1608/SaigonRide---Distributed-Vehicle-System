@@ -157,6 +157,22 @@
         color: #dc3545;
     }
 
+    /* === MÀU MỚI CHO WEATHER CARD === */
+    .icon-sky {
+        background-color: rgba(2, 136, 209, 0.1);
+        color: #0288D1;
+    }
+
+    .btn-sky-dash {
+        background-color: #0288D1;
+        color: white;
+    }
+
+        .btn-sky-dash:hover {
+            background-color: #0277BD;
+            color: white;
+        }
+
     .dash-title {
         font-size: 1.1rem;
         font-weight: 600;
@@ -244,6 +260,52 @@
             color: white;
         }
 
+    /* === WEATHER NAV BADGE === */
+    .nav-weather-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        background: linear-gradient(135deg, #e0f7fa, #b2ebf2);
+        color: #006064;
+        font-weight: 600;
+        font-size: 0.88rem;
+        border-radius: 20px;
+        padding: 6px 14px;
+        text-decoration: none;
+        border: 1.5px solid rgba(0, 131, 143, 0.2);
+        transition: all 0.25s ease;
+        white-space: nowrap;
+    }
+
+        .nav-weather-btn:hover {
+            background: linear-gradient(135deg, #00838F, #006064);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 12px rgba(0, 131, 143, 0.3);
+            transform: translateY(-1px);
+        }
+
+    .nav-weather-temp {
+        font-family: 'Courier New', monospace;
+        font-weight: 700;
+        font-size: 0.9rem;
+        letter-spacing: -0.5px;
+    }
+
+    .nav-weather-dot {
+        width: 6px;
+        height: 6px;
+        background: #22c55e;
+        border-radius: 50%;
+        animation: blink-dot 1.8s infinite;
+        flex-shrink: 0;
+    }
+
+    @@keyframes blink-dot {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.3; }
+    }
+
     /* Responsive Navbar */
     @@media (max-width: 991px) {
         .custom-navbar {
@@ -292,6 +354,13 @@
                 <i class="fas fa-headset me-1"></i> Liên hệ hỗ trợ
             </a>
 
+            <!-- Nút Thời tiết realtime (Task 5) -->
+            <a href="@Url.Action("Weather", "Home")" class="nav-weather-btn" id="navWeatherBtn" title="Xem thời tiết chi tiết">
+                <span id="navWeatherIcon">⛅</span>
+                <span class="nav-weather-temp" id="navWeatherTemp">--°C</span>
+                <div class="nav-weather-dot"></div>
+            </a>
+
             <!-- Nút quay về trang Khách Hàng -->
             <div class="border-start ps-3 ms-1">
                 <a href="@Url.Action("Portal", "Home")" class="btn-switch-mode shadow-sm">
@@ -311,7 +380,7 @@
         <i class="fas fa-th-large text-muted me-2"></i> Phân hệ Quản lý cốt lõi
     </h4>
 
-    <!-- Lưới các chức năng chính (Đã mở rộng thành 6 Thẻ) -->
+    <!-- Lưới các chức năng chính -->
     <div class="row g-4">
         <!-- HÀNG 1 -->
         <!-- Module Quản lý Xe -->
@@ -368,7 +437,7 @@
             </div>
         </div>
 
-        <!-- HÀNG 2 (TÍNH NĂNG MỚI) -->
+        <!-- HÀNG 2 -->
         <!-- Module Quản lý Khách Hàng -->
         <div class="col-md-4">
             <div class="dash-card" style="border-top-color: #6f42c1;">
@@ -387,7 +456,7 @@
             </div>
         </div>
 
-        <!-- Module Thuê Xe Nhóm (Mới) -->
+        <!-- Module Thuê Xe Nhóm -->
         <div class="col-md-4">
             <div class="dash-card" style="border-top-color: #17a2b8;">
                 <div class="dash-icon icon-cyan">
@@ -422,6 +491,25 @@
                 </div>
             </div>
         </div>
+
+        <!-- HÀNG 3 -->
+        <div class="col-md-4">
+            <div class="dash-card" style="border-top-color: #0288D1;">
+                <div class="dash-icon icon-sky">
+                    <i class="fas fa-cloud-sun"></i>
+                </div>
+                <div class="dash-title">Thời tiết & GPS</div>
+                <div class="dash-desc">
+                    Xem thời tiết realtime theo vị trí GPS. Dự báo theo giờ, dự báo 7 ngày và chỉ số chất lượng không khí AQI.
+                </div>
+                <div class="mt-auto">
+                    <a href="@Url.Action("Weather", "Home")" class="btn btn-dash btn-sky-dash">
+                        Xem thời tiết <i class="fas fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <!-- Footer -->
@@ -430,3 +518,34 @@
     </div>
 
 </div>
+
+<script>
+    // Lấy thời tiết realtime cho navbar (TP.HCM mặc định)
+    (async function () {
+        try {
+            const res = await fetch(
+                'https://api.open-meteo.com/v1/forecast?latitude=10.8231&longitude=106.6297&current_weather=true&timezone=Asia%2FHo_Chi_Minh'
+            );
+            const data = await res.json();
+            const cw = data.current_weather;
+            const temp = Math.round(cw.temperature);
+
+            function getIcon(code) {
+                if (code === 0) return '☀️';
+                if (code <= 2) return '⛅';
+                if (code <= 3) return '☁️';
+                if (code <= 48) return '🌫️';
+                if (code <= 67) return '🌧️';
+                if (code <= 99) return '⛈️';
+                return '🌡️';
+            }
+
+            document.getElementById('navWeatherTemp').textContent = temp + '°C';
+            document.getElementById('navWeatherIcon').textContent = getIcon(cw.weathercode);
+        } catch (e) {
+            // Fallback nếu không có mạng
+            document.getElementById('navWeatherTemp').textContent = '32°C';
+            document.getElementById('navWeatherIcon').textContent = '⛅';
+        }
+    })();
+</script>
