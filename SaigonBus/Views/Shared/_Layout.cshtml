@@ -8,10 +8,7 @@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 
-    <link rel="stylesheet"
-      href="~/Content/site-custom.css" />
-    <link rel="stylesheet"
-      href="~/Content/darkmode.css" />
+    <link rel="stylesheet" href="~/Content/site-custom.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
     <style>
@@ -22,6 +19,7 @@
             /* Reset padding của template mặc định */
             padding-top: 0 !important;
             padding-bottom: 0 !important;
+            margin: 0;
         }
 
         /* Định nghĩa biến màu CSS Global (Toàn cục) */
@@ -41,38 +39,11 @@
     </style>
 </head>
 <body>
-
-    <div style="padding: 10px; text-align: right;">
-
-    <button
-        onclick="toggleDarkMode()"
-        class="primary-btn">
-
-        🌙 Dark Mode
-
-    </button>
-
-</div>
-
-<div style="padding: 10px;">
-
-    <a href="/Feedbacks"
-       class="primary-btn">
-
-       Feedback
-
-    </a>
-
-</div>
-    <main>
-        @RenderBody()
-    </main>
+    @RenderBody()
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
-    <script src="~/Scripts/darkmode.js"></script>
 
     @RenderSection("scripts", required: false)
-
 </body>
 </html>

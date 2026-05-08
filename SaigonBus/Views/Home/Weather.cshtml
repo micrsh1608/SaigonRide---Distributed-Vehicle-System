@@ -27,14 +27,15 @@
         background: #eef2f7;
         font-family: 'Be Vietnam Pro', sans-serif;
         padding-top: 0 !important;
+        margin: 0;
+        overflow-x: hidden;
     }
 
     .weather-wrapper {
         display: grid;
         grid-template-columns: 260px 1fr;
         min-height: 100vh;
-        max-width: 1360px;
-        margin: 0 auto;
+        width: 100%;
         gap: 0;
     }
 
@@ -59,23 +60,23 @@
         border-bottom: 1px solid rgba(255,255,255,0.15);
     }
 
-    .sidebar-logo .logo-icon {
-        width: 40px;
-        height: 40px;
-        background: rgba(255,255,255,0.2);
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.2rem;
-    }
+        .sidebar-logo .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
 
-    .sidebar-logo span {
-        font-family: 'Outfit', sans-serif;
-        font-weight: 700;
-        font-size: 1.05rem;
-        letter-spacing: 0.3px;
-    }
+        .sidebar-logo span {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 1.05rem;
+            letter-spacing: 0.3px;
+        }
 
     .nav-item {
         display: flex;
@@ -91,17 +92,20 @@
         cursor: pointer;
     }
 
-    .nav-item:hover, .nav-item.active {
-        background: rgba(255,255,255,0.18);
-        color: white;
-    }
+        .nav-item:hover, .nav-item.active {
+            background: rgba(255,255,255,0.18);
+            color: white;
+        }
 
-    .nav-item.active {
-        background: rgba(255,255,255,0.22);
-        font-weight: 700;
-    }
+        .nav-item.active {
+            background: rgba(255,255,255,0.22);
+            font-weight: 700;
+        }
 
-    .nav-item i { width: 18px; text-align: center; }
+        .nav-item i {
+            width: 18px;
+            text-align: center;
+        }
 
     .sidebar-divider {
         height: 1px;
@@ -126,17 +130,17 @@
         text-align: center;
     }
 
-    .sidebar-promo .promo-icon {
-        font-size: 2rem;
-        margin-bottom: 8px;
-    }
+        .sidebar-promo .promo-icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
 
-    .sidebar-promo p {
-        font-size: 0.8rem;
-        color: rgba(255,255,255,0.8);
-        margin-bottom: 12px;
-        line-height: 1.4;
-    }
+        .sidebar-promo p {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
 
     .btn-promo {
         background: white;
@@ -152,7 +156,10 @@
         display: inline-block;
     }
 
-    .btn-promo:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .btn-promo:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
 
     .weather-main {
         padding: 28px 28px 40px;
@@ -173,32 +180,32 @@
         position: relative;
     }
 
-    .search-box input {
-        width: 100%;
-        padding: 12px 20px 12px 44px;
-        border-radius: 50px;
-        border: 1.5px solid #e0e6ef;
-        background: white;
-        font-size: 0.9rem;
-        font-family: 'Be Vietnam Pro', sans-serif;
-        outline: none;
-        transition: all 0.2s;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-    }
+        .search-box input {
+            width: 100%;
+            padding: 12px 20px 12px 44px;
+            border-radius: 50px;
+            border: 1.5px solid #e0e6ef;
+            background: white;
+            font-size: 0.9rem;
+            font-family: 'Be Vietnam Pro', sans-serif;
+            outline: none;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
 
-    .search-box input:focus {
-        border-color: var(--primary);
-        box-shadow: 0 0 0 3px rgba(0,131,143,0.12);
-    }
+            .search-box input:focus {
+                border-color: var(--primary);
+                box-shadow: 0 0 0 3px rgba(0,131,143,0.12);
+            }
 
-    .search-box i {
-        position: absolute;
-        left: 16px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: var(--text-muted);
-        font-size: 0.9rem;
-    }
+        .search-box i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
 
     .topbar-right {
         display: flex;
@@ -222,11 +229,11 @@
         box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     }
 
-    .btn-gps:hover {
-        background: var(--primary);
-        color: white;
-        border-color: var(--primary);
-    }
+        .btn-gps:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
 
     .gps-dot {
         width: 8px;
@@ -238,8 +245,15 @@
     }
 
     @@keyframes pulse-dot {
-        0%, 100% { opacity: 1; transform: scale(1); }
-        50% { opacity: 0.6; transform: scale(1.3); }
+        0%, 100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        50% {
+            opacity: 0.6;
+            transform: scale(1.3);
+        }
     }
 
     .avatar-btn {
@@ -272,29 +286,32 @@
         align-items: center;
     }
 
-    .hero-card::before {
-        content: '';
-        position: absolute;
-        top: -60px;
-        right: -60px;
-        width: 280px;
-        height: 280px;
-        border-radius: 50%;
-        background: rgba(255,255,255,0.06);
-    }
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: -60px;
+            right: -60px;
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.06);
+        }
 
-    .hero-card::after {
-        content: '';
-        position: absolute;
-        bottom: -80px;
-        left: 30%;
-        width: 200px;
-        height: 200px;
-        border-radius: 50%;
-        background: rgba(255,255,255,0.04);
-    }
+        .hero-card::after {
+            content: '';
+            position: absolute;
+            bottom: -80px;
+            left: 30%;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.04);
+        }
 
-    .hero-left { position: relative; z-index: 2; }
+    .hero-left {
+        position: relative;
+        z-index: 2;
+    }
 
     .hero-city {
         font-size: 1.6rem;
@@ -325,13 +342,13 @@
         letter-spacing: -4px;
     }
 
-    .hero-temp sup {
-        font-size: 2rem;
-        font-weight: 500;
-        vertical-align: top;
-        margin-top: 12px;
-        letter-spacing: 0;
-    }
+        .hero-temp sup {
+            font-size: 2rem;
+            font-weight: 500;
+            vertical-align: top;
+            margin-top: 12px;
+            letter-spacing: 0;
+        }
 
     .hero-weather-info {
         padding-top: 8px;
@@ -364,26 +381,26 @@
         border: 1px solid rgba(255,255,255,0.15);
     }
 
-    .hero-stat .stat-label {
-        font-size: 0.72rem;
-        opacity: 0.7;
-        text-transform: uppercase;
-        letter-spacing: 0.8px;
-        margin-bottom: 6px;
-        font-weight: 600;
-    }
+        .hero-stat .stat-label {
+            font-size: 0.72rem;
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
 
-    .hero-stat .stat-value {
-        font-size: 1.15rem;
-        font-weight: 700;
-        font-family: 'Outfit', sans-serif;
-    }
+        .hero-stat .stat-value {
+            font-size: 1.15rem;
+            font-weight: 700;
+            font-family: 'Outfit', sans-serif;
+        }
 
-    .hero-stat .stat-icon {
-        font-size: 0.8rem;
-        opacity: 0.6;
-        margin-right: 4px;
-    }
+        .hero-stat .stat-icon {
+            font-size: 0.8rem;
+            opacity: 0.6;
+            margin-right: 4px;
+        }
 
     .weather-icon-anim {
         font-size: 4.5rem;
@@ -393,8 +410,13 @@
     }
 
     @@keyframes float-icon {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-8px); }
+        0%, 100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-8px);
+        }
     }
 
     .cards-grid {
@@ -431,7 +453,9 @@
         gap: 8px;
     }
 
-    .card-title i { color: var(--primary); }
+        .card-title i {
+            color: var(--primary);
+        }
 
     .hourly-scroll {
         display: flex;
@@ -453,25 +477,49 @@
         border: 1.5px solid transparent;
     }
 
-    .hourly-item:hover, .hourly-item.active {
-        background: var(--primary-light);
-        border-color: var(--primary);
+        .hourly-item:hover, .hourly-item.active {
+            background: var(--primary-light);
+            border-color: var(--primary);
+        }
+
+        .hourly-item.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+            .hourly-item.active .hourly-time {
+                color: rgba(255,255,255,0.75);
+            }
+
+            .hourly-item.active .hourly-temp {
+                color: white;
+            }
+
+    .hourly-time {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+        margin-bottom: 8px;
+        font-weight: 500;
     }
 
-    .hourly-item.active {
-        background: var(--primary);
-        color: white;
-        border-color: var(--primary);
+    .hourly-icon {
+        font-size: 1.5rem;
+        margin-bottom: 6px;
     }
 
-    .hourly-item.active .hourly-time { color: rgba(255,255,255,0.75); }
-    .hourly-item.active .hourly-temp { color: white; }
+    .hourly-temp {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: var(--text-main);
+        font-family: 'Outfit', sans-serif;
+    }
 
-    .hourly-time { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 8px; font-weight: 500; }
-    .hourly-icon { font-size: 1.5rem; margin-bottom: 6px; }
-    .hourly-temp { font-size: 0.95rem; font-weight: 700; color: var(--text-main); font-family: 'Outfit', sans-serif; }
-
-    .daily-list { display: flex; flex-direction: column; gap: 10px; }
+    .daily-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
 
     .daily-item {
         display: flex;
@@ -483,11 +531,27 @@
         cursor: pointer;
     }
 
-    .daily-item:hover { background: #f6f9fc; }
+        .daily-item:hover {
+            background: #f6f9fc;
+        }
 
-    .daily-day { font-size: 0.88rem; font-weight: 600; color: var(--text-main); min-width: 50px; }
-    .daily-icon { font-size: 1.4rem; flex-shrink: 0; }
-    .daily-desc { font-size: 0.8rem; color: var(--text-muted); flex: 1; }
+    .daily-day {
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: var(--text-main);
+        min-width: 50px;
+    }
+
+    .daily-icon {
+        font-size: 1.4rem;
+        flex-shrink: 0;
+    }
+
+    .daily-desc {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        flex: 1;
+    }
 
     .daily-temps {
         display: flex;
@@ -496,8 +560,17 @@
         font-family: 'Outfit', sans-serif;
     }
 
-    .temp-high { font-size: 0.95rem; font-weight: 700; color: var(--text-main); }
-    .temp-low { font-size: 0.85rem; font-weight: 400; color: var(--text-muted); }
+    .temp-high {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: var(--text-main);
+    }
+
+    .temp-low {
+        font-size: 0.85rem;
+        font-weight: 400;
+        color: var(--text-muted);
+    }
 
     .temp-bar-track {
         width: 60px;
@@ -566,19 +639,34 @@
         margin: 12px 0;
     }
 
-    .sun-arc svg {
-        width: 100%;
-        height: 100%;
-    }
+        .sun-arc svg {
+            width: 100%;
+            height: 100%;
+        }
 
     .sun-times {
         display: flex;
         justify-content: space-between;
     }
 
-    .sun-time-item { text-align: center; }
-    .sun-time-label { font-size: 0.72rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
-    .sun-time-value { font-size: 1rem; font-weight: 700; color: var(--text-main); font-family: 'Outfit', sans-serif; }
+    .sun-time-item {
+        text-align: center;
+    }
+
+    .sun-time-label {
+        font-size: 0.72rem;
+        color: var(--text-muted);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .sun-time-value {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--text-main);
+        font-family: 'Outfit', sans-serif;
+    }
 
     .gps-map {
         background: linear-gradient(135deg, #e8f5e9, #e0f2f1);
@@ -595,9 +683,7 @@
     .map-grid {
         position: absolute;
         inset: 0;
-        background-image:
-            linear-gradient(rgba(0,131,143,0.06) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(0,131,143,0.06) 1px, transparent 1px);
+        background-image: linear-gradient(rgba(0,131,143,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(0,131,143,0.06) 1px, transparent 1px);
         background-size: 24px 24px;
     }
 
@@ -618,18 +704,23 @@
         position: relative;
     }
 
-    .map-dot-inner::before {
-        content: '';
-        position: absolute;
-        inset: -8px;
-        border-radius: 50%;
-        background: rgba(0,131,143,0.12);
-        animation: map-pulse 2s infinite 0.5s;
-    }
+        .map-dot-inner::before {
+            content: '';
+            position: absolute;
+            inset: -8px;
+            border-radius: 50%;
+            background: rgba(0,131,143,0.12);
+            animation: map-pulse 2s infinite 0.5s;
+        }
 
     @@keyframes map-pulse {
-        0%, 100% { box-shadow: 0 0 0 4px rgba(0,131,143,0.2); }
-        50% { box-shadow: 0 0 0 10px rgba(0,131,143,0.05); }
+        0%, 100% {
+            box-shadow: 0 0 0 4px rgba(0,131,143,0.2);
+        }
+
+        50% {
+            box-shadow: 0 0 0 10px rgba(0,131,143,0.05);
+        }
     }
 
     .map-label {
@@ -651,7 +742,10 @@
         color: var(--text-muted);
     }
 
-    .gps-coords strong { color: var(--text-main); font-family: 'Outfit', sans-serif; }
+        .gps-coords strong {
+            color: var(--text-main);
+            font-family: 'Outfit', sans-serif;
+        }
 
     .gps-live-badge {
         display: inline-flex;
@@ -666,11 +760,16 @@
     }
 
     @@media (max-width: 1100px) {
-        .cards-grid { grid-template-columns: 1fr 1fr; }
+        .cards-grid {
+            grid-template-columns: 1fr 1fr;
+        }
     }
 
     @@media (max-width: 900px) {
-        .weather-wrapper { grid-template-columns: 1fr; }
+        .weather-wrapper {
+            grid-template-columns: 1fr;
+        }
+
         .weather-sidebar {
             min-height: auto;
             position: static;
@@ -679,11 +778,28 @@
             padding: 16px 20px;
             gap: 8px;
         }
-        .sidebar-logo { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
-        .sidebar-promo { display: none; }
-        .cards-grid { grid-template-columns: 1fr; }
-        .cards-grid-2 { grid-template-columns: 1fr; }
-        .hero-card { grid-template-columns: 1fr; }
+
+        .sidebar-logo {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .sidebar-promo {
+            display: none;
+        }
+
+        .cards-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .cards-grid-2 {
+            grid-template-columns: 1fr;
+        }
+
+        .hero-card {
+            grid-template-columns: 1fr;
+        }
     }
 </style>
 
@@ -890,106 +1006,106 @@
 </div>
 
 <script>
-// ============================================================
-// DATA & HELPERS
-// ============================================================
-const DAYS_VI = ['Chủ nhật','Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6','Thứ 7'];
-const MONTHS_VI = ['Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Tháng 6','Tháng 7','Tháng 8','Tháng 9','Tháng 10','Tháng 11','Tháng 12'];
+    // ============================================================
+    // DATA & HELPERS
+    // ============================================================
+    const DAYS_VI = ['Chủ nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'];
+    const MONTHS_VI = ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'];
 
-function weatherIcon(code) {
-    if (code === 0) return '☀️';
-    if (code <= 2) return '⛅';
-    if (code <= 3) return '☁️';
-    if (code <= 48) return '🌫️';
-    if (code <= 67) return '🌧️';
-    if (code <= 77) return '❄️';
-    if (code <= 82) return '🌦️';
-    if (code <= 99) return '⛈️';
-    return '🌡️';
-}
-
-function weatherDesc(code) {
-    if (code === 0) return 'Nắng đẹp';
-    if (code <= 2) return 'Ít mây';
-    if (code <= 3) return 'Nhiều mây';
-    if (code <= 48) return 'Sương mù';
-    if (code <= 55) return 'Mưa phùn';
-    if (code <= 67) return 'Mưa rào';
-    if (code <= 77) return 'Tuyết nhẹ';
-    if (code <= 82) return 'Mưa nhẹ';
-    if (code <= 99) return 'Dông bão';
-    return 'Khó xác định';
-}
-
-function formatTime(h) {
-    return h.toString().padStart(2,'0') + ':00';
-}
-
-// ============================================================
-// FETCH WEATHER FROM OPEN-METEO (FREE, NO API KEY)
-// ============================================================
-async function fetchWeather(lat, lon, cityName) {
-    try {
-        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,relativehumidity_2m,weathercode,windspeed_10m,visibility,apparent_temperature,surface_pressure&daily=weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset&current_weather=true&timezone=Asia%2FHo_Chi_Minh&forecast_days=7`;
-        const res = await fetch(url);
-        const data = await res.json();
-        updateUI(data, cityName || 'Hồ Chí Minh');
-    } catch(e) {
-        console.error('Weather fetch error:', e);
-        loadDemoData();
+    function weatherIcon(code) {
+        if (code === 0) return '☀️';
+        if (code <= 2) return '⛅';
+        if (code <= 3) return '☁️';
+        if (code <= 48) return '🌫️';
+        if (code <= 67) return '🌧️';
+        if (code <= 77) return '❄️';
+        if (code <= 82) return '🌦️';
+        if (code <= 99) return '⛈️';
+        return '🌡️';
     }
-}
 
-function updateUI(data, cityName) {
-    const now = new Date();
-    const cw = data.current_weather;
-    const hourlyIdx = data.hourly.time.findIndex(t => new Date(t) >= now) || 0;
+    function weatherDesc(code) {
+        if (code === 0) return 'Nắng đẹp';
+        if (code <= 2) return 'Ít mây';
+        if (code <= 3) return 'Nhiều mây';
+        if (code <= 48) return 'Sương mù';
+        if (code <= 55) return 'Mưa phùn';
+        if (code <= 67) return 'Mưa rào';
+        if (code <= 77) return 'Tuyết nhẹ';
+        if (code <= 82) return 'Mưa nhẹ';
+        if (code <= 99) return 'Dông bão';
+        return 'Khó xác định';
+    }
 
-    // Hero
-    document.getElementById('heroCity').textContent = cityName;
-    document.getElementById('heroDate').textContent =
-        DAYS_VI[now.getDay()] + ', ' + now.getDate() + ' ' + MONTHS_VI[now.getMonth()] + ' ' + now.getFullYear();
-    document.getElementById('heroTemp').textContent = Math.round(cw.temperature);
-    document.getElementById('heroIcon').textContent = weatherIcon(cw.weathercode);
-    document.getElementById('heroDesc').textContent = weatherDesc(cw.weathercode);
+    function formatTime(h) {
+        return h.toString().padStart(2, '0') + ':00';
+    }
 
-    const appTemp = data.hourly.apparent_temperature ? Math.round(data.hourly.apparent_temperature[hourlyIdx]) : Math.round(cw.temperature - 2);
-    document.getElementById('heroFeels').textContent = `Cảm giác như ${appTemp}°C`;
+    // ============================================================
+    // FETCH WEATHER FROM OPEN-METEO (FREE, NO API KEY)
+    // ============================================================
+    async function fetchWeather(lat, lon, cityName) {
+        try {
+            const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,relativehumidity_2m,weathercode,windspeed_10m,visibility,apparent_temperature,surface_pressure&daily=weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset&current_weather=true&timezone=Asia%2FHo_Chi_Minh&forecast_days=7`;
+            const res = await fetch(url);
+            const data = await res.json();
+            updateUI(data, cityName || 'Hồ Chí Minh');
+        } catch (e) {
+            console.error('Weather fetch error:', e);
+            loadDemoData();
+        }
+    }
 
-    const hum = data.hourly.relativehumidity_2m ? data.hourly.relativehumidity_2m[hourlyIdx] : '--';
-    document.getElementById('heroHumidity').textContent = hum + '%';
-    document.getElementById('heroWind').textContent = Math.round(cw.windspeed) + ' km/h';
-    const vis = data.hourly.visibility ? (data.hourly.visibility[hourlyIdx] / 1000).toFixed(0) : '--';
-    document.getElementById('heroVis').textContent = vis + ' km';
-    const pres = data.hourly.surface_pressure ? Math.round(data.hourly.surface_pressure[hourlyIdx]) : '--';
-    document.getElementById('heroPressure').textContent = pres + ' hPa';
+    function updateUI(data, cityName) {
+        const now = new Date();
+        const cw = data.current_weather;
+        const hourlyIdx = data.hourly.time.findIndex(t => new Date(t) >= now) || 0;
 
-    // Hourly
-    const hourlyHtml = [];
-    for (let i = 0; i < 12; i++) {
-        const idx = hourlyIdx + i;
-        if (idx >= data.hourly.time.length) break;
-        const t = new Date(data.hourly.time[idx]);
-        const isActive = i === 0;
-        hourlyHtml.push(`
+        // Hero
+        document.getElementById('heroCity').textContent = cityName;
+        document.getElementById('heroDate').textContent =
+            DAYS_VI[now.getDay()] + ', ' + now.getDate() + ' ' + MONTHS_VI[now.getMonth()] + ' ' + now.getFullYear();
+        document.getElementById('heroTemp').textContent = Math.round(cw.temperature);
+        document.getElementById('heroIcon').textContent = weatherIcon(cw.weathercode);
+        document.getElementById('heroDesc').textContent = weatherDesc(cw.weathercode);
+
+        const appTemp = data.hourly.apparent_temperature ? Math.round(data.hourly.apparent_temperature[hourlyIdx]) : Math.round(cw.temperature - 2);
+        document.getElementById('heroFeels').textContent = `Cảm giác như ${appTemp}°C`;
+
+        const hum = data.hourly.relativehumidity_2m ? data.hourly.relativehumidity_2m[hourlyIdx] : '--';
+        document.getElementById('heroHumidity').textContent = hum + '%';
+        document.getElementById('heroWind').textContent = Math.round(cw.windspeed) + ' km/h';
+        const vis = data.hourly.visibility ? (data.hourly.visibility[hourlyIdx] / 1000).toFixed(0) : '--';
+        document.getElementById('heroVis').textContent = vis + ' km';
+        const pres = data.hourly.surface_pressure ? Math.round(data.hourly.surface_pressure[hourlyIdx]) : '--';
+        document.getElementById('heroPressure').textContent = pres + ' hPa';
+
+        // Hourly
+        const hourlyHtml = [];
+        for (let i = 0; i < 12; i++) {
+            const idx = hourlyIdx + i;
+            if (idx >= data.hourly.time.length) break;
+            const t = new Date(data.hourly.time[idx]);
+            const isActive = i === 0;
+            hourlyHtml.push(`
             <div class="hourly-item ${isActive ? 'active' : ''}" onclick="setActive(this)">
                 <div class="hourly-time">${i === 0 ? 'Hiện tại' : formatTime(t.getHours())}</div>
                 <div class="hourly-icon">${weatherIcon(data.hourly.weathercode[idx])}</div>
                 <div class="hourly-temp">${Math.round(data.hourly.temperature_2m[idx])}°</div>
             </div>
         `);
-    }
-    document.getElementById('hourlyScroll').innerHTML = hourlyHtml.join('');
+        }
+        document.getElementById('hourlyScroll').innerHTML = hourlyHtml.join('');
 
-    // Daily
-    const dailyHtml = [];
-    for (let i = 0; i < 7; i++) {
-        const d = new Date(data.daily.time[i]);
-        const dayName = i === 0 ? 'Hôm nay' : i === 1 ? 'Ngày mai' : DAYS_VI[d.getDay()];
-        const hi = Math.round(data.daily.temperature_2m_max[i]);
-        const lo = Math.round(data.daily.temperature_2m_min[i]);
-        const pct = Math.min(100, Math.max(0, ((hi - 20) / 20) * 100));
-        dailyHtml.push(`
+        // Daily
+        const dailyHtml = [];
+        for (let i = 0; i < 7; i++) {
+            const d = new Date(data.daily.time[i]);
+            const dayName = i === 0 ? 'Hôm nay' : i === 1 ? 'Ngày mai' : DAYS_VI[d.getDay()];
+            const hi = Math.round(data.daily.temperature_2m_max[i]);
+            const lo = Math.round(data.daily.temperature_2m_min[i]);
+            const pct = Math.min(100, Math.max(0, ((hi - 20) / 20) * 100));
+            dailyHtml.push(`
             <div class="daily-item">
                 <div class="daily-day">${dayName}</div>
                 <div class="daily-icon">${weatherIcon(data.daily.weathercode[i])}</div>
@@ -1001,168 +1117,168 @@ function updateUI(data, cityName) {
                 </div>
             </div>
         `);
+        }
+        document.getElementById('dailyList').innerHTML = dailyHtml.join('');
+
+        // Sunrise/Sunset
+        if (data.daily.sunrise && data.daily.sunset) {
+            const sr = new Date(data.daily.sunrise[0]);
+            const ss = new Date(data.daily.sunset[0]);
+            document.getElementById('sunrise').textContent =
+                sr.getHours().toString().padStart(2, '0') + ':' + sr.getMinutes().toString().padStart(2, '0');
+            document.getElementById('sunset').textContent =
+                ss.getHours().toString().padStart(2, '0') + ':' + ss.getMinutes().toString().padStart(2, '0');
+        }
+
+        // AQI (mock based on humidity)
+        const aqiVal = Math.floor(20 + (hum || 70) * 0.3);
+        updateAQI(aqiVal);
     }
-    document.getElementById('dailyList').innerHTML = dailyHtml.join('');
 
-    // Sunrise/Sunset
-    if (data.daily.sunrise && data.daily.sunset) {
-        const sr = new Date(data.daily.sunrise[0]);
-        const ss = new Date(data.daily.sunset[0]);
-        document.getElementById('sunrise').textContent =
-            sr.getHours().toString().padStart(2,'0') + ':' + sr.getMinutes().toString().padStart(2,'0');
-        document.getElementById('sunset').textContent =
-            ss.getHours().toString().padStart(2,'0') + ':' + ss.getMinutes().toString().padStart(2,'0');
+    function updateAQI(val) {
+        document.getElementById('aqiNumber').textContent = val;
+        let label, desc, color;
+        if (val <= 50) {
+            label = 'Tốt'; color = '#22c55e'; desc = 'Chất lượng không khí tốt. Không ảnh hưởng đến sức khỏe.';
+        } else if (val <= 100) {
+            label = 'Trung bình'; color = '#eab308'; desc = 'Chất lượng trung bình. Nhóm nhạy cảm nên hạn chế ra ngoài.';
+        } else if (val <= 150) {
+            label = 'Không lành mạnh'; color = '#f97316'; desc = 'Không lành mạnh cho nhóm nhạy cảm.';
+        } else {
+            label = 'Rất xấu'; color = '#ef4444'; desc = 'Toàn dân nên hạn chế hoạt động ngoài trời.';
+        }
+        const el = document.getElementById('aqiLabel');
+        el.textContent = label;
+        el.style.background = color + '22';
+        el.style.color = color.replace('#', '#').slice(0, -2) + 'dd';
+        document.getElementById('aqiDesc').textContent = desc;
+        document.getElementById('aqiNumber').style.color = color;
+        document.getElementById('aqiIndicator').style.left = Math.min(90, (val / 200) * 100) + '%';
+        document.getElementById('aqiIndicator').style.borderColor = color;
     }
 
-    // AQI (mock based on humidity)
-    const aqiVal = Math.floor(20 + (hum || 70) * 0.3);
-    updateAQI(aqiVal);
-}
+    function loadDemoData() {
+        document.getElementById('heroTemp').textContent = '32';
+        document.getElementById('heroIcon').textContent = '⛅';
+        document.getElementById('heroDesc').textContent = 'Nắng ít mây';
+        document.getElementById('heroFeels').textContent = 'Cảm giác như 35°C';
+        document.getElementById('heroHumidity').textContent = '72%';
+        document.getElementById('heroWind').textContent = '14 km/h';
+        document.getElementById('heroVis').textContent = '10 km';
+        document.getElementById('heroPressure').textContent = '1012 hPa';
 
-function updateAQI(val) {
-    document.getElementById('aqiNumber').textContent = val;
-    let label, desc, color;
-    if (val <= 50) {
-        label = 'Tốt'; color = '#22c55e'; desc = 'Chất lượng không khí tốt. Không ảnh hưởng đến sức khỏe.';
-    } else if (val <= 100) {
-        label = 'Trung bình'; color = '#eab308'; desc = 'Chất lượng trung bình. Nhóm nhạy cảm nên hạn chế ra ngoài.';
-    } else if (val <= 150) {
-        label = 'Không lành mạnh'; color = '#f97316'; desc = 'Không lành mạnh cho nhóm nhạy cảm.';
-    } else {
-        label = 'Rất xấu'; color = '#ef4444'; desc = 'Toàn dân nên hạn chế hoạt động ngoài trời.';
-    }
-    const el = document.getElementById('aqiLabel');
-    el.textContent = label;
-    el.style.background = color + '22';
-    el.style.color = color.replace('#', '#').slice(0, -2) + 'dd';
-    document.getElementById('aqiDesc').textContent = desc;
-    document.getElementById('aqiNumber').style.color = color;
-    document.getElementById('aqiIndicator').style.left = Math.min(90, (val / 200) * 100) + '%';
-    document.getElementById('aqiIndicator').style.borderColor = color;
-}
+        const now = new Date();
+        document.getElementById('heroDate').textContent =
+            DAYS_VI[now.getDay()] + ', ' + now.getDate() + ' ' + MONTHS_VI[now.getMonth()] + ' ' + now.getFullYear();
 
-function loadDemoData() {
-    document.getElementById('heroTemp').textContent = '32';
-    document.getElementById('heroIcon').textContent = '⛅';
-    document.getElementById('heroDesc').textContent = 'Nắng ít mây';
-    document.getElementById('heroFeels').textContent = 'Cảm giác như 35°C';
-    document.getElementById('heroHumidity').textContent = '72%';
-    document.getElementById('heroWind').textContent = '14 km/h';
-    document.getElementById('heroVis').textContent = '10 km';
-    document.getElementById('heroPressure').textContent = '1012 hPa';
-
-    const now = new Date();
-    document.getElementById('heroDate').textContent =
-        DAYS_VI[now.getDay()] + ', ' + now.getDate() + ' ' + MONTHS_VI[now.getMonth()] + ' ' + now.getFullYear();
-
-    const demos = [
-        {t:'Hiện tại',i:'⛅',c:31},{t:'11:00',i:'☀️',c:33},{t:'12:00',i:'☀️',c:34},{t:'13:00',i:'⛅',c:35},
-        {t:'14:00',i:'⛅',c:34},{t:'15:00',i:'🌧️',c:32},{t:'16:00',i:'🌦️',c:30},{t:'17:00',i:'🌦️',c:29},
-        {t:'18:00',i:'🌥️',c:28},{t:'19:00',i:'☁️',c:27},{t:'20:00',i:'🌙',c:26},{t:'21:00',i:'🌙',c:25}
-    ];
-    document.getElementById('hourlyScroll').innerHTML = demos.map((d,i) =>
-        `<div class="hourly-item ${i===0?'active':''}" onclick="setActive(this)">
+        const demos = [
+            { t: 'Hiện tại', i: '⛅', c: 31 }, { t: '11:00', i: '☀️', c: 33 }, { t: '12:00', i: '☀️', c: 34 }, { t: '13:00', i: '⛅', c: 35 },
+            { t: '14:00', i: '⛅', c: 34 }, { t: '15:00', i: '🌧️', c: 32 }, { t: '16:00', i: '🌦️', c: 30 }, { t: '17:00', i: '🌦️', c: 29 },
+            { t: '18:00', i: '🌥️', c: 28 }, { t: '19:00', i: '☁️', c: 27 }, { t: '20:00', i: '🌙', c: 26 }, { t: '21:00', i: '🌙', c: 25 }
+        ];
+        document.getElementById('hourlyScroll').innerHTML = demos.map((d, i) =>
+            `<div class="hourly-item ${i === 0 ? 'active' : ''}" onclick="setActive(this)">
             <div class="hourly-time">${d.t}</div>
             <div class="hourly-icon">${d.i}</div>
             <div class="hourly-temp">${d.c}°</div>
         </div>`
-    ).join('');
+        ).join('');
 
-    const days7 = [
-        {d:'Hôm nay',i:'⛅',desc:'Ít mây',hi:33,lo:26},
-        {d:'Ngày mai',i:'🌧️',desc:'Mưa rào',hi:30,lo:24},
-        {d:'Thứ 4',i:'☀️',desc:'Nắng đẹp',hi:35,lo:27},
-        {d:'Thứ 5',i:'⛅',desc:'Nhiều mây',hi:32,lo:25},
-        {d:'Thứ 6',i:'🌦️',desc:'Mưa nhẹ',hi:29,lo:24},
-        {d:'Thứ 7',i:'☀️',desc:'Nắng đẹp',hi:34,lo:26},
-        {d:'Chủ nhật',i:'⛅',desc:'Ít mây',hi:33,lo:26}
-    ];
-    document.getElementById('dailyList').innerHTML = days7.map(d => {
-        const pct = Math.min(100, Math.max(0, ((d.hi - 20) / 20) * 100));
-        return `<div class="daily-item">
+        const days7 = [
+            { d: 'Hôm nay', i: '⛅', desc: 'Ít mây', hi: 33, lo: 26 },
+            { d: 'Ngày mai', i: '🌧️', desc: 'Mưa rào', hi: 30, lo: 24 },
+            { d: 'Thứ 4', i: '☀️', desc: 'Nắng đẹp', hi: 35, lo: 27 },
+            { d: 'Thứ 5', i: '⛅', desc: 'Nhiều mây', hi: 32, lo: 25 },
+            { d: 'Thứ 6', i: '🌦️', desc: 'Mưa nhẹ', hi: 29, lo: 24 },
+            { d: 'Thứ 7', i: '☀️', desc: 'Nắng đẹp', hi: 34, lo: 26 },
+            { d: 'Chủ nhật', i: '⛅', desc: 'Ít mây', hi: 33, lo: 26 }
+        ];
+        document.getElementById('dailyList').innerHTML = days7.map(d => {
+            const pct = Math.min(100, Math.max(0, ((d.hi - 20) / 20) * 100));
+            return `<div class="daily-item">
             <div class="daily-day">${d.d}</div>
             <div class="daily-icon">${d.i}</div>
             <div class="daily-desc">${d.desc}</div>
             <div class="temp-bar-track"><div class="temp-bar-fill" style="width:${pct}%"></div></div>
             <div class="daily-temps"><span class="temp-high">${d.hi}°</span><span class="temp-low">${d.lo}°</span></div>
         </div>`;
-    }).join('');
+        }).join('');
 
-    updateAQI(32);
-    document.getElementById('sunrise').textContent = '06:19';
-    document.getElementById('sunset').textContent = '18:35';
-}
-
-// ============================================================
-// GPS
-// ============================================================
-function getGPS() {
-    document.getElementById('gpsLabel').textContent = 'Đang định vị...';
-    if (!navigator.geolocation) {
-        alert('Trình duyệt không hỗ trợ GPS');
-        return;
+        updateAQI(32);
+        document.getElementById('sunrise').textContent = '06:19';
+        document.getElementById('sunset').textContent = '18:35';
     }
-    navigator.geolocation.getCurrentPosition(pos => {
-        const lat = pos.coords.latitude;
-        const lon = pos.coords.longitude;
-        document.getElementById('gpsLat').textContent = lat.toFixed(4) + '°N';
-        document.getElementById('gpsLon').textContent = lon.toFixed(4) + '°E';
-        document.getElementById('gpsLabel').textContent = 'GPS Bật';
-        fetchWeather(lat, lon, 'Vị trí của tôi');
-        updateGPSTime();
-    }, () => {
-        document.getElementById('gpsLabel').textContent = 'Vị trí của tôi';
-        // Fallback: HCMC
-        fetchWeather(10.8231, 106.6297, 'Hồ Chí Minh');
-    });
-}
 
-function updateGPSTime() {
-    const now = new Date();
-    document.getElementById('gpsTime').textContent =
-        now.getHours().toString().padStart(2,'0') + ':' +
-        now.getMinutes().toString().padStart(2,'0') + ':' +
-        now.getSeconds().toString().padStart(2,'0');
-}
-
-// Update GPS time every second
-setInterval(updateGPSTime, 1000);
-updateGPSTime();
-
-// ============================================================
-// UI HELPERS
-// ============================================================
-function setActive(el) {
-    document.querySelectorAll('.hourly-item').forEach(e => e.classList.remove('active'));
-    el.classList.add('active');
-}
-
-document.getElementById('citySearch').addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') {
-        const city = this.value.trim();
-        if (!city) return;
-        document.getElementById('heroCity').textContent = city;
-        // Simple city -> coords mapping
-        const cities = {
-            'hà nội': [21.0285, 105.8542],
-            'hcm': [10.8231, 106.6297],
-            'hồ chí minh': [10.8231, 106.6297],
-            'đà nẵng': [16.0544, 108.2022],
-            'cần thơ': [10.0452, 105.7469],
-            'huế': [16.4637, 107.5909],
-        };
-        const match = cities[city.toLowerCase()];
-        if (match) {
-            fetchWeather(match[0], match[1], city);
-        } else {
-            fetchWeather(10.8231, 106.6297, city);
+    // ============================================================
+    // GPS
+    // ============================================================
+    function getGPS() {
+        document.getElementById('gpsLabel').textContent = 'Đang định vị...';
+        if (!navigator.geolocation) {
+            alert('Trình duyệt không hỗ trợ GPS');
+            return;
         }
+        navigator.geolocation.getCurrentPosition(pos => {
+            const lat = pos.coords.latitude;
+            const lon = pos.coords.longitude;
+            document.getElementById('gpsLat').textContent = lat.toFixed(4) + '°N';
+            document.getElementById('gpsLon').textContent = lon.toFixed(4) + '°E';
+            document.getElementById('gpsLabel').textContent = 'GPS Bật';
+            fetchWeather(lat, lon, 'Vị trí của tôi');
+            updateGPSTime();
+        }, () => {
+            document.getElementById('gpsLabel').textContent = 'Vị trí của tôi';
+            // Fallback: HCMC
+            fetchWeather(10.8231, 106.6297, 'Hồ Chí Minh');
+        });
     }
-});
 
-// ============================================================
-// INIT
-// ============================================================
-// Try fetching live weather for HCMC, fallback to demo
-fetchWeather(10.8231, 106.6297, 'Hồ Chí Minh');
+    function updateGPSTime() {
+        const now = new Date();
+        document.getElementById('gpsTime').textContent =
+            now.getHours().toString().padStart(2, '0') + ':' +
+            now.getMinutes().toString().padStart(2, '0') + ':' +
+            now.getSeconds().toString().padStart(2, '0');
+    }
+
+    // Update GPS time every second
+    setInterval(updateGPSTime, 1000);
+    updateGPSTime();
+
+    // ============================================================
+    // UI HELPERS
+    // ============================================================
+    function setActive(el) {
+        document.querySelectorAll('.hourly-item').forEach(e => e.classList.remove('active'));
+        el.classList.add('active');
+    }
+
+    document.getElementById('citySearch').addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+            const city = this.value.trim();
+            if (!city) return;
+            document.getElementById('heroCity').textContent = city;
+            // Simple city -> coords mapping
+            const cities = {
+                'hà nội': [21.0285, 105.8542],
+                'hcm': [10.8231, 106.6297],
+                'hồ chí minh': [10.8231, 106.6297],
+                'đà nẵng': [16.0544, 108.2022],
+                'cần thơ': [10.0452, 105.7469],
+                'huế': [16.4637, 107.5909],
+            };
+            const match = cities[city.toLowerCase()];
+            if (match) {
+                fetchWeather(match[0], match[1], city);
+            } else {
+                fetchWeather(10.8231, 106.6297, city);
+            }
+        }
+    });
+
+    // ============================================================
+    // INIT
+    // ============================================================
+    // Try fetching live weather for HCMC, fallback to demo
+    fetchWeather(10.8231, 106.6297, 'Hồ Chí Minh');
 </script>
