@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using SaigonBus.Services;
 
 namespace SaigonBus.Controllers
 {
@@ -212,6 +213,19 @@ namespace SaigonBus.Controllers
                             vehicle.Status = Models.VehicleStatus.Available;
                             vehicle.CurrentStationId = endStationId;
                         }
+                    }
+
+                    if (user != null)
+                    {
+                        var pointResult = PointService.Calculate(
+                            finalAmount: finalAmount,
+                            discountAmount: discountAmount,
+                            vehicleCategory: groupRental.VehicleCategory,
+                            tripStartTime: groupRental.StartTime,
+                            quantity: groupRental.Quantity
+                        );
+
+                        PointService.ApplyPoints(user, pointResult, db);
                     }
 
                     db.SaveChanges();

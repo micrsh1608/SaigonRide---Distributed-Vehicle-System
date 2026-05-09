@@ -1,0 +1,20 @@
+﻿#main-map {
+    height: 350px;
+    width: 100%;
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    margin-bottom: 24px;
+    z-index: 10;
+}
+.station-marker-label {
+    background: var(--sg-primary);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: 12px;
+    border: 2px solid white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    text-align: center;
+    white-space: nowrap;
+}

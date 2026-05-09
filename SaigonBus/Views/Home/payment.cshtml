@@ -335,12 +335,10 @@
         </div>
     </div>
 
-    <!-- Thanh nút chốt -->
     <div class="bottom-action">
         <button class="btn-pay" id="btn-process-pay" onclick="processPayment()">Thanh toán <span id="btn-total">0 ₫</span></button>
     </div>
 
-    <!-- Loading Overlay -->
     <div id="loading-overlay">
         <div class="spinner"></div>
         <h5 class="fw-bold text-dark mt-3" id="loading-text">Đang kết nối cổng thanh toán...</h5>
@@ -348,7 +346,6 @@
     </div>
 
     <script>
-        // Hàm format tiền
         function formatVND(amt) { return new Intl.NumberFormat('vi-VN').format(amt) + ' ₫'; }
 
         // Khởi tạo dữ liệu từ LocalStorage (Được gửi từ trang UserDashboard)
@@ -358,6 +355,7 @@
         let rideMins = parseInt(localStorage.getItem('checkout_mins')) || 0;
         let rideRate = parseInt(localStorage.getItem('checkout_rate')) || 0;
         let rideType = localStorage.getItem('checkout_type') || "Không xác định";
+        let rideCategory = localStorage.getItem('checkout_category') || "StandardBike";
         let userBalance = parseInt(localStorage.getItem('user_balance')) || 150000;
 
         let selectedMethod = 'wallet';
@@ -460,7 +458,6 @@
             }
         }
 
-        // Hàm chọn cổng thanh toán
         function selectMethod(element, method) {
             if (method === 'wallet' && userBalance < rideTotal) {
                 alert("Số dư ví Saigon EcoRide không đủ. Vui lòng chọn phương thức khác (MoMo/Zalo/Visa)!");
@@ -472,7 +469,6 @@
             selectedMethod = method;
         }
 
-        // Hàm xử lý thanh toán
         function processPayment() {
             document.getElementById('loading-overlay').style.display = 'flex';
             document.getElementById('loading-text').innerText = 'Đang đồng bộ dữ liệu về máy chủ Admin...';
@@ -480,15 +476,14 @@
             const startStationId = localStorage.getItem('start_station_id') || 0;
             const endStationId = localStorage.getItem('end_station_id') || 0;
 
-            // Dùng AJAX gửi dữ liệu chuyến đi về C# Backend
             fetch('/RentalTransactions/SaveTrip', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    vehicleType: rideType,
+                    vehicleType: rideCategory,
                     duration: rideMins,
-                    totalCost: rideTotal, // Gửi cước phí gốc
-                    discountAmount: rideDiscount + promoDiscount, // Gửi tổng mức giảm giá để Backend lưu chuẩn xác
+                    totalCost: rideTotal,
+                    discountAmount: rideDiscount + promoDiscount,
                     startStationId: parseInt(startStationId),
                     endStationId: parseInt(endStationId),
                     paymentMethod: selectedMethod
@@ -497,16 +492,17 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        // Nếu DB lưu thành công thật sự
+                        let earnedPoints = Math.floor(rideFinal / 1000);
+
                         if (selectedMethod === 'wallet') {
                             localStorage.setItem('user_balance', userBalance - rideFinal);
                         }
+
                         setTimeout(() => {
-                            alert("Thanh toán thành công! Giao dịch đã được ghi nhận trên hệ thống.");
+                            alert("Thanh toán thành công! Bạn vừa tích lũy thêm được " + earnedPoints + " điểm xếp hạng.");
                             window.location.href = '/Home/UserDashboard';
                         }, 1000);
                     } else {
-                        // BÁO LỖI THỰC TẾ TỪ SQL SERVER RA MÀN HÌNH
                         alert("Lỗi từ CSDL: " + data.message);
                         document.getElementById('loading-overlay').style.display = 'none';
                     }

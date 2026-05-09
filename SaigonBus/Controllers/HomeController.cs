@@ -100,92 +100,50 @@ namespace SaigonBus.Controllers
             using (var db = new Models.SaigonRideContext())
             {
                 string username = User.Identity.Name;
-
                 var user = db.Users.FirstOrDefault(u => u.Username == username);
 
-                if (user == null)
-                {
-                    return RedirectToAction("Login", "Account");
-                }
+                if (user == null) return RedirectToAction("Login", "Account");
 
                 int points = user.Point;
 
                 string rankName = "HẠNG ĐỒNG";
                 string nextRankName = "HẠNG BẠC";
+                int currentRankMinPoint = 0;
                 int nextRankPoint = 1000;
 
                 if (points >= 5000)
                 {
                     rankName = "KIM CƯƠNG";
-                    nextRankName = "VIP";
+                    nextRankName = "—";
+                    currentRankMinPoint = 5000;
                     nextRankPoint = 10000;
                 }
                 else if (points >= 2500)
                 {
                     rankName = "HẠNG VÀNG";
                     nextRankName = "KIM CƯƠNG";
+                    currentRankMinPoint = 2500;
                     nextRankPoint = 5000;
                 }
                 else if (points >= 1000)
                 {
                     rankName = "HẠNG BẠC";
                     nextRankName = "HẠNG VÀNG";
+                    currentRankMinPoint = 1000;
                     nextRankPoint = 2500;
                 }
 
-                var topVips = db.Users
-                    .OrderByDescending(u => u.Point)
-                    .Take(5)
-                    .ToList();
+                int progress = ((points - currentRankMinPoint) * 100) / (nextRankPoint - currentRankMinPoint);
+                if (progress < 0) progress = 0;
+                if (progress > 100) progress = 100;
 
-                bool isTop5 = topVips.Any(u => u.UserId == user.UserId);
-
-                bool isVIP = points >= 5000 && isTop5;
-
-                if (isVIP)
-                {
-                    rankName = "VIP";
-                }
-
-                int progress = 0;
-
-                if (isVIP)
-                {
-                    progress = 100;
-                }
-                else
-                {
-                    progress = (points * 100) / nextRankPoint;
-
-                    if (progress > 100)
-                    {
-                        progress = 100;
-                    }
-                }
-
-                var allUsers = db.Users.OrderByDescending(u => u.Point).ToList();
-
-                int currentRankPosition = 1;
-
-                for (int i = 0; i < allUsers.Count; i++)
-                {
-                    if (allUsers[i].UserId == user.UserId)
-                    {
-                        currentRankPosition = i + 1;
-                        break;
-                    }
-                }
-
-                ViewBag.IsVIP = isVIP;
+                ViewBag.CurrentRankPosition = db.Users.Count(u => u.Point > points) + 1;
+                ViewBag.TotalUsers = db.Users.Count();
                 ViewBag.CurrentRankName = rankName;
                 ViewBag.CurrentPoints = points;
                 ViewBag.NextRankName = nextRankName;
                 ViewBag.ProgressPercentage = progress;
                 ViewBag.PointsToNextRank = Math.Max(0, nextRankPoint - points);
-                ViewBag.CurrentRankPosition = currentRankPosition;
-                ViewBag.TotalUsers = allUsers.Count;
-
-                ViewBag.TopVips = topVips;
 
                 return View();
             }
