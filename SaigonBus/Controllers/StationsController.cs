@@ -31,8 +31,10 @@ namespace SaigonBus.Controllers
                 name = s.LocationName,
                 dist = "Gần bạn",
                 capacity = s.CapacityLimit,
+                lat = s.Latitude,
+                lng = s.Longitude,
                 currentCount = vehicles.Count(v => v.CurrentStationId == s.StationId && v.Status == Models.VehicleStatus.Available && (v.ReservedUntil == null || v.ReservedUntil < DateTime.Now)),
-                vehicles = vehicles.Where(v => v.CurrentStationId == s.StationId && v.Status == Models.VehicleStatus.Available).Select(v => new {
+                vehicles = vehicles.Where(v => v.CurrentStationId == s.StationId && v.Status == Models.VehicleStatus.Available && (v.ReservedUntil == null || v.ReservedUntil < DateTime.Now)).Select(v => new {
                     id = v.VehicleId,
                     type = v.Category.ToString().ToLower().Contains("bike") ? (v.Category == Models.VehicleCategory.EBike ? "ebike" : "bike") : "scooter",
                     name = v.Category == Models.VehicleCategory.StandardBike ? "Xe đạp chuẩn" :
@@ -72,7 +74,7 @@ namespace SaigonBus.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "StationId,LocationName,CapacityLimit,CurrentInventoryCount")] Station station)
+        public ActionResult Create([Bind(Include = "StationId,LocationName,CapacityLimit,CurrentInventoryCount,Latitude,Longitude")] Station station)
         {
             if (ModelState.IsValid)
             {
@@ -104,7 +106,7 @@ namespace SaigonBus.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "StationId,LocationName,CapacityLimit,CurrentInventoryCount")] Station station)
+        public ActionResult Edit([Bind(Include = "StationId,LocationName,CapacityLimit,CurrentInventoryCount,Latitude,Longitude")] Station station)
         {
             if (ModelState.IsValid)
             {

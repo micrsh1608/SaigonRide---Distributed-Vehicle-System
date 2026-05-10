@@ -161,6 +161,10 @@
     <Compile Include="Migrations\202605090917063_AddFeedback.Designer.cs">
       <DependentUpon>202605090917063_AddFeedback.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202605100603007_AddLatLngToStation.cs" />
+    <Compile Include="Migrations\202605100603007_AddLatLngToStation.Designer.cs">
+      <DependentUpon>202605100603007_AddLatLngToStation.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Admin.cs" />
     <Compile Include="Models\Feedback.cs" />
@@ -213,6 +217,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\lang.js" />
     <Content Include="Scripts\map.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\SaigonRideDB.sql" />
@@ -289,6 +294,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202605090917063_AddFeedback.resx">
       <DependentUpon>202605090917063_AddFeedback.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202605100603007_AddLatLngToStation.resx">
+      <DependentUpon>202605100603007_AddLatLngToStation.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

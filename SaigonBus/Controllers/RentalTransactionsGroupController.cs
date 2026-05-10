@@ -198,6 +198,8 @@ namespace SaigonBus.Controllers
                     }
 
                     groupRental.TotalAmount = finalAmount;
+                    user.Balance += groupRental.TotalAmount;
+                    user.Balance -= finalAmount;
 
                     var rentals = db.RentalTransactions.Where(rt => rt.GroupRentalId == groupRentalId).ToList();
                     foreach (var rt in rentals)

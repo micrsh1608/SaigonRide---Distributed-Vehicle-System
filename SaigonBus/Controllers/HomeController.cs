@@ -50,6 +50,12 @@ namespace SaigonBus.Controllers
                         ViewBag.Balance = user.Balance;
                         ViewBag.Phone = user.Phone ?? "N/A";
                         ViewBag.Email = user.Email ?? "N/A";
+                        int points = user.Point;
+                        string rankName = "HẠNG ĐỒNG";
+                        if (points >= 5000) rankName = "KIM CƯƠNG";
+                        else if (points >= 2500) rankName = "HẠNG VÀNG";
+                        else if (points >= 1000) rankName = "HẠNG BẠC";
+                        ViewBag.CurrentRankName = rankName;
                     }
                 }
             }

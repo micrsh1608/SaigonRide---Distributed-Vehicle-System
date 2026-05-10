@@ -353,7 +353,7 @@
     <!-- JAVASCRIPT LOGIC -->
     <script>
         let isLoginMode = true;
-        let currentLang = 'vi';
+        let currentLang = localStorage.getItem('saigonride_lang') || 'vi';
 
         function switchTab(type) {
             document.getElementById('tab-local').classList.remove('active');
@@ -488,10 +488,15 @@
 
         function switchLang(lang) {
             currentLang = lang;
+            localStorage.setItem('saigonride_lang', lang);
             document.getElementById('btn-vi').classList.toggle('active', lang === 'vi');
             document.getElementById('btn-en').classList.toggle('active', lang === 'en');
             updateTextByLang(lang);
         }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            switchLang(currentLang);
+        });
     </script>
 </body>
 </html>

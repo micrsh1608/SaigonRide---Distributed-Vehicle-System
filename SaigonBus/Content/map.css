@@ -18,3 +18,9 @@
     text-align: center;
     white-space: nowrap;
 }
+
+.station-card-highlight {
+    border: 2px solid #f59e0b !important;
+    box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.12);
+    transition: box-shadow 0.3s ease;
+}

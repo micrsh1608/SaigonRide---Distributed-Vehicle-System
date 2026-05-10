@@ -1,0 +1,455 @@
+﻿let currentLang = localStorage.getItem("saigonride_lang") || "vi";
+
+const translations = {
+
+    vi: {
+        /* Navigation */
+        nav_home: "Trang chủ",
+        nav_about: "Về chúng tôi",
+        nav_support: "Hỗ trợ",
+
+        /* User menu */
+        menu_myaccount: "Tài khoản của tôi",
+        menu_profile: "Hồ sơ cá nhân",
+        menu_topup: "Nạp tiền ví",
+        menu_language: "Ngôn ngữ",
+        menu_logout: "Đăng xuất an toàn",
+
+        /* Hero section */
+        hero_service: "Dịch vụ 24/7",
+        hero_location: "Đang ở TP.HCM",
+        hero_title: "Trải nghiệm di chuyển xanh",
+        hero_subtitle: "Mở khóa xe đạp, xe điện và scooter nhanh chóng với mã QR chỉ trong 5 giây.",
+
+        /* Buttons */
+        btn_rent: "Thuê xe ngay",
+        btn_group_rent: "Thuê xe nhóm",
+        btn_find_station: "Tìm trạm & Xe",
+        btn_topup_more: "Nạp thêm tiền",
+        btn_checkout: "Trả xe",
+
+        /* Stations section */
+        section_stations: "Trạm đỗ & Xe gần bạn",
+        station_near_you: "Gần bạn",
+        station_capacity: "Sức chứa",
+        station_full_pct: "đầy",
+        station_not_found: "Không tìm thấy trạm đỗ.",
+        station_view_detail: "Xem chi tiết xe đang đỗ",
+
+        /* Station detail modal */
+        station_empty_title: "Trạm tạm hết xe",
+        station_empty_desc: "Hiện chưa có xe khả dụng tại trạm này. Vui lòng thử trạm lân cận hoặc quay lại sau.",
+        station_find_other: "Tìm trạm khác",
+
+        /* Vehicle types */
+        vtype_bike: "Xe đạp",
+        vtype_ebike: "Xe điện",
+        vtype_scooter: "Scooter",
+        vtype_manual_note: "Xe đạp cơ — không cần sạc",
+
+        /* Battery */
+        bat_good: "Tốt",
+        bat_mid: "Trung bình",
+        bat_low: "Yếu",
+
+        /* Vehicle actions */
+        btn_rent_vehicle: "Thuê",
+        btn_reserve: "Giữ chỗ",
+
+        /* Wallet */
+        wallet_balance: "SỐ DƯ KHẢ DỤNG",
+
+        /* Rental status */
+        status_title: "Trạng thái thuê xe",
+        status_no_trip: "Chưa có chuyến đi",
+        status_scan_qr: "Quét mã QR tại trạm để bắt đầu.",
+
+        /* Map popup */
+        map_you_are_here: "Bạn đang ở đây",
+        map_vehicles: "xe",
+        map_choose_vehicle: "Chọn xe tại trạm này",
+        map_no_vehicle: "Không có xe khả dụng",
+        map_route_label: "Chuyến đi dự kiến",
+        map_distance: "Khoảng cách",
+
+        /* Notifications / incentives */
+        notif_discount: "Ưu đãi 15% — trạm gần hết xe",
+        notif_navigate: "Dẫn đường",
+        notif_empty: "Hiện chưa có ưu đãi",
+
+        /* Weather */
+        weather_rain_alert: "Trời đang mưa — hãy cân nhắc trước khi thuê xe!",
+
+        /* Misc */
+        dist_label: "Khoảng cách",
+        per_minute: "đ/phút",
+        loading: "Đang tải...",
+        error_generic: "Đã có lỗi xảy ra. Vui lòng thử lại.",
+
+        nav_tab_home: "Trang chủ",
+        nav_tab_history: "Lịch sử",
+        nav_tab_wallet: "Ví tiền",
+        nav_tab_account: "Tài khoản",
+    },
+
+    en: {
+        /* Navigation */
+        nav_home: "Home",
+        nav_about: "About Us",
+        nav_support: "Support",
+
+        /* User menu */
+        menu_myaccount: "My Account",
+        menu_profile: "My Profile",
+        menu_topup: "Top Up Wallet",
+        menu_language: "Language",
+        menu_logout: "Safe Logout",
+
+        /* Hero section */
+        hero_service: "24/7 Service",
+        hero_location: "In Ho Chi Minh City",
+        hero_title: "Experience Green Mobility",
+        hero_subtitle: "Unlock bicycles, e-bikes and scooters with QR code in just 5 seconds.",
+
+        /* Buttons */
+        btn_rent: "Rent Now",
+        btn_group_rent: "Group Rental",
+        btn_find_station: "Find Stations",
+        btn_topup_more: "Add Funds",
+        btn_checkout: "Return Vehicle",
+
+        /* Stations section */
+        section_stations: "Nearby Stations & Vehicles",
+        station_near_you: "Near you",
+        station_capacity: "Capacity",
+        station_full_pct: "full",
+        station_not_found: "No stations found.",
+        station_view_detail: "View parked vehicles",
+
+        /* Station detail modal */
+        station_empty_title: "No vehicles available",
+        station_empty_desc: "No vehicles are currently available at this station. Try a nearby station or check back later.",
+        station_find_other: "Find another station",
+
+        /* Vehicle types */
+        vtype_bike: "Bicycle",
+        vtype_ebike: "E-Bike",
+        vtype_scooter: "Scooter",
+        vtype_manual_note: "Manual bike — no charging needed",
+
+        /* Battery */
+        bat_good: "Good",
+        bat_mid: "Fair",
+        bat_low: "Low",
+
+        /* Vehicle actions */
+        btn_rent_vehicle: "Rent",
+        btn_reserve: "Reserve",
+
+        /* Wallet */
+        wallet_balance: "AVAILABLE BALANCE",
+
+        /* Rental status */
+        status_title: "Rental Status",
+        status_no_trip: "No active trip",
+        status_scan_qr: "Scan QR code at a station to get started.",
+
+        /* Map popup */
+        map_you_are_here: "You are here",
+        map_vehicles: "vehicles",
+        map_choose_vehicle: "Choose a vehicle at this station",
+        map_no_vehicle: "No vehicles available",
+        map_route_label: "Estimated route",
+        map_distance: "Distance",
+
+        /* Notifications / incentives */
+        notif_discount: "15% off — station running low",
+        notif_navigate: "Navigate",
+        notif_empty: "No promotions available",
+
+        /* Weather */
+        weather_rain_alert: "It's raining — consider your trip before renting!",
+
+        /* Misc */
+        dist_label: "Distance",
+        per_minute: "/min",
+        loading: "Loading...",
+        error_generic: "Something went wrong. Please try again.",
+
+        nav_tab_home: "Home",
+        nav_tab_history: "History",
+        nav_tab_wallet: "Wallet",
+        nav_tab_account: "Account",
+    }
+};
+
+function t(key) {
+    const lang = (typeof currentLang !== 'undefined') ? currentLang : 'vi';
+    const dict = translations[lang] || translations.vi;
+    return dict[key] || key;
+}
+function renderStationsList() {
+    const filter = document.getElementById('station-search').value.toLowerCase().trim();
+    const listObj = document.getElementById('stations-render-area');
+    listObj.innerHTML = '';
+
+    let filtered = stationsData.filter(s => s.name.toLowerCase().includes(filter));
+
+    if (filtered.length === 0) {
+        listObj.innerHTML = `
+            <div class="p-5 text-center text-muted border rounded-4 bg-white">
+                <i class="fas fa-search-minus fs-1 mb-3 opacity-25"></i><br>
+                ${t('station_not_found')}
+            </div>`;
+        return;
+    }
+
+    if (filter.length > 0 && filtered.length > 0 && typeof map !== 'undefined') {
+        const target = filtered[0];
+        if (target.lat && target.lng) {
+            focusOnMap(target.lat, target.lng);
+            stationMarkers.forEach(marker => {
+                const ll = marker.getLatLng();
+                if (Math.abs(ll.lat - target.lat) < 0.0001 &&
+                    Math.abs(ll.lng - target.lng) < 0.0001) {
+                    setTimeout(() => marker.openPopup(), 400);
+                }
+            });
+        }
+    } else if (filter.length === 0 && typeof focusOnMap === 'function') {
+        focusOnMap(10.7769, 106.7009);
+        if (window.stationMarkers) stationMarkers.forEach((_, idx) => _resetMarker(idx));
+    }
+
+    filtered.forEach(s => {
+        let counts = { bike: 0, ebike: 0, scooter: 0 };
+        s.vehicles.forEach(v => counts[v.type] = (counts[v.type] || 0) + 1);
+
+        const fillPct = s.capacity > 0 ? Math.round((s.currentCount / s.capacity) * 100) : 0;
+        const fillColor = fillPct >= 50 ? 'bg-success' : fillPct >= 20 ? 'bg-warning' : 'bg-danger';
+        const isMatch = filter && s.name.toLowerCase().includes(filter);
+
+        listObj.insertAdjacentHTML('beforeend', `
+            <div class="station-card-list${isMatch ? ' station-card-highlight' : ''}">
+                <div class="station-header d-flex justify-content-between align-items-start">
+                    <div>
+                        <h5 class="fw-bold m-0 text-primary">${_highlightText(s.name, filter)}</h5>
+                        <span class="text-danger fw-bold small">
+                            <i class="fas fa-location-arrow"></i> ${s.dist || t('station_near_you')}
+                        </span>
+                    </div>
+                    <div class="text-end">
+                        <div class="fw-bold text-dark" style="font-size:0.85rem;">
+                            ${t('station_capacity')}: ${s.currentCount}/${s.capacity}
+                        </div>
+                        <div class="progress mt-1" style="height:6px;width:80px;margin-left:auto;">
+                            <div class="progress-bar ${fillColor}" style="width:${fillPct}%"></div>
+                        </div>
+                        <div style="font-size:0.7rem;color:#6b7280;margin-top:2px;">
+                            ${fillPct}% ${t('station_full_pct')}
+                        </div>
+                    </div>
+                </div>
+                <div class="vehicle-type-grid">
+                    <div class="vehicle-type-item ${counts.bike > 0 ? 'has-bike' : ''}">
+                        <i class="fas fa-bicycle text-success"></i>
+                        <div class="v-count">${counts.bike}</div>
+                    </div>
+                    <div class="vehicle-type-item ${counts.ebike > 0 ? 'has-bike' : ''}">
+                        <i class="fas fa-bolt text-warning"></i>
+                        <div class="v-count">${counts.ebike}</div>
+                    </div>
+                    <div class="vehicle-type-item ${counts.scooter > 0 ? 'has-bike' : ''}">
+                        <i class="fas fa-motorcycle text-primary"></i>
+                        <div class="v-count">${counts.scooter}</div>
+                    </div>
+                </div>
+                <button class="btn w-100 fw-bold py-2"
+                        style="background:#e0f2f1;color:var(--sg-primary);border-radius:14px;"
+                        onclick="viewStationVehicles(${s.id})">
+                    <i class="fas fa-search me-2"></i>${t('station_view_detail')}
+                </button>
+            </div>`);
+    });
+}
+
+function viewStationVehicles(stationId) {
+    currentStartStationId = stationId;
+    const st = stationsData.find(x => x.id === stationId);
+    document.getElementById('sd-name').innerText = st.name;
+    document.getElementById('sd-dist').innerText = st.dist || t('station_near_you');
+
+    const vList = document.getElementById('sd-vehicle-list');
+    vList.innerHTML = '';
+
+    if (!st.vehicles || st.vehicles.length === 0) {
+        vList.innerHTML = `
+            <div style="display:flex;flex-direction:column;align-items:center;
+                        justify-content:center;padding:36px 20px;gap:12px;text-align:center;">
+                <div style="width:72px;height:72px;background:#fef2f2;border-radius:50%;
+                            display:flex;align-items:center;justify-content:center;">
+                    <i class="fas fa-bicycle" style="font-size:28px;color:#fca5a5;"></i>
+                </div>
+                <div style="font-weight:800;font-size:1.05rem;color:#374151;">
+                    ${t('station_empty_title')}
+                </div>
+                <div style="font-size:0.85rem;color:#9ca3af;max-width:220px;line-height:1.5;">
+                    ${t('station_empty_desc')}
+                </div>
+                <button class="btn btn-outline-secondary btn-sm rounded-pill mt-2"
+                        onclick="closeModal('station-detail-modal')">
+                    <i class="fas fa-search me-1"></i>${t('station_find_other')}
+                </button>
+            </div>`;
+        openModal('station-detail-modal');
+        return;
+    }
+
+    st.vehicles.forEach(v => {
+        const icon = v.type === 'bike' ? 'fa-bicycle' : v.type === 'ebike' ? 'fa-bolt' : 'fa-motorcycle';
+        const colorClass = v.type === 'bike' ? 'text-success' : v.type === 'ebike' ? 'text-warning' : 'text-primary';
+        const typeLabel = t('vtype_' + v.type) || v.type;
+        const actualPrice = v.type === 'ebike' ? 1500 : v.type === 'bike' ? 500 : 1000;
+
+        let batHtml = '';
+        if (v.bat != null) {
+            const batPct = Math.max(0, Math.min(100, v.bat));
+            const batColor = batPct > 50 ? '#10b981' : batPct > 20 ? '#f59e0b' : '#ef4444';
+            const batIcon = batPct > 50 ? 'fa-battery-three-quarters'
+                : batPct > 20 ? 'fa-battery-half'
+                    : 'fa-battery-quarter';
+            const batLabel = batPct > 50 ? t('bat_good') : batPct > 20 ? t('bat_mid') : t('bat_low');
+            batHtml = `
+                <div style="margin-top:6px;">
+                    <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
+                        <i class="fas ${batIcon}" style="color:${batColor};font-size:13px;"></i>
+                        <span style="font-size:11px;font-weight:700;color:${batColor};">
+                            ${batPct}% — ${batLabel}
+                        </span>
+                    </div>
+                    <div style="background:#e2e8f0;border-radius:999px;height:5px;overflow:hidden;width:110px;">
+                        <div style="background:${batColor};width:${batPct}%;height:100%;
+                                    transition:width .4s ease;border-radius:999px;"></div>
+                    </div>
+                </div>`;
+        } else {
+            batHtml = `
+                <div style="margin-top:6px;">
+                    <span style="font-size:11px;color:#94a3b8;font-style:italic;">
+                        <i class="fas fa-leaf me-1 text-success"></i>${t('vtype_manual_note')}
+                    </span>
+                </div>`;
+        }
+
+        vList.innerHTML += `
+            <div class="single-bike-item">
+                <div class="d-flex align-items-center gap-2" style="flex:1;min-width:0;">
+                    <div class="bike-img"><i class="fas ${icon} ${colorClass}"></i></div>
+                    <div style="min-width:0;">
+                        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+                            <span class="fw-bold" style="font-size:1rem;">${v.name}</span>
+                            <span class="text-muted" style="font-size:0.78rem;">(${v.id})</span>
+                            <span class="badge"
+                                  style="background:#f0fdf4;color:#16a34a;font-size:0.7rem;border:1px solid #bbf7d0;">
+                                ${typeLabel}
+                            </span>
+                        </div>
+                        ${batHtml}
+                        <div class="mt-2">
+                            <span class="badge bg-white text-dark border">
+                                <i class="fas fa-tag text-danger me-1"></i>${v.price}${t('per_minute')}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex flex-column gap-2" style="flex-shrink:0;">
+                    <button class="btn btn-primary fw-bold px-3 rounded-pill btn-sm"
+                            onclick="selectVehicleToRent('${v.name}', ${actualPrice})">
+                        <i class="fas fa-key me-1"></i>${t('btn_rent_vehicle')}
+                    </button>
+                    <button class="btn btn-outline-warning fw-bold px-3 rounded-pill btn-sm"
+                            onclick="reserveVehicle(${v.id}, '${v.name}')">
+                        <i class="fas fa-clock me-1"></i>${t('btn_reserve')}
+                    </button>
+                </div>
+            </div>`;
+    });
+
+    openModal('station-detail-modal');
+}
+
+function updateIncentiveUI(data) {
+    const listContainer = document.getElementById("notification-list");
+    const badge = document.getElementById("promo-badge");
+    if (!listContainer || !badge) return;
+
+    const promoStations = data.filter(s => {
+        if (!s.Capacity || s.Capacity <= 0) return false;
+        return (s.CurrentBikes / s.Capacity) < 0.2;
+    });
+
+    badge.innerText = promoStations.length;
+    badge.style.display = promoStations.length > 0 ? "block" : "none";
+
+    if (promoStations.length > 0) {
+        listContainer.innerHTML = promoStations.map(s => `
+            <div class="card mb-3 border-warning" style="background:#fffbeb;">
+                <div class="card-body p-3">
+                    <h6>${s.StationName}</h6>
+                    <span class="badge bg-warning text-dark">
+                        ${t('notif_discount')}
+                    </span>
+                    <button class="btn btn-sm btn-warning w-100 mt-2"
+                            onclick="focusOnMap(${s.Latitude}, ${s.Longitude})">
+                        <i class="fas fa-location-arrow me-1"></i>${t('notif_navigate')}
+                    </button>
+                </div>
+            </div>`).join('');
+    } else {
+        listContainer.innerHTML = `
+            <div class="text-center py-3 text-muted">
+                <i class="fas fa-tag me-1 opacity-50"></i>${t('notif_empty')}
+            </div>`;
+    }
+}
+
+function _highlightText(text, keyword) {
+    if (!keyword) return text;
+    const re = new RegExp(`(${keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+    return text.replace(re, '<mark style="background:#fef08a;padding:0 2px;border-radius:3px;">$1</mark>');
+}
+
+function _highlightMarker(idx) {
+    const el = stationMarkers[idx]?.getElement();
+    if (!el) return;
+    el.style.transition = 'transform .25s ease';
+    el.style.transform = 'scale(1.35)';
+    el.style.zIndex = '1000';
+    el.style.filter = 'drop-shadow(0 0 8px #f59e0b)';
+}
+
+function _resetMarker(idx) {
+    const el = stationMarkers[idx]?.getElement();
+    if (!el) return;
+    el.style.transform = 'scale(1)';
+    el.style.zIndex = '';
+    el.style.filter = '';
+}
+
+function applyLanguage(lang) {
+    currentLang = lang;
+    localStorage.setItem("saigonride_lang", lang);
+
+    const dict = translations[lang] || translations.vi;
+    document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.getAttribute("data-i18n");
+        if (dict[key]) el.textContent = dict[key];
+    });
+
+    updateLangButtons(lang);
+    document.documentElement.lang = lang === "en" ? "en" : "vi";
+
+    // ── THÊM: re-render các UI động khi đổi ngôn ngữ ──────────────
+    if (typeof renderStationsList === 'function') renderStationsList();
+    if (typeof updateIncentiveUI === 'function') updateIncentiveUI(stationsData);
+}
