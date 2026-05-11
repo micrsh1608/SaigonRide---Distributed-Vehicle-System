@@ -244,6 +244,7 @@
     <Content Include="Views\RentalTransactionsGroup\Details.cshtml" />
     <Content Include="Views\RentalTransactionsGroup\Delete.cshtml" />
     <Content Include="Views\Home\Weather.cshtml" />
+    <Content Include="Views\Feedbacks\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
