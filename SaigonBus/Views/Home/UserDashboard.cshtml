@@ -9,6 +9,8 @@
     <title>Saigon EcoRide - Ứng dụng Thuê xe</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="~/Content/map.css" />
 
     <style>
         :root {
@@ -112,8 +114,13 @@
         }
 
         @@keyframes live-blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.25; }
+            0%, 100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.25;
+            }
         }
 
         .nav-link-custom {
@@ -785,9 +792,85 @@
                 background: white;
                 outline: none;
             }
+
+        .profile-menu-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            transition: background 0.2s;
+            cursor: pointer; /* Hiển thị con trỏ tay khi di chuyển chuột vào */
+        }
+
+            .profile-menu-item:hover {
+                background-color: #f1f5f9;
+            }
+        /* =========================
+           RANK TAG
+        ========================= */
+
+        .rank-status-tag {
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 800;
+            color: white;
+            letter-spacing: 0.5px;
+        }
+
+        .rank-bronze {
+            background: linear-gradient(135deg,#b87333,#8b5a2b);
+        }
+
+        .rank-silver {
+            background: linear-gradient(135deg,#cbd5e1,#94a3b8);
+        }
+
+        .rank-gold {
+            background: linear-gradient(135deg,#facc15,#f59e0b);
+        }
+
+        .rank-diamond {
+            background: linear-gradient(135deg,#06b6d4,#3b82f6);
+        }
+
+        .rank-vip {
+            background: linear-gradient( 135deg, #06b6d4, #8b5cf6, #ec4899, #f59e0b );
+            background-size: 300% 300%;
+            animation: vipFlow 5s ease infinite;
+        }
+
+        /* ICON */
+
+        .rank-icon-special {
+            color: white;
+        }
+
+        /* VIP ANIMATION */
+
+        @@keyframes vipFlow {
+
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
     </style>
 </head>
 <body>
+
+    <div id="weatherAlert" style="display:none" class="alert alert-warning shadow-sm">
+        🌧️ Trời đang mưa! Hãy mang áo mưa khi di chuyển.
+    </div>
 
     <nav class="customer-top-nav w-100">
         <a href="javascript:location.reload();" class="brand-logo-nav">
@@ -797,9 +880,9 @@
 
         <div class="d-flex align-items-center gap-3 gap-md-4">
             <div class="nav-links d-none d-lg-flex">
-                <a href="javascript:location.reload();" class="nav-link-custom active"><i class="fas fa-home me-1"></i> Trang chủ</a>
-                <a href="@Url.Action("About", "Home")" class="nav-link-custom"><i class="fas fa-info-circle me-1"></i> Về chúng tôi</a>
-                <a href="@Url.Action("Contact", "Home")" class="nav-link-custom"><i class="fas fa-headset me-1"></i> Hỗ trợ</a>
+                <a href="javascript:location.reload();" class="nav-link-custom active"><i class="fas fa-home me-1"></i> <span data-i18n="nav_home">Trang chủ</span></a>
+                <a href="@Url.Action("About", "Home")" class="nav-link-custom"><i class="fas fa-info-circle me-1"></i> <span data-i18n="nav_about">Về chúng tôi</span></a>
+                <a href="@Url.Action("Contact", "Home")" class="nav-link-custom"><i class="fas fa-headset me-1"></i> <span data-i18n="nav_support">Hỗ trợ</span></a>
 
                 <!-- Widget Thời tiết Realtime (Task 5) -->
                 <a href="@Url.Action("Weather", "Home")" class="nav-weather-pill" id="navWeatherPill" title="Xem thời tiết chi tiết">
@@ -811,9 +894,11 @@
 
             <div class="d-flex align-items-center gap-3">
 
-                <div class="nav-icon-wrapper position-relative" onclick="openModal('notification-modal')" title="Thông báo">
-                    <i class="fas fa-bell fs-5 text-muted"></i>
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger border border-white" style="font-size: 0.65rem;">2</span>
+                <div class="nav-icon-wrapper position-relative" onclick="openModal('notification-modal')" style="cursor:pointer; background:#f0fdf4; border-color:#bbf7d0;" title="Ưu đãi trả xe">
+                    <i class="fas fa-bell" style="color:#00897b; font-size:18px;"></i>
+                    <span id="promo-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill" style="display:none; font-size:10px; background:#ef4444; min-width:18px; padding:3px 5px;">
+                        0
+                    </span>
                 </div>
 
                 <div class="dropdown d-none d-md-block">
@@ -821,16 +906,141 @@
                         <img src="https://ui-avatars.com/api/?name=@Uri.EscapeDataString(ViewBag.FullName ?? "User")&background=00897b&color=fff&bold=true" alt="User" class="nav-avatar" id="nav-avatar-img">
                         <div class="nav-user-info">
                             <span class="nav-user-name" id="nav-user-name">@(ViewBag.FullName ?? "Khách hàng")</span>
-                            <span class="nav-user-role"><i class="fas fa-medal text-warning"></i> Hạng Bạc</span>
+
                         </div>
                         <i class="fas fa-chevron-down text-muted ms-3" style="font-size: 0.8rem;"></i>
                     </div>
                     <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-3 rounded-4 p-2" style="min-width: 240px;">
-                        <li><h6 class="dropdown-header text-uppercase fw-bold text-muted" style="letter-spacing: 1px;">Tài khoản của tôi</h6></li>
-                        <li><a class="dropdown-item py-2 fw-bold" href="#" onclick="alert('Chuyển đến Hồ sơ')"><i class="fas fa-user-circle text-primary me-2"></i> Hồ sơ cá nhân</a></li>
-                        <li><a class="dropdown-item py-2 fw-bold" href="#" onclick="openModal('gateway-modal')"><i class="fas fa-wallet text-success me-2"></i> Nạp tiền ví</a></li>
+                        <li><h6 class="dropdown-header text-uppercase fw-bold text-muted" style="letter-spacing: 1px;" data-i18n="menu_myaccount">Tài khoản của tôi</h6></li>
+                        <li><a class="dropdown-item py-2 fw-bold" href="#" onclick="alert('Chuyển đến Hồ sơ')"><i class="fas fa-user-circle text-primary me-2"></i> <span data-i18n="menu_profile">Hồ sơ cá nhân</span></a></li>
+                        <li><a class="dropdown-item py-2 fw-bold" href="#" onclick="openModal('gateway-modal')"><i class="fas fa-wallet text-success me-2"></i> <span data-i18n="menu_topup">Nạp tiền ví</span></a></li>
+                        <li>
+                            <div class="dropdown-item py-2 fw-bold" style="cursor:default;">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span><i class="fas fa-globe text-info me-2"></i> <span data-i18n="menu_language">Ngôn ngữ</span></span>
+                                    <!-- Language pill toggle -->
+                                    <div id="lang-pill-toggle" style="
+                                        display: flex;
+                                        background: #f0f2f5;
+                                        border-radius: 30px;
+                                        padding: 3px;
+                                        gap: 2px;
+                                        border: 1px solid #e0e3e8;
+                                    ">
+                                        <button onclick="setLanguage('vi', event)" id="lang-btn-vi" style="
+                                            display: flex; align-items: center; gap: 5px;
+                                            border: none; border-radius: 24px;
+                                            padding: 4px 10px; font-size: 0.78rem; font-weight: 700;
+                                            cursor: pointer; transition: all 0.22s cubic-bezier(.4,0,.2,1);
+                                            background: #00838F; color: #fff;
+                                            box-shadow: 0 2px 6px rgba(0,131,143,0.25);
+                                        ">
+                                            <svg width="18" height="13" viewBox="0 0 18 13" style="border-radius:3px;flex-shrink:0;">
+                                                <rect width="18" height="13" fill="#DA251D" />
+                                                <polygon points="9,2.2 10.1,5.6 13.7,5.6 10.8,7.7 11.9,11.1 9,9 6.1,11.1 7.2,7.7 4.3,5.6 7.9,5.6" fill="#FFFF00" />
+                                            </svg>
+                                            VI
+                                        </button>
+                                        <button onclick="setLanguage('en', event)" id="lang-btn-en" style="
+                                            display: flex; align-items: center; gap: 5px;
+                                            border: none; border-radius: 24px;
+                                            padding: 4px 10px; font-size: 0.78rem; font-weight: 700;
+                                            cursor: pointer; transition: all 0.22s cubic-bezier(.4,0,.2,1);
+                                            background: transparent; color: #555;
+                                            box-shadow: none;
+                                        ">
+                                            <svg width="18" height="13" viewBox="0 0 18 13" style="border-radius:3px;flex-shrink:0;">
+                                                <rect width="18" height="13" fill="#012169" />
+                                                <path d="M0,0 L18,13 M18,0 L0,13" stroke="#fff" stroke-width="2.6" />
+                                                <path d="M0,0 L18,13 M18,0 L0,13" stroke="#C8102E" stroke-width="1.4" />
+                                                <path d="M9,0 V13 M0,6.5 H18" stroke="#fff" stroke-width="3.5" />
+                                                <path d="M9,0 V13 M0,6.5 H18" stroke="#C8102E" stroke-width="2.1" />
+                                            </svg>
+                                            EN
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        @{
+                            string currentRank = ViewBag.CurrentRankName != null
+                                ? ViewBag.CurrentRankName.ToString().ToUpper()
+                                : "HẠNG ĐỒNG";
+
+                            string rankTagClass = "rank-bronze";
+                            string rankIconClass = "fa-shield-halved";
+
+                            if (currentRank == "HẠNG BẠC")
+                            {
+                                rankTagClass = "rank-silver";
+                                rankIconClass = "fa-dragon";
+                            }
+                            else if (currentRank == "HẠNG VÀNG")
+                            {
+                                rankTagClass = "rank-gold";
+                                rankIconClass = "fa-crown";
+                            }
+                            else if (currentRank == "KIM CƯƠNG")
+                            {
+                                rankTagClass = "rank-diamond";
+                                rankIconClass = "fa-gem";
+                            }
+                            else if (currentRank == "VIP")
+                            {
+                                rankTagClass = "rank-vip";
+                                rankIconClass = "fa-fire-flame-curved";
+                            }
+                        }
+
+                        <li class="list-unstyled">
+
+                            <div class="profile-menu-group">
+
+                                <a href="@Url.Action("MemberRank", "Home")"
+                                   class="profile-menu-item d-flex align-items-center gap-3"
+                                   style="text-decoration: none;">
+
+                                    <div class="menu-item-icon rank-icon-special @rankTagClass">
+                                        <i class="fas @rankIconClass"></i>
+                                    </div>
+
+                                    <div class="menu-item-text d-flex align-items-center gap-2">
+
+                                        <span class="lang-key rank-text-premium"
+                                              data-key="rank">
+                                            Xếp hạng
+                                        </span>
+
+                                        <span class="rank-status-tag @rankTagClass">
+                                            @currentRank
+                                        </span>
+
+                                    </div>
+
+                                </a>
+
+                            </div>
+
+                        </li>
+
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li>
+                            <a class="dropdown-item py-2 fw-bold"
+                               href="#"
+                               id="darkModeToggle">
+
+                                <i class="fas fa-moon text-dark me-2"></i>
+
+                                Dark Mode
+
+                            </a>
+                        </li>
+
+
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item py-2 text-danger fw-bold" href="@Url.Action("Portal", "Home")"><i class="fas fa-sign-out-alt me-2"></i> Đăng xuất an toàn</a></li>
+                        <li><a class="dropdown-item py-2 text-danger fw-bold" href="@Url.Action("Portal", "Home")"><i class="fas fa-sign-out-alt me-2"></i> <span data-i18n="menu_logout">Đăng xuất an toàn</span></a></li>
                     </ul>
                 </div>
 
@@ -851,14 +1061,14 @@
         <div class="vehicle-list-section" id="scrollable-section">
             <div class="hero-banner">
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <span class="badge bg-warning text-dark px-3 py-2 rounded-pill shadow-sm"><i class="fas fa-bolt me-1"></i> Dịch vụ 24/7</span>
-                    <span class="fw-bold bg-black bg-opacity-25 px-3 py-1 rounded-pill" style="font-size: 0.85rem;"><i class="fas fa-location-arrow me-1"></i> Đang ở TP.HCM</span>
+                    <span class="badge bg-warning text-dark px-3 py-2 rounded-pill shadow-sm"><i class="fas fa-bolt me-1"></i> <span data-i18n="hero_service">Dịch vụ 24/7</span></span>
+                    <span class="fw-bold bg-black bg-opacity-25 px-3 py-1 rounded-pill" style="font-size: 0.85rem;"><i class="fas fa-location-arrow me-1"></i> <span data-i18n="hero_location">Đang ở TP.HCM</span></span>
                 </div>
-                <h2 class="fw-bold mb-2">Trải nghiệm di chuyển xanh</h2>
-                <p class="opacity-85 mb-4 fs-6" style="max-width: 80%;">Mở khóa xe đạp, xe điện và scooter nhanh chóng với mã QR chỉ trong 5 giây.</p>
+                <h2 class="fw-bold mb-2" data-i18n="hero_title">Trải nghiệm di chuyển xanh</h2>
+                <p class="opacity-85 mb-4 fs-6" style="max-width: 80%;" data-i18n="hero_subtitle">Mở khóa xe đạp, xe điện và scooter nhanh chóng với mã QR chỉ trong 5 giây.</p>
                 <div class="d-flex flex-wrap gap-3">
-                    <button class="btn btn-warning fw-bold px-4 py-2 rounded-pill" onclick="handleMainAction()" style="box-shadow: 0 4px 15px rgba(245,158,11,0.4);"><i class="fas fa-qrcode me-2"></i>Thuê xe ngay</button>
-                    <button class="btn btn-light fw-bold px-4 py-2 text-primary rounded-pill" onclick="document.getElementById('station-search').focus()"><i class="fas fa-map-marker-alt me-2"></i>Tìm trạm & Xe</button>
+                    <button class="btn btn-warning fw-bold px-4 py-2 rounded-pill" onclick="handleMainAction()" style="box-shadow: 0 4px 15px rgba(245,158,11,0.4);"><i class="fas fa-qrcode me-2"></i><span data-i18n="btn_rent">Thuê xe ngay</span></button>
+                    <button class="btn btn-light fw-bold px-4 py-2 text-primary rounded-pill" onclick="document.getElementById('station-search').focus()"><i class="fas fa-map-marker-alt me-2"></i><span data-i18n="btn_find_station">Tìm trạm & Xe</span></button>
                 </div>
             </div>
 
@@ -873,7 +1083,10 @@
                 <input type="text" id="station-search" placeholder="Tìm kiếm trạm đỗ (VD: Bến Thành)..." onkeyup="renderStationsList()">
             </div>
 
-            <h5 class="fw-bold mb-3" style="color: var(--sg-text);"><i class="fas fa-map-pin text-danger me-2"></i>Trạm đỗ & Xe gần bạn</h5>
+            <div id="main-map"></div>
+
+
+            <h5 class="fw-bold mb-3" style="color: var(--sg-text);"><i class="fas fa-map-pin text-danger me-2"></i><span data-i18n="section_stations">Trạm đỗ & Xe gần bạn</span></h5>
             <div id="stations-render-area"></div>
         </div>
 
@@ -885,25 +1098,25 @@
                 <div id="tab-status" class="tab-pane active d-flex flex-column h-100">
                     <div class="wallet-card">
                         <div class="d-flex justify-content-between align-items-start mb-2">
-                            <div class="small opacity-75 fw-bold letter-spacing-1">SỐ DƯ KHẢ DỤNG</div>
+                            <div class="small opacity-75 fw-bold letter-spacing-1" data-i18n="wallet_balance">SỐ DƯ KHẢ DỤNG</div>
                             <i class="fas fa-wallet fs-4 opacity-50"></i>
                         </div>
                         <div class="wallet-balance mb-4 dyn-balance" id="display-balance">@(ViewBag.Balance != null ? string.Format("{0:N0}", ViewBag.Balance) : "0") ₫</div>
                         <button class="btn btn-light fw-bold w-100 py-3 shadow-sm" onclick="openModal('gateway-modal')" style="border-radius: 14px; color: var(--sg-primary);">
-                            <i class="fas fa-plus-circle me-1"></i> Nạp thêm tiền
+                            <i class="fas fa-plus-circle me-1"></i> <span data-i18n="btn_topup_more">Nạp thêm tiền</span>
                         </button>
                     </div>
 
                     <div class="mb-4 flex-grow-1">
                         <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h6 class="fw-bold text-muted m-0 text-uppercase" style="letter-spacing: 1px;">Trạng thái thuê xe</h6>
+                            <h6 class="fw-bold text-muted m-0 text-uppercase" style="letter-spacing: 1px;" data-i18n="status_title">Trạng thái thuê xe</h6>
                             <span class="badge bg-success bg-opacity-10 text-success"><i class="fas fa-wifi me-1"></i> Online</span>
                         </div>
 
                         <div id="status-container" class="p-4 border rounded-4 bg-light text-center transition-all">
                             <i class="fas fa-bicycle fs-1 text-muted mb-3 opacity-25"></i>
-                            <h6 class="fw-bold text-dark m-0">Chưa có chuyến đi</h6>
-                            <p class="text-muted small mt-1">Quét mã QR tại trạm để bắt đầu.</p>
+                            <h6 class="fw-bold text-dark m-0">${t('status_no_trip')}</h6>
+                            <p class="text-muted small mt-1">${t('status_scan_qr')}</p>
                         </div>
 
                         <!-- THÊM MỚI: SECTION THUÊ NHÓM ĐANG HOẠT ĐỘNG -->
@@ -939,12 +1152,12 @@
                     <h5 class="fw-bold mb-4">Ví Saigon EcoRide</h5>
                     <div class="wallet-card">
                         <div class="d-flex justify-content-between align-items-start mb-2">
-                            <div class="small opacity-75 fw-bold letter-spacing-1">SỐ DƯ KHẢ DỤNG</div>
+                            <div class="small opacity-75 fw-bold letter-spacing-1" data-i18n="wallet_balance">SỐ DƯ KHẢ DỤNG</div>
                             <i class="fas fa-wallet fs-4 opacity-50"></i>
                         </div>
                         <div class="wallet-balance mb-4 dyn-balance">150,000 ₫</div>
                         <button class="btn btn-light fw-bold w-100 py-3 shadow-sm" onclick="openModal('gateway-modal')" style="border-radius: 14px; color: var(--sg-primary);">
-                            <i class="fas fa-plus-circle me-1"></i> Nạp thêm tiền
+                            <i class="fas fa-plus-circle me-1"></i> <span data-i18n="btn_topup_more">Nạp thêm tiền</span>
                         </button>
                     </div>
                     <h6 class="fw-bold text-muted small text-uppercase mb-3 mt-4">Lịch sử giao dịch ví</h6>
@@ -993,10 +1206,10 @@
 
             <!-- HTML THÊM MỚI: BOTTOM NAV -->
             <div class="bottom-nav">
-                <div class="nav-item active" onclick="switchTab('tab-status', this)"><i class="fas fa-home"></i>Trang chủ</div>
-                <div class="nav-item" onclick="switchTab('tab-history', this)"><i class="fas fa-history"></i>Lịch sử</div>
-                <div class="nav-item" onclick="switchTab('tab-wallet', this)"><i class="fas fa-wallet"></i>Ví tiền</div>
-                <div class="nav-item" onclick="switchTab('tab-account', this)"><i class="fas fa-user"></i>Tài khoản</div>
+                <div class="nav-item active" onclick="switchTab('tab-status', this)"><i class="fas fa-home"></i><span data-i18n="nav_tab_home">Trang chủ</span></div>
+                <div class="nav-item" onclick="switchTab('tab-history', this)"><i class="fas fa-history"></i><span data-i18n="nav_tab_history">Lịch sử</span></div>
+                <div class="nav-item" onclick="switchTab('tab-wallet', this)"><i class="fas fa-wallet"></i><span data-i18n="nav_tab_wallet">Ví tiền</span></div>
+                <div class="nav-item" onclick="switchTab('tab-account', this)"><i class="fas fa-user"></i><span data-i18n="nav_tab_account">Tài khoản</span></div>
             </div>
 
         </div>
@@ -1069,49 +1282,51 @@
         </div>
     </div>
 
-    <div id="gateway-modal" class="modal-overlay">
-        <div class="modal-card">
-            <button class="btn-close-modal" onclick="closeModal('gateway-modal')"><i class="fas fa-times"></i></button>
-            <h4 class="fw-bold mb-1">Nạp tiền vào ví</h4>
-            <p class="text-muted small mb-4">Chọn phương thức thanh toán an toàn</p>
+    <div id="rechargeModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+        <div id="gateway-modal" class="modal-overlay">
+            <div class="modal-card">
+                <button class="btn-close-modal" onclick="closeModal('gateway-modal')"><i class="fas fa-times"></i></button>
+                <h4 class="fw-bold mb-1">Nạp tiền vào ví</h4>
+                <p class="text-muted small mb-4">Chọn phương thức thanh toán an toàn</p>
 
-            <div class="radio-option selected" onclick="selectPaymentMethod(this, 'momo')">
-                <input type="radio" name="topup-method" value="momo" checked>
-                <img src="https://img.mservice.com.vn/app/img/portal_documents/mini-app_design-guideline_branding-guide-2-2.png" class="pay-logo">
-                <div class="flex-grow-1">
-                    <div class="fw-bold">Ví MoMo</div>
-                    <div class="small text-muted">Thanh toán tự động (Local)</div>
+                <div class="radio-option selected" onclick="selectPaymentMethod(this, 'momo')">
+                    <input type="radio" name="topup-method" value="momo" checked>
+                    <img src="https://img.mservice.com.vn/app/img/portal_documents/mini-app_design-guideline_branding-guide-2-2.png" class="pay-logo">
+                    <div class="flex-grow-1">
+                        <div class="fw-bold">Ví MoMo</div>
+                        <div class="small text-muted">Thanh toán tự động (Local)</div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="radio-option" onclick="selectPaymentMethod(this, 'zalopay')">
-                <input type="radio" name="topup-method" value="zalo">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTlp4qW2M8xPofmuZHwEfGi9mNMWUG0zs53A&s" class="pay-logo" style="border-radius: 8px;">
-                <div class="flex-grow-1">
-                    <div class="fw-bold">ZaloPay</div>
-                    <div class="small text-muted">Liên kết Zalo (Local)</div>
+                <div class="radio-option" onclick="selectPaymentMethod(this, 'zalopay')">
+                    <input type="radio" name="topup-method" value="zalo">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTlp4qW2M8xPofmuZHwEfGi9mNMWUG0zs53A&s" class="pay-logo" style="border-radius: 8px;">
+                    <div class="flex-grow-1">
+                        <div class="fw-bold">ZaloPay</div>
+                        <div class="small text-muted">Liên kết Zalo (Local)</div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="radio-option" onclick="selectPaymentMethod(this, 'visa')">
-                <input type="radio" name="topup-method" value="visa">
-                <div class="d-flex align-items-center justify-content-center text-primary bg-white border rounded shadow-sm" style="width: 40px; height: 35px; margin-right: 15px;">
-                    <i class="fab fa-cc-visa fs-4"></i>
+                <div class="radio-option" onclick="selectPaymentMethod(this, 'visa')">
+                    <input type="radio" name="topup-method" value="visa">
+                    <div class="d-flex align-items-center justify-content-center text-primary bg-white border rounded shadow-sm" style="width: 40px; height: 35px; margin-right: 15px;">
+                        <i class="fab fa-cc-visa fs-4"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="fw-bold">Visa / Mastercard</div>
+                        <div class="small text-muted">For Foreigners</div>
+                    </div>
                 </div>
-                <div class="flex-grow-1">
-                    <div class="fw-bold">Visa / Mastercard</div>
-                    <div class="small text-muted">For Foreigners</div>
+
+                <div class="mt-4">
+                    <label class="form-label-mini">Số tiền cần nạp (VNĐ)</label>
+                    <input type="number" id="topup-amount" class="form-control py-3 rounded-4 bg-light" placeholder="Ví dụ: 50000" style="font-size: 1.2rem; font-weight: bold; border: 2px solid #e2e8f0; outline: none;">
                 </div>
-            </div>
 
-            <div class="mt-4">
-                <label class="form-label-mini">Số tiền cần nạp (VNĐ)</label>
-                <input type="number" id="topup-amount" class="form-control py-3 rounded-4 bg-light" placeholder="Ví dụ: 50000" style="font-size: 1.2rem; font-weight: bold; border: 2px solid #e2e8f0; outline: none;">
+                <button class="btn btn-success w-100 fw-bold py-3 mt-4 shadow" style="border-radius: 14px;" onclick="processTopup()">
+                    <i class="fas fa-lock me-2"></i>Thanh toán an toàn
+                </button>
             </div>
-
-            <button class="btn btn-success w-100 fw-bold py-3 mt-4 shadow" style="border-radius: 14px;" onclick="processTopup()">
-                <i class="fas fa-lock me-2"></i>Thanh toán an toàn
-            </button>
         </div>
     </div>
 
@@ -1127,15 +1342,6 @@
         </div>
     </div>
 
-    <div id="notification-modal" class="modal-overlay">
-        <div class="modal-card text-center">
-            <button class="btn-close-modal" onclick="closeModal('notification-modal')"><i class="fas fa-times"></i></button>
-            <i class="fas fa-bell-slash fs-1 text-muted mb-3 opacity-50"></i>
-            <h5 class="fw-bold">Không có thông báo mới</h5>
-        </div>
-    </div>
-
-    <!-- MODAL THUÊ NHÓM (MỚI) -->
     <div id="group-modal" class="modal-overlay">
         <div class="modal-card">
             <button class="btn-close-modal" onclick="closeModal('group-modal')"><i class="fas fa-times"></i></button>
@@ -1169,8 +1375,51 @@
             </button>
         </div>
     </div>
+    <div id="notification-modal" class="modal-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:1050; padding-top:80px; overflow-y:auto;">
+        <div style="background:#fff; width:92%; max-width:420px; border-radius:20px; overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,0.2); margin:0 auto;">
+
+            <div style="background:linear-gradient(135deg,#00897b,#00695c); padding:18px 20px; display:flex; align-items:center; justify-content:space-between;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <div style="width:36px; height:36px; background:rgba(255,255,255,0.2); border-radius:10px; display:flex; align-items:center; justify-content:center;">
+                        <i class="fas fa-gift" style="color:#fbbf24; font-size:16px;"></i>
+                    </div>
+                    <div>
+                        <div style="color:#fff; font-weight:700; font-size:15px;">Ưu đãi trả xe</div>
+                        <div style="color:rgba(255,255,255,0.75); font-size:12px;">Trạm thiếu xe — giảm 15% + thưởng điểm</div>
+                    </div>
+                </div>
+                <button onclick="closeModal('notification-modal')" style="background:rgba(255,255,255,0.2); border:none; border-radius:8px; width:30px; height:30px; color:#fff; cursor:pointer;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div style="background:#fffbeb; border-bottom:1px solid #fde68a; padding:10px 16px; display:flex; align-items:center; gap:8px;">
+                <i class="fas fa-info-circle" style="color:#d97706;"></i>
+                <span style="font-size:12px; color:#92400e;">
+                    Trả xe về trạm dưới đây: <strong>giảm 15% cước</strong> và <strong>+50 điểm thưởng</strong> ngay!
+                </span>
+            </div>
+
+            <div id="notification-list" style="max-height:380px; overflow-y:auto; padding:12px 14px;">
+                <div style="text-align:center; padding:24px; color:#94a3b8;">
+                    <i class="fas fa-spinner fa-spin" style="font-size:20px; display:block; margin-bottom:8px;"></i>
+                    Đang kiểm tra ưu đãi...
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div style="padding:12px 16px; border-top:1px solid #f1f5f9; text-align:center;">
+                <span style="font-size:11px; color:#94a3b8;">
+                    <i class="fas fa-sync-alt me-1"></i>Tự động cập nhật mỗi 60 giây
+                </span>
+            </div>
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="~/Scripts/lang.js"></script>
+    <script src="~/Scripts/map.js"></script>
 
     <script>
         let balance = @(ViewBag.Balance != null ? ViewBag.Balance : 0);
@@ -1180,12 +1429,11 @@
         let currentRate = 1000;
         let currentStartStationId = 0;
         let vehicleType = "Xe đạp";
+        let vehicleCategory = "StandardBike";
 
-        const stationsData = [];
+        let stationsData = [];
 
         function loadStationsFromDB() {
-            // Lấy dữ liệu trạm thực tế từ DB (Giả lập qua fetch nếu có API, hoặc lấy từ Model)
-            // Ở đây ta sử dụng dữ liệu đã được nạp sẵn từ Razor nếu có, hoặc dùng fetch
             fetch('/Stations/GetStationsData')
                 .then(r => r.json())
                 .then(data => {
@@ -1193,7 +1441,9 @@
                     data.forEach(s => stationsData.push(s));
                     renderStationsList();
                     populateGroupStations();
-                    loadActiveGroupRentals(); // Load thuê nhóm sau khi có data trạm
+                    loadActiveGroupRentals();
+                    updateIncentiveUI(data);
+                    if (typeof renderStationsOnMap === 'function') renderStationsOnMap(stationsData);
                 });
         }
 
@@ -1237,10 +1487,10 @@
                         <div class="station-header d-flex justify-content-between align-items-start">
                             <div>
                                 <h5 class="fw-bold m-0 text-primary">${s.name}</h5>
-                                <span class="text-danger fw-bold small"><i class="fas fa-location-arrow"></i> ${s.dist}</span>
+<span class="text-danger fw-bold small"><i class="fas fa-location-arrow"></i> ${s.dist}</span>
                             </div>
                             <div class="text-end">
-                                <div class="fw-bold text-dark" style="font-size: 0.85rem;">Sức chứa: ${s.currentCount}/${s.capacity}</div>
+<div class="fw-bold text-dark" style="font-size: 0.85rem;">${t('station_capacity')}: ${s.currentCount}/${s.capacity}</div>
                                 <div class="progress mt-1" style="height: 6px; width: 80px; margin-left: auto;">
                                     <div class="progress-bar bg-success" style="width: ${(s.currentCount/s.capacity)*100}%"></div>
                                 </div>
@@ -1252,7 +1502,7 @@
                             <div class="vehicle-type-item ${counts.scooter>0?'has-bike':''}"><i class="fas fa-motorcycle text-primary"></i><div class="v-count">${counts.scooter}</div></div>
                         </div>
                         <button class="btn w-100 fw-bold py-3" style="background: #e0f2f1; color: var(--sg-primary); border-radius: 14px;" onclick="viewStationVehicles(${s.id})">
-                            <i class="fas fa-search me-2"></i> Xem chi tiết xe đang đỗ
+                            <i class="fas fa-search me-2"></i> ${t('station_view_detail')}
                         </button>
                     </div>`;
                 listObj.insertAdjacentHTML('beforeend', html);
@@ -1317,6 +1567,8 @@
             const quantity = document.getElementById('group-quantity').value;
             const errorDiv = document.getElementById('group-error');
 
+            showRouteBetweenStations(stationId, endStationId);
+
             errorDiv.classList.add('d-none');
 
             fetch('/RentalTransactionsGroup/ProcessGroupRental', {
@@ -1328,12 +1580,11 @@
                   if (data.success) {
                       showToast(data.message, 'success');
                       closeModal('group-modal');
-                      location.reload(); // Tải lại để cập nhật số dư
+                      location.reload();
                   } else {
                       if (data.maxAvailable !== undefined) {
                           errorDiv.innerText = data.message;
                           errorDiv.classList.remove('d-none');
-                          // Cập nhật input quantity thành số lượng tối đa nếu người dùng muốn
                           if (confirm(data.message)) {
                               document.getElementById('group-quantity').value = data.maxAvailable;
                           }
@@ -1347,13 +1598,20 @@
         function selectVehicleToRent(name, price) {
             vehicleType = name;
             currentRate = price;
+
+            if (price === 500) vehicleCategory = "StandardBike";
+            else if (price === 1500) vehicleCategory = "EBike";
+            else vehicleCategory = "Scooter";
+
             closeModal('station-detail-modal');
             openModal('qr-modal');
         }
 
         function handleMainAction() {
             if (!isRiding) {
-                currentRate = 500; vehicleType = "Xe đạp (Nhanh)";
+                currentRate = 500;
+                vehicleType = "Xe đạp (Nhanh)";
+                vehicleCategory = "StandardBike";
                 openModal('qr-modal');
             } else {
                 goToCheckOut();
@@ -1408,6 +1666,7 @@
             }
 
             localStorage.setItem('checkout_type', vehicleType);
+            localStorage.setItem('checkout_category', vehicleCategory);
             localStorage.setItem('checkout_mins', totalMins);
             localStorage.setItem('checkout_rate', currentRate);
             localStorage.setItem('checkout_total', totalCost);
@@ -1427,7 +1686,7 @@
 
             if (isRiding) {
                 mainBtn.className = "btn-pay-now bg-danger";
-                mainBtn.innerHTML = `<i class="fas fa-stop-circle me-2"></i>Kết thúc chuyến đi`;
+                mainBtn.innerHTML = `<i class="fas fa-stop-circle me-2"></i>${t('btn_checkout')}`;
 
                 statusContainer.className = "p-4 border rounded-4 bg-white text-center shadow-sm";
                 statusContainer.innerHTML = `
@@ -1439,13 +1698,13 @@
                 `;
             } else {
                 mainBtn.className = "btn-pay-now";
-                mainBtn.innerHTML = `<i class="fas fa-qrcode me-2"></i>Thuê xe ngay`;
+                mainBtn.innerHTML = `<i class="fas fa-qrcode me-2"></i>${t('btn_rent')}`;
 
                 statusContainer.className = "p-4 border rounded-4 bg-light text-center";
                 statusContainer.innerHTML = `
                     <i class="fas fa-bicycle fs-1 text-muted mb-3 opacity-25"></i>
-                    <h6 class="fw-bold text-dark m-0">Chưa có chuyến đi</h6>
-                    <p class="text-muted small mt-1">Quét mã QR tại trạm để bắt đầu.</p>
+                    <h6 class="fw-bold text-dark m-0" data-i18n="status_no_trip">Chưa có chuyến đi</h6>
+                    <p class="text-muted small mt-1" data-i18n="status_scan_qr">Quét mã QR tại trạm để bắt đầu.</p>
                 `;
             }
         }
@@ -1555,6 +1814,7 @@
             // Luôn đồng bộ với cơ sở dữ liệu thay vì lấy từ LocalStorage
             localStorage.setItem('user_balance', balance);
             updateDOM();
+            if (typeof initMap === 'function') initMap();
             loadStationsFromDB();
         };
 
@@ -1771,5 +2031,697 @@
             }
         })();
     </script>
+
+    <!-- ===== HỆ THỐNG ĐA NGÔN NGỮ (i18n) ===== -->
+    <script>
+
+        /* =========================
+           LANGUAGE SYSTEM
+        ========================= */
+
+        // translations and t() loaded from lang.js
+
+        function applyLanguage(lang) {
+
+            currentLang = lang;
+
+            localStorage.setItem(
+                "saigonride_lang",
+                lang
+            );
+
+            const dict =
+                translations[lang] || translations.vi;
+
+            document.querySelectorAll("[data-i18n]")
+                .forEach(el => {
+
+                    const key =
+                        el.getAttribute("data-i18n");
+
+                    if (dict[key]) {
+
+                        el.textContent = dict[key];
+
+                    }
+
+                });
+
+            updateLangButtons(lang);
+
+            document.documentElement.lang =
+                lang === "en" ? "en" : "vi";
+            if (typeof renderStationsList === 'function') renderStationsList();
+            if (typeof renderStationsOnMap === 'function') renderStationsOnMap(stationsData);
+        }
+
+        /* =========================
+           UPDATE LANGUAGE BUTTONS
+        ========================= */
+
+        function updateLangButtons(lang) {
+
+            const btnVi =
+                document.getElementById("lang-btn-vi");
+
+            const btnEn =
+                document.getElementById("lang-btn-en");
+
+            if (!btnVi || !btnEn) return;
+
+            if (lang === "vi") {
+
+                btnVi.style.background = "#00838F";
+                btnVi.style.color = "#fff";
+                btnVi.style.boxShadow =
+                    "0 2px 6px rgba(0,131,143,0.25)";
+
+                btnEn.style.background = "transparent";
+                btnEn.style.color = "#555";
+                btnEn.style.boxShadow = "none";
+
+            } else {
+
+                btnEn.style.background = "#00838F";
+                btnEn.style.color = "#fff";
+                btnEn.style.boxShadow =
+                    "0 2px 6px rgba(0,131,143,0.25)";
+
+                btnVi.style.background = "transparent";
+                btnVi.style.color = "#555";
+                btnVi.style.boxShadow = "none";
+            }
+        }
+
+        /* =========================
+           SET LANGUAGE
+        ========================= */
+
+        function setLanguage(lang, event) {
+
+            if (event) {
+                event.preventDefault();
+            }
+
+            applyLanguage(lang);
+        }
+
+        /* =========================
+           STATION DATA
+        ========================= */
+
+        // stationsData already declared above
+
+        function updateIncentiveUI(data) {
+
+            const listContainer =
+                document.getElementById("notification-list");
+
+            const badge =
+                document.getElementById("promo-badge");
+
+            if (!listContainer || !badge) return;
+
+            const promoStations = data.filter(s => {
+
+                if (!s.Capacity || s.Capacity <= 0)
+                    return false;
+
+                return (s.CurrentBikes / s.Capacity) < 0.2;
+            });
+
+            badge.innerText = promoStations.length;
+
+            badge.style.display =
+                promoStations.length > 0
+                    ? "block"
+                    : "none";
+
+            if (promoStations.length > 0) {
+
+                listContainer.innerHTML =
+                    promoStations.map(s => `
+
+                        <div class="card mb-3 border-warning"
+                             style="background:#fffbeb;">
+
+                            <div class="card-body p-3">
+
+                                <h6>${s.StationName}</h6>
+
+                                <span class="badge bg-warning text-dark">
+                                    -15%
+                                </span>
+
+                                <button
+                                    class="btn btn-sm btn-warning w-100 mt-2"
+                                    onclick="focusOnMap(${s.Latitude}, ${s.Longitude})">
+
+                                    Dẫn đường
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    `).join("");
+
+            } else {
+
+                listContainer.innerHTML = `
+
+                        <div class="text-center py-3 text-muted">
+
+                            Hiện chưa có ưu đãi
+
+                        </div>
+
+                    `;
+            }
+        }
+
+        /* =========================
+           LOAD STATIONS
+        ========================= */
+
+        // [REMOVED DUPLICATE] function loadStationsFromDB() {
+        // [REMOVED DUPLICATE]         // [REMOVED DUPLICATE] fetch('/Home/GetStationsData')
+        // [REMOVED DUPLICATE]         // [REMOVED DUPLICATE] .then(r => r.json())
+        // [REMOVED DUPLICATE]         // [REMOVED DUPLICATE] .then(data => {
+        // [REMOVED DUPLICATE]         // [REMOVED DUPLICATE] stationsData = data;
+        // [REMOVED DUPLICATE]         // [REMOVED DUPLICATE] if (typeof renderStationsList === "function") {
+        // [REMOVED DUPLICATE] renderStationsList();
+        // [REMOVED DUPLICATE] }
+        // [REMOVED DUPLICATE]         // [REMOVED DUPLICATE] if (typeof populateGroupStations === "function") {
+        // [REMOVED DUPLICATE] populateGroupStations();
+        // [REMOVED DUPLICATE] }
+        // [REMOVED DUPLICATE]         // [REMOVED DUPLICATE] updateIncentiveUI(data);
+        // [REMOVED DUPLICATE]         // [REMOVED DUPLICATE] })
+        // [REMOVED DUPLICATE]         // [REMOVED DUPLICATE] .catch(err => {
+        // [REMOVED DUPLICATE] console.error("Load station error:", err);
+        // [REMOVED DUPLICATE] });
+        // [REMOVED DUPLICATE] }
+
+        /* =========================
+           WEATHER
+        ========================= */
+
+        function checkRain(lat, lon) {
+
+            fetch(`/Weather/IsRaining?lat=${lat}&lon=${lon}`)
+
+                .then(r => r.json())
+
+                .then(data => {
+
+                    const alertBox =
+                        document.getElementById("weatherAlert");
+
+                    if (!alertBox) return;
+
+                    alertBox.style.display =
+                        data.isRaining
+                            ? "block"
+                            : "none";
+
+                })
+
+                .catch(err => {
+                    console.error("Weather error:", err);
+                });
+        }
+
+        /* =========================
+           INIT
+        ========================= */
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            applyLanguage(currentLang);
+
+            // loadStationsFromDB & initMap already called in window.onload above
+            // setInterval for auto-refresh
+            setInterval(function () {
+                fetch('/Stations/GetStationsData')
+                    .then(r => r.json())
+                    .then(data => {
+                        stationsData.length = 0;
+                        data.forEach(s => stationsData.push(s));
+                        if (typeof renderStationsOnMap === 'function') renderStationsOnMap(stationsData);
+                        if (typeof renderStationsList === 'function') renderStationsList();
+                        updateIncentiveUI(data);
+                    });
+            }, 60000);
+
+            const lat = 10.8231;
+            const lon = 106.6297;
+
+            checkRain(lat, lon);
+
+            setInterval(() => {
+
+                checkRain(lat, lon);
+
+            }, 600000);
+
+        });
+
+    </script>
+    <style>
+
+        /* CARD TRẠM XE */
+
+        body.dark-mode .station-card,
+        body.dark-mode .station-item,
+        body.dark-mode .station-box,
+        body.dark-mode .rental-station-card {
+            background: #1e1e1e !important;
+            border: 1px solid #2f2f2f !important;
+        }
+
+        /* BOX XE BÊN TRONG */
+
+        body.dark-mode .vehicle-box,
+        body.dark-mode .vehicle-item,
+        body.dark-mode .bike-box,
+        body.dark-mode .scooter-box,
+        body.dark-mode .battery-box {
+            background: #2a2a2a !important;
+            border-color: #3a3a3a !important;
+        }
+
+        /* TRẠNG THÁI THUÊ XE */
+
+        body.dark-mode .rental-status,
+        body.dark-mode .status-card,
+        body.dark-mode .trip-status-card {
+            background: #1e1e1e !important;
+            border-color: #333 !important;
+        }
+
+        /* NÚT XEM CHI TIẾT */
+
+        body.dark-mode .view-detail-btn,
+        body.dark-mode .detail-button,
+        body.dark-mode .btn-detail {
+            background: #2b2b2b !important;
+            color: #ffffff !important;
+        }
+
+        /* CHỮ BỊ MỜ */
+
+        body.dark-mode .text-muted,
+        body.dark-mode .opacity-50,
+        body.dark-mode .opacity-75,
+        body.dark-mode .small-text {
+            color: #d6d6d6 !important;
+            opacity: 1 !important;
+        }
+
+        /* FIX TITLE */
+
+        body.dark-mode .station-name,
+        body.dark-mode .station-title,
+        body.dark-mode .status-title {
+            color: #ffffff !important;
+        }
+
+        /* FIX SỨC CHỨA */
+
+        body.dark-mode .capacity-text,
+        body.dark-mode .capacity-label {
+            color: #f1f1f1 !important;
+        }
+
+        /* FIX THANH PROGRESS */
+
+        body.dark-mode .progress {
+            background: #333 !important;
+        }
+
+        body.dark-mode .progress-bar {
+            background: #00b894 !important;
+        }
+
+        /* FIX Ô TRẠNG THÁI CHƯA CÓ CHUYẾN ĐI */
+
+        body.dark-mode .empty-trip-box,
+        body.dark-mode .empty-state {
+            background: #232323 !important;
+            border-color: #333 !important;
+        }
+
+        /* FIX MÀU CHỮ SỐ XE */
+
+        body.dark-mode .vehicle-count,
+        body.dark-mode .bike-count,
+        body.dark-mode .count-number {
+            color: #ffffff !important;
+        }
+    </style>
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const darkBtn = document.getElementById("darkModeToggle");
+
+            // LOAD TRẠNG THÁI
+            if (localStorage.getItem("dashboardDarkMode") === "true") {
+                document.body.classList.add("dark-mode");
+            }
+
+            // TOGGLE DARK MODE
+            if (darkBtn) {
+
+                darkBtn.addEventListener("click", function (e) {
+
+                    e.preventDefault();
+
+                    document.body.classList.toggle("dark-mode");
+
+                    localStorage.setItem(
+                        "dashboardDarkMode",
+                        document.body.classList.contains("dark-mode")
+                    );
+
+                });
+
+            }
+
+        });
+
+    </script>
+    <style>
+
+        /* =========================
+           CLEAN DARK MODE FINAL
+        ========================= */
+
+        body.dark-mode {
+            background: #0f0f0f !important;
+            color: #ffffff !important;
+        }
+
+            /* ===== MAIN LAYOUT ===== */
+
+            body.dark-mode .container,
+            body.dark-mode .container-fluid,
+            body.dark-mode main,
+            body.dark-mode section,
+            body.dark-mode article,
+            body.dark-mode aside,
+            body.dark-mode .content,
+            body.dark-mode .dashboard-wrapper {
+                background: #0f0f0f !important;
+            }
+
+            /* ===== NAVBAR ===== */
+
+            body.dark-mode nav,
+            body.dark-mode header,
+            body.dark-mode .navbar,
+            body.dark-mode .topbar {
+                background: #181818 !important;
+                border-color: #2a2a2a !important;
+            }
+
+            /* ===== LOGO ===== */
+
+            body.dark-mode .navbar-brand,
+            body.dark-mode .logo-text {
+                color: #ffffff !important;
+            }
+
+            /* ===== DARK CARDS ===== */
+
+            body.dark-mode .card,
+            body.dark-mode .station-card,
+            body.dark-mode .station-wrapper,
+            body.dark-mode .station-container,
+            body.dark-mode .station-box,
+            body.dark-mode .vehicle-card,
+            body.dark-mode .info-card,
+            body.dark-mode .wallet-card,
+            body.dark-mode .status-card,
+            body.dark-mode .trip-status-card,
+            body.dark-mode .modal-content,
+            body.dark-mode .dropdown-menu,
+            body.dark-mode .bottom-nav,
+            body.dark-mode .bg-white,
+            body.dark-mode .list-group-item {
+                background: #1b1b1b !important;
+                border: 1px solid #2f2f2f !important;
+                box-shadow: none !important;
+            }
+
+            /* ===== VEHICLE BOX ===== */
+
+            body.dark-mode .vehicle-box,
+            body.dark-mode .bike-box,
+            body.dark-mode .scooter-box,
+            body.dark-mode .battery-box,
+            body.dark-mode .vehicle-item {
+                background: #252525 !important;
+                border: 1px solid #333 !important;
+            }
+
+            /* ===== SEARCH BAR ===== */
+
+            body.dark-mode .search-box,
+            body.dark-mode .search-container {
+                background: #ffffff !important;
+                border: none !important;
+            }
+
+                body.dark-mode .search-box input,
+                body.dark-mode .search-input,
+                body.dark-mode .search-box .form-control {
+                    background: #ffffff !important;
+                    color: #222 !important;
+                    border: none !important;
+                    box-shadow: none !important;
+                }
+
+                    body.dark-mode .search-box input::placeholder {
+                        color: #777 !important;
+                    }
+
+                body.dark-mode .search-box i {
+                    color: #666 !important;
+                }
+
+            /* ===== INPUT KHÁC ===== */
+
+            body.dark-mode textarea,
+            body.dark-mode select,
+            body.dark-mode .form-control:not(.search-box .form-control) {
+                background: #2a2a2a !important;
+                color: #ffffff !important;
+                border: 1px solid #444 !important;
+            }
+
+            /* ===== TEXT ===== */
+
+            body.dark-mode h1,
+            body.dark-mode h2,
+            body.dark-mode h3,
+            body.dark-mode h4,
+            body.dark-mode h5,
+            body.dark-mode h6,
+            body.dark-mode p,
+            body.dark-mode span,
+            body.dark-mode label,
+            body.dark-mode small,
+            body.dark-mode strong,
+            body.dark-mode li,
+            body.dark-mode a {
+                color: #f5f5f5 !important;
+                opacity: 1 !important;
+            }
+
+            /* ===== STATION TITLE ===== */
+
+            body.dark-mode .station-title,
+            body.dark-mode .station-name,
+            body.dark-mode .station-card h3,
+            body.dark-mode .station-card h4,
+            body.dark-mode .station-card h5,
+            body.dark-mode .station-card a {
+                color: #ffffff !important;
+            }
+
+            /* ===== NEARBY ===== */
+
+            body.dark-mode .nearby-label,
+            body.dark-mode .distance-label {
+                color: #ff6b6b !important;
+            }
+
+            /* ===== CAPACITY ===== */
+
+            body.dark-mode .capacity-text,
+            body.dark-mode .capacity-label {
+                color: #ffffff !important;
+            }
+
+            /* ===== VEHICLE NUMBER ===== */
+
+            body.dark-mode .vehicle-count,
+            body.dark-mode .count-number {
+                color: #ffffff !important;
+            }
+
+            /* ===== DETAIL BUTTON ===== */
+
+            body.dark-mode .view-detail-btn,
+            body.dark-mode .detail-btn,
+            body.dark-mode .station-detail-btn {
+                background: #2a2a2a !important;
+                color: #ffffff !important;
+                border: 1px solid #444 !important;
+            }
+
+            /* ===== EMPTY STATUS ===== */
+
+            body.dark-mode .empty-state,
+            body.dark-mode .empty-trip-box {
+                background: #202020 !important;
+                border-color: #333 !important;
+            }
+
+            /* ===== PROGRESS ===== */
+
+            body.dark-mode .progress {
+                background: #333 !important;
+            }
+
+            /* ===== BOTTOM NAV ===== */
+
+            body.dark-mode .bottom-nav {
+                background: #121212 !important;
+                border-top: 1px solid #2f2f2f !important;
+            }
+
+            /* ===== DROPDOWN ===== */
+
+            body.dark-mode .dropdown-item {
+                color: #ffffff !important;
+            }
+
+                body.dark-mode .dropdown-item:hover {
+                    background: #2a2a2a !important;
+                }
+
+            /* ===== DIVIDER ===== */
+
+            body.dark-mode hr,
+            body.dark-mode .dropdown-divider {
+                border-color: #444 !important;
+            }
+
+            /* ===== REMOVE FADE ===== */
+
+            body.dark-mode .station-card *,
+            body.dark-mode .trip-status-card *,
+            body.dark-mode .wallet-card * {
+                opacity: 1 !important;
+            }
+
+            /* ===== KEEP ICON COLORS ===== */
+
+            body.dark-mode .fa-bicycle {
+                color: #20c997 !important;
+            }
+
+            body.dark-mode .fa-bolt {
+                color: #ffc107 !important;
+            }
+
+            body.dark-mode .fa-motorcycle {
+                color: #0d6efd !important;
+            }
+
+            /* ===== BOOTSTRAP COLORS ===== */
+
+            body.dark-mode .text-primary {
+                color: #0d6efd !important;
+            }
+
+            body.dark-mode .text-success {
+                color: #20c997 !important;
+            }
+
+            body.dark-mode .text-danger {
+                color: #ff6b6b !important;
+            }
+
+            body.dark-mode .text-warning {
+                color: #ffc107 !important;
+            }
+
+            body.dark-mode .text-info {
+                color: #0dcaf0 !important;
+            }
+
+            /* ===== ICON FIX ===== */
+
+            body.dark-mode i,
+            body.dark-mode svg {
+                opacity: 1 !important;
+            }
+
+            /* ===== KEEP GREEN BUTTON ===== */
+
+            body.dark-mode .btn-success,
+            body.dark-mode .btn-primary,
+            body.dark-mode .green-card,
+            body.dark-mode .balance-card {
+                filter: brightness(1) !important;
+            }
+
+            /* ===== TOAST FIX ===== */
+
+            body.dark-mode .toast,
+            body.dark-mode .swal2-popup,
+            body.dark-mode .notification-toast {
+                background: #1f1f1f !important;
+                color: #ffffff !important;
+            }
+
+            /* ===== WALLET BUTTON FIX ===== */
+
+            body.dark-mode .wallet-card .btn,
+            body.dark-mode .wallet-card button,
+            body.dark-mode .wallet-card .btn-light {
+                background: #ffffff !important;
+                color: #008c7a !important;
+                border: none !important;
+                opacity: 1 !important;
+            }
+
+                body.dark-mode .wallet-card .btn i {
+                    color: #008c7a !important;
+                }
+                /* FIX CHỮ NẠP TIỀN */
+
+                body.dark-mode .wallet-card .btn,
+                body.dark-mode .wallet-card .btn span,
+                body.dark-mode .wallet-card .btn-light,
+                body.dark-mode .wallet-card .btn-light span,
+                body.dark-mode .wallet-card a {
+                    color: #008c7a !important;
+                    opacity: 1 !important;
+                    font-weight: 700 !important;
+                }
+
+                    /* FIX ICON */
+
+                    body.dark-mode .wallet-card .btn i,
+                    body.dark-mode .wallet-card .btn-light i {
+                        color: #008c7a !important;
+                    }
+    </style>
 </body>
 </html>

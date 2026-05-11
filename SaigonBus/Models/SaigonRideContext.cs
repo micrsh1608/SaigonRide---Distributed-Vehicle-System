@@ -1,3 +1,4 @@
+using SaigonBus.Controllers;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -21,5 +22,7 @@ namespace SaigonBus.Models
         public DbSet<User> Users { get; set; }
         public DbSet<GroupRental> GroupRentals { get; set; }
         public DbSet<SupportRequest> SupportRequests { get; set; }
+        public DbSet<PointTransaction> PointTransactions { get; set; }
+        public DbSet<Feedback> Feedbacks { get; set; }
     }
 }   

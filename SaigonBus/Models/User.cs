@@ -43,5 +43,7 @@ namespace SaigonBus.Models
 
         [Display(Name = "Số dư ví")]
         public decimal Balance { get; set; } = 0;
+
+        public int Point { get; set; }
     }
 }

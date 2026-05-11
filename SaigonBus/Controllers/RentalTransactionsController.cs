@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using SaigonBus.Models;
+using SaigonBus.Services;
 
 namespace SaigonBus.Controllers
 {
@@ -319,9 +320,18 @@ namespace SaigonBus.Controllers
                         if (user != null)
                         {
                             user.Balance -= finalAmount;
+
+                            var pointResult = PointService.Calculate(
+                                finalAmount: finalAmount,
+                                discountAmount: discount,
+                                vehicleCategory: vehicleType,
+                                tripStartTime: DateTime.Now,
+                                quantity: 1
+                            );
+
+                            PointService.ApplyPoints(user, pointResult, db);
                         }
                     }
-
                     db.SaveChanges();
                 }
 

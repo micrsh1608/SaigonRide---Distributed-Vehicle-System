@@ -25,8 +25,11 @@ namespace SaigonBus.Models
         public int CapacityLimit { get; set; }
 
         public int CurrentInventoryCount { get; set; }
+        /// <summary>Vĩ độ (latitude) của trạm đỗ trên bản đồ</summary>
+        public double? Latitude { get; set; }
 
-        // Navigation property: 1 Trạm có nhiều Xe
+        /// <summary>Kinh độ (longitude) của trạm đỗ trên bản đồ</summary>
+        public double? Longitude { get; set; }
         public virtual ICollection<Vehicle> Vehicles { get; set; }
     }
 }

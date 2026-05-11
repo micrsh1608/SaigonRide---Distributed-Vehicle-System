@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Web;
 using System.Web.Mvc;
 
@@ -49,6 +50,12 @@ namespace SaigonBus.Controllers
                         ViewBag.Balance = user.Balance;
                         ViewBag.Phone = user.Phone ?? "N/A";
                         ViewBag.Email = user.Email ?? "N/A";
+                        int points = user.Point;
+                        string rankName = "HẠNG ĐỒNG";
+                        if (points >= 5000) rankName = "KIM CƯƠNG";
+                        else if (points >= 2500) rankName = "HẠNG VÀNG";
+                        else if (points >= 1000) rankName = "HẠNG BẠC";
+                        ViewBag.CurrentRankName = rankName;
                     }
                 }
             }
@@ -92,6 +99,76 @@ namespace SaigonBus.Controllers
         public ActionResult Weather()
         {
             return View();
+        }
+        [Authorize]
+        public ActionResult MemberRank()
+        {
+            using (var db = new Models.SaigonRideContext())
+            {
+                string username = User.Identity.Name;
+                var user = db.Users.FirstOrDefault(u => u.Username == username);
+
+                if (user == null) return RedirectToAction("Login", "Account");
+
+                int points = user.Point;
+
+                string rankName = "HẠNG ĐỒNG";
+                string nextRankName = "HẠNG BẠC";
+                int currentRankMinPoint = 0;
+                int nextRankPoint = 1000;
+
+                if (points >= 5000)
+                {
+                    rankName = "KIM CƯƠNG";
+                    nextRankName = "—";
+                    currentRankMinPoint = 5000;
+                    nextRankPoint = 10000;
+                }
+                else if (points >= 2500)
+                {
+                    rankName = "HẠNG VÀNG";
+                    nextRankName = "KIM CƯƠNG";
+                    currentRankMinPoint = 2500;
+                    nextRankPoint = 5000;
+                }
+                else if (points >= 1000)
+                {
+                    rankName = "HẠNG BẠC";
+                    nextRankName = "HẠNG VÀNG";
+                    currentRankMinPoint = 1000;
+                    nextRankPoint = 2500;
+                }
+
+                int progress = ((points - currentRankMinPoint) * 100) / (nextRankPoint - currentRankMinPoint);
+                if (progress < 0) progress = 0;
+                if (progress > 100) progress = 100;
+
+                ViewBag.CurrentRankPosition = db.Users.Count(u => u.Point > points) + 1;
+                ViewBag.TotalUsers = db.Users.Count();
+                ViewBag.CurrentRankName = rankName;
+                ViewBag.CurrentPoints = points;
+                ViewBag.NextRankName = nextRankName;
+                ViewBag.ProgressPercentage = progress;
+                ViewBag.PointsToNextRank = Math.Max(0, nextRankPoint - points);
+
+                return View();
+            }
+        }
+        [HttpGet]
+        public JsonResult GetStationsData()
+        {
+            using (var db = new Models.SaigonRideContext())
+            {
+                var stations = db.Stations.Select(s => new {
+                    s.StationId,
+                    StationName = s.LocationName,
+                    CurrentBikes = s.CurrentInventoryCount,
+                    Capacity = s.CapacityLimit,
+                    Latitude = (double?)null,
+                    Longitude = (double?)null
+                }).ToList();
+                return Json(stations, JsonRequestBehavior.AllowGet);
+            }
         }
     }
 }

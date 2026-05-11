@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace SaigonBus.Models
 {
@@ -6,29 +6,13 @@ namespace SaigonBus.Models
     {
         public int Id { get; set; }
 
-        public string Username
-        {
-            get;
-            set;
-        }
+        public string Username { get; set; }
 
-        public string Note
-        {
-            get;
-            set;
-        }
+        public string Note { get; set; }
 
-        public int Rating
-        {
-            get;
-            set;
-        }
+        public int Rating { get; set; }
 
-        public DateTime CreatedAt
-        {
-            get;
-            set;
-        }
-        = DateTime.Now;
+        public DateTime CreatedAt { get; set; }
+            = DateTime.Now;
     }
 }

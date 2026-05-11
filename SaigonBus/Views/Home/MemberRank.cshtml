@@ -1,0 +1,570 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xếp hạng thành viên - Saigon EcoRide</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --sg-primary: #0f8b7f;
+            --sg-primary-dark: #0a6e63;
+            --sg-primary-light: #14b8a6;
+            --sg-bg: #eef2f5;
+            --sg-card: #ffffff;
+            --sg-text: #1e293b;
+            --sg-muted: #64748b;
+            --sg-border: #e5e7eb;
+            --sg-gold: #f5b301;
+            --sg-silver: #94a3b8;
+            --sg-bronze: #b87333;
+            --sg-diamond: #06b6d4;
+        }
+
+        body {
+            background: var(--sg-bg);
+            font-family: 'Be Vietnam Pro', sans-serif;
+            color: var(--sg-text);
+        }
+
+
+
+        .member-dashboard {
+            max-width: 1400px;
+            margin: auto;
+            padding: 24px;
+        }
+
+        .title-block {
+            background: linear-gradient(135deg, #0f8b7f, #0a6e63);
+            border-radius: 24px;
+            padding: 24px 34px !important;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 24px rgba(15,23,42,0.06);
+        }
+
+            .title-block h1 {
+                color: white;
+                margin: 0;
+                font-size: 30px;
+                font-weight: 700;
+                letter-spacing: -0.5px;
+                text-align: center;
+                font-weight: 900;
+            }
+
+        .breadcrumb-container {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 16px 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            display: flex;
+            align-items: center;
+        }
+
+        .breadcrumb-custom {
+            margin-bottom: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            list-style: none;
+            padding: 0;
+            font-size: 15px;
+        }
+
+        .breadcrumb-item-custom {
+            color: #64748b;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+            .breadcrumb-item-custom i {
+                color: #64748b;
+            }
+
+            .breadcrumb-item-custom.active {
+                color: #0f8b7f;
+                font-weight: 700;
+            }
+
+        .breadcrumb-separator {
+            color: #cbd5e1;
+            font-size: 12px;
+        }
+
+        .card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 24px;
+            padding: 34px !important;
+            background: #ffffff;
+            border: 1px solid #edf2f7;
+            box-shadow: 0 8px 24px rgba(15,23,42,0.06);
+        }
+
+            .card::before,
+            .card::after {
+                content: "";
+                position: absolute;
+                border-radius: 50%;
+                filter: blur(40px);
+                z-index: -1;
+            }
+
+            .card::before {
+                width: 350px;
+                height: 350px;
+                top: -180px;
+                right: -120px;
+                background: rgba(6,182,212,0.18);
+            }
+
+            .card::after {
+                width: 300px;
+                height: 300px;
+                bottom: -160px;
+                left: -100px;
+                background: rgba(0,137,123,0.15);
+            }
+
+        .rank-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 20px;
+            border-radius: 999px;
+            font-weight: 800;
+            font-size: 14px;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .point-number {
+            font-size: 64px;
+            font-weight: 900;
+            color: white;
+            line-height: 1;
+            letter-spacing: -2px;
+        }
+
+        .point-label {
+            font-size: 14px;
+            color: var(--sg-muted);
+        }
+
+        .progress {
+            height: 12px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, #facc15, #f59e0b);
+            border-radius: 999px;
+        }
+
+        .benefit-card {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(145deg, #ffffff, #f8fafc);
+            border-radius: 24px;
+            border: 1px solid #edf2f7;
+            padding: 24px !important;
+            box-shadow: 0 10px 25px rgba(15,23,42,0.05), inset 0 1px 0 rgba(255,255,255,0.8);
+            transition: all 0.25s ease;
+        }
+
+            .benefit-card:hover {
+                transform: translateY(-6px);
+                box-shadow: 0 18px 40px rgba(15,23,42,0.12);
+            }
+
+        .benefit-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+
+        .icon-yellow {
+            background: rgba(245,179,1,0.12);
+            color: #f5b301;
+        }
+
+        .icon-red {
+            background: rgba(239,68,68,0.12);
+            color: #ef4444;
+        }
+
+        .rank-bronze {
+            background: linear-gradient(135deg, #b87333, #8c5523);
+            color: white;
+        }
+
+        .rank-silver {
+            background: linear-gradient(135deg, #cbd5e1, #94a3b8);
+            color: white;
+        }
+
+        .rank-gold {
+            background: linear-gradient(135deg, #facc15, #f59e0b);
+            color: white;
+        }
+
+        .rank-diamond {
+            background: linear-gradient(135deg, #06b6d4, #0284c7);
+            color: white;
+        }
+
+        .rank-header-card {
+            background: linear-gradient(135deg, #0f8b7f, #0a6e63);
+            color: white;
+            border: none;
+        }
+
+        .rank-subtitle {
+            color: rgba(255,255,255,0.78);
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        .point-label {
+            color: rgba(255,255,255,0.78);
+            font-size: 15px;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        .progress-text {
+            color: rgba(255,255,255,0.9);
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .progress-percent {
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 800;
+        }
+
+
+        .progress {
+            height: 16px;
+            background: #dbeafe;
+            border-radius: 999px;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, #06b6d4, #00897b);
+            border-radius: 999px;
+        }
+
+        .rank-card {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(145deg, #ffffff, #f8fafc);
+            border-radius: 26px;
+            border: 1px solid #edf2f7;
+            padding: 28px 20px !important;
+            transition: all 0.25s ease;
+            box-shadow: 0 10px 25px rgba(15,23,42,0.05), inset 0 1px 0 rgba(255,255,255,0.8);
+        }
+
+            .rank-card:hover {
+                transform: translateY(-10px) scale(1.03);
+                box-shadow: 0 20px 40px rgba(15,23,42,0.12);
+            }
+
+            .rank-card::before {
+                content: "";
+                position: absolute;
+                top: -60px;
+                right: -60px;
+                width: 140px;
+                height: 140px;
+                border-radius: 50%;
+                opacity: 0.12;
+            }
+
+            .rank-card i {
+                font-size: 42px;
+                margin-bottom: 16px;
+            }
+
+            .rank-card .fw-bold {
+                font-size: 24px;
+                font-weight: 900 !important;
+                letter-spacing: -0.5px;
+            }
+
+            .rank-card small {
+                color: #64748b;
+                font-size: 15px;
+            }
+
+        .bronze::before {
+            background: #b87333;
+        }
+
+        .silver::before {
+            background: #94a3b8;
+        }
+
+        .gold::before {
+            background: #f5b301;
+        }
+
+        .diamond::before {
+            background: #06b6d4;
+        }
+
+        .bronze i {
+            color: #b87333;
+        }
+
+        .silver i {
+            color: #94a3b8;
+        }
+
+        .gold i {
+            color: #f59e0b;
+        }
+
+        .diamond i {
+            color: #06b6d4;
+        }
+
+        h5 {
+            font-size: 28px;
+            font-weight: 900;
+            color: #0f172a;
+            margin-bottom: 22px;
+            letter-spacing: -1px;
+            position: relative;
+            display: inline-block;
+        }
+
+            h5::after {
+                content: "";
+                position: absolute;
+                left: 0;
+                bottom: -8px;
+                width: 60%;
+                height: 4px;
+                border-radius: 999px;
+                background: linear-gradient(90deg, #14b8a6, transparent);
+            }
+
+        .active-rank {
+            border: 2px solid #14b8a6 !important;
+            box-shadow: 0 0 0 6px rgba(20,184,166,0.12), 0 20px 40px rgba(15,23,42,0.12);
+        }
+
+        @@keyframes shine {
+            100% {
+                transform: translateX(200%);
+            }
+        }
+
+        @@media (max-width: 992px) {
+            .member-dashboard {
+                padding: 16px;
+            }
+
+            .point-number {
+                font-size: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="member-dashboard">
+        <div class="breadcrumb-container">
+            <ul class="breadcrumb-custom">
+                <li>
+                    <a href="@Url.Action("UserDashboard", "Home")" class="breadcrumb-item-custom">
+                        <i class="fas fa-home"></i>
+                        Trang chủ Khách hàng
+                    </a>
+                </li>
+                </li>
+                <li class="breadcrumb-separator">
+                    <i class="fas fa-chevron-right"></i>
+                </li>
+                <li>
+                    <span class="breadcrumb-item-custom active">Xếp hạng thành viên</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="member-dashboard">
+        <div class="card rank-header-card p-4 mb-4 position-relative overflow-hidden">
+            <div class="title-block">
+                <h1>Xếp hạng thành viên</h1>
+            </div>
+
+            <div class="rank-bg"></div>
+
+            <div class="floating-light light-1"></div>
+            <div class="floating-light light-2"></div>
+
+            <div class="bg-circle bg-primary"></div>
+            <div class="bg-circle bg-info"></div>
+
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+
+                <div>
+                    <div class="rank-subtitle mb-3">
+                        Hạng hiện tại
+                    </div>
+
+                    @{
+                        string rankName = ViewBag.CurrentRankName != null
+                            ? ViewBag.CurrentRankName.ToString().ToUpper()
+                            : "HẠNG ĐỒNG";
+
+                        string rankClass = "rank-bronze";
+                        string rankIcon = "fa-shield-halved";
+
+                        switch (rankName)
+                        {
+                            case "HẠNG BẠC":
+                                rankClass = "rank-silver";
+                                rankIcon = "fa-dragon";
+                                break;
+
+                            case "HẠNG VÀNG":
+                                rankClass = "rank-gold";
+                                rankIcon = "fa-crown";
+                                break;
+
+                            case "KIM CƯƠNG":
+                                rankClass = "rank-diamond";
+                                rankIcon = "fa-gem";
+                                break;
+                        }
+                    }
+
+                    <div class="rank-badge @rankClass">
+                        <i class="fas @rankIcon"></i>
+                        @rankName
+                    </div>
+                </div>
+
+                <div class="text-end">
+
+                    <div class="point-number">
+                        @String.Format("{0:N0}", ViewBag.CurrentPoints ?? 0)
+                    </div>
+
+                    <div class="point-label">
+                        Tổng điểm tích lũy
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="progress-wrapper mt-4">
+
+                <div class="d-flex justify-content-between align-items-center mb-2">
+
+                    <span class="progress-text">
+                        Tiến độ lên @ViewBag.NextRankName
+                    </span>
+
+                    <span class="progress-percent">
+                        @ViewBag.ProgressPercentage%
+                    </span>
+
+                </div>
+
+                <div class="progress">
+                    <div class="progress-bar"
+                         style="width:@ViewBag.ProgressPercentage%">
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <h5 class="mb-3">QUYỀN LỢI ĐẶC QUYỀN</h5>
+        <div class="row g-3">
+            <div class="col-md-4">
+                <div class="benefit-card p-3 d-flex align-items-center gap-3 border rounded">
+                    <div class="benefit-icon icon-yellow">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <div>
+                        <div class="fw-bold">Ưu tiên mở khóa xe</div>
+                        <div class="text-secondary small">Xử lý nhanh hơn cho thành viên cao cấp</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="benefit-card p-3 d-flex align-items-center gap-3 border rounded">
+                    <div class="benefit-icon icon-red">
+                        <i class="fas fa-gift"></i>
+                    </div>
+                    <div>
+                        <div class="fw-bold">Voucher độc quyền</div>
+                        <div class="text-secondary small">Ưu đãi và mã giảm giá hàng tháng</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h5 class="mt-4 mb-3">CẤP BẬC THÀNH VIÊN</h5>
+        <div class="row g-3">
+            <div class="col-md-2">
+                <div class="rank-card active-rank text-center bronze">
+                    <i class="fas fa-shield-halved fa-2x text-secondary"></i>
+                    <div class="fw-bold mt-2">HẠNG ĐỒNG</div>
+                    <small>0 điểm trở lên</small>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="rank-card text-center p-3 border rounded silver">
+                    <i class="fas fa-dragon fa-2x text-secondary"></i>
+                    <div class="fw-bold mt-2">HẠNG BẠC</div>
+                    <small>1,000 điểm</small>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="rank-card text-center p-3 border rounded gold">
+                    <i class="fas fa-crown fa-2x text-warning"></i>
+                    <div class="fw-bold mt-2">HẠNG VÀNG</div>
+                    <small>2,500 điểm</small>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="rank-card text-center p-3 border rounded diamond">
+                    <i class="fas fa-gem fa-2x text-info"></i>
+                    <div class="fw-bold mt-2">KIM CƯƠNG</div>
+                    <small>5,000 điểm</small>
+                </div>
+            </div>
+        </div>
+</body>
+</html>
