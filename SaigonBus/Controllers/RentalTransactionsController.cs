@@ -340,7 +340,14 @@ namespace SaigonBus.Controllers
             catch (Exception ex)
             {
                 string error = ex.Message;
-                if (ex.InnerException != null) error = ex.InnerException.Message;
+                if (ex.InnerException != null) 
+                {
+                    error += " | " + ex.InnerException.Message;
+                    if (ex.InnerException.InnerException != null) 
+                    {
+                        error += " | " + ex.InnerException.InnerException.Message;
+                    }
+                }
                 return Json(new { success = false, message = error });
             }
         }

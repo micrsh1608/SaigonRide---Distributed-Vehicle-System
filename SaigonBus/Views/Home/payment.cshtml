@@ -372,11 +372,11 @@
                 // Chèn dòng giảm giá vào trước dòng Tổng cộng
                 const totalRow = document.querySelector('.invoice-row.total');
                 const discountHtml = `
-                                <div class="invoice-row text-danger fw-bold">
-                                    <span><i class="fas fa-gift me-2"></i>Giảm giá 15% (Hỗ trợ điều phối):</span>
-                                    <span>- ${formatVND(rideDiscount)}</span>
-                                </div>
-                            `;
+                                    <div class="invoice-row text-danger fw-bold">
+                                        <span><i class="fas fa-gift me-2"></i>Giảm giá 15% (Hỗ trợ điều phối):</span>
+                                        <span>- ${formatVND(rideDiscount)}</span>
+                                    </div>
+                                `;
                 totalRow.insertAdjacentHTML('beforebegin', discountHtml);
             }
 
@@ -434,11 +434,11 @@
             // Insert into invoice visually
             const totalRow = document.querySelector('.invoice-row.total');
             const promoHtml = `
-                            <div class="invoice-row text-success fw-bold" id="promo-row">
-                                <span><i class="fas fa-tag me-2"></i>Mã KM [${code}]:</span>
-                                <span>- ${formatVND(promoDiscount)}</span>
-                            </div>
-                        `;
+                                <div class="invoice-row text-success fw-bold" id="promo-row">
+                                    <span><i class="fas fa-tag me-2"></i>Mã KM [${code}]:</span>
+                                    <span>- ${formatVND(promoDiscount)}</span>
+                                </div>
+                            `;
             totalRow.insertAdjacentHTML('beforebegin', promoHtml);
 
             // Recalculate Final

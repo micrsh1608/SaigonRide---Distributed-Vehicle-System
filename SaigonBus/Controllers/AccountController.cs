@@ -307,5 +307,45 @@ namespace SaigonBus.Controllers
             }
             return Json(new { success = false, message = "Không tìm thấy tài khoản" });
         }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public JsonResult GetLinkedAccounts()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                var user = db.Users.FirstOrDefault(u => u.Username == User.Identity.Name);
+                if (user != null)
+                {
+                    return Json(new {
+                        success = true,
+                        momo = user.LinkedMoMo,
+                        zalo = user.LinkedZaloPay,
+                        visa = user.LinkedVisa
+                    }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            return Json(new { success = false }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public JsonResult LinkAccount(string method, string accountInfo)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                var user = db.Users.FirstOrDefault(u => u.Username == User.Identity.Name);
+                if (user != null)
+                {
+                    if (method == "momo") user.LinkedMoMo = accountInfo;
+                    else if (method == "zalo") user.LinkedZaloPay = accountInfo;
+                    else if (method == "visa") user.LinkedVisa = accountInfo;
+                    
+                    db.SaveChanges();
+                    return Json(new { success = true, method = method, info = accountInfo });
+                }
+            }
+            return Json(new { success = false, message = "Bạn cần đăng nhập để liên kết tài khoản." });
+        }
     }
 }

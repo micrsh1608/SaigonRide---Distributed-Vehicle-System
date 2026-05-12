@@ -165,6 +165,10 @@
     <Compile Include="Migrations\202605100603007_AddLatLngToStation.Designer.cs">
       <DependentUpon>202605100603007_AddLatLngToStation.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202605110701560_UpdateMissingModels.cs" />
+    <Compile Include="Migrations\202605110701560_UpdateMissingModels.Designer.cs">
+      <DependentUpon>202605110701560_UpdateMissingModels.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Admin.cs" />
     <Compile Include="Models\Feedback.cs" />
@@ -198,6 +202,7 @@
     <Content Include="Content\Images\ads-left.png" />
     <Content Include="Content\Images\banner.png" />
     <Content Include="Content\map.css" />
+    <Content Include="Content\site-darkmode.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\bootstrap.bundle.js" />
@@ -298,6 +303,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202605100603007_AddLatLngToStation.resx">
       <DependentUpon>202605100603007_AddLatLngToStation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202605110701560_UpdateMissingModels.resx">
+      <DependentUpon>202605110701560_UpdateMissingModels.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -45,5 +45,9 @@ namespace SaigonBus.Models
         public decimal Balance { get; set; } = 0;
 
         public int Point { get; set; }
+
+        public string LinkedMoMo { get; set; }
+        public string LinkedZaloPay { get; set; }
+        public string LinkedVisa { get; set; }
     }
 }
