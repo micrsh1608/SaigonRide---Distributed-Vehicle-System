@@ -1,9 +1,10 @@
 @{
-    ViewBag.Title = "Liên hệ hỗ trợ";
+    ViewBag.Title = "Support Contact";
 }
 
-<!-- Nhúng thư viện FontAwesome -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<!-- FontAwesome -->
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
 <style>
     body {
@@ -31,35 +32,35 @@
         width: 100%;
     }
 
-    .custom-breadcrumb-container .breadcrumb {
-        margin-bottom: 0;
-        background: transparent;
-        padding: 0;
-    }
+        .custom-breadcrumb-container .breadcrumb {
+            margin-bottom: 0;
+            background: transparent;
+            padding: 0;
+        }
 
-    .custom-breadcrumb-container .breadcrumb-item a {
-        color: #6c757d;
-        font-weight: 500;
-        text-decoration: none;
-        transition: color 0.2s ease-in-out;
-    }
+        .custom-breadcrumb-container .breadcrumb-item a {
+            color: #6c757d;
+            font-weight: 500;
+            text-decoration: none;
+            transition: color 0.2s ease-in-out;
+        }
 
-    .custom-breadcrumb-container .breadcrumb-item a:hover {
-        color: var(--saigonbus-accent);
-    }
+            .custom-breadcrumb-container .breadcrumb-item a:hover {
+                color: var(--saigonbus-accent);
+            }
 
-    .custom-breadcrumb-container .breadcrumb-item.active {
-        color: var(--saigonbus-primary);
-    }
+        .custom-breadcrumb-container .breadcrumb-item.active {
+            color: var(--saigonbus-primary);
+        }
 
-    .custom-breadcrumb-container .breadcrumb-item + .breadcrumb-item::before {
-        content: "›";
-        font-size: 1.4em;
-        line-height: 1;
-        color: #adb5bd;
-        vertical-align: middle;
-        padding: 0 0.5rem;
-    }
+        .custom-breadcrumb-container .breadcrumb-item + .breadcrumb-item::before {
+            content: "›";
+            font-size: 1.4em;
+            line-height: 1;
+            color: #adb5bd;
+            vertical-align: middle;
+            padding: 0 0.5rem;
+        }
 
     /* Card Layout */
     .contact-card {
@@ -70,24 +71,24 @@
     }
 
     .contact-info-bg {
-        background: linear-gradient(135deg, var(--saigonbus-primary) 0%, var(--saigonbus-primary-dark) 100%);
+        background: linear-gradient( 135deg, var(--saigonbus-primary) 0%, var(--saigonbus-primary-dark) 100% );
         color: white;
         padding: 3rem 2rem;
         height: 100%;
         position: relative;
     }
 
-    .contact-info-bg::after {
-        content: '\f095';
-        font-family: 'Font Awesome 6 Free';
-        font-weight: 900;
-        position: absolute;
-        bottom: -20px;
-        right: -10px;
-        font-size: 12rem;
-        opacity: 0.05;
-        transform: rotate(-15deg);
-    }
+        .contact-info-bg::after {
+            content: '\f095';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            bottom: -20px;
+            right: -10px;
+            font-size: 12rem;
+            opacity: 0.05;
+            transform: rotate(-15deg);
+        }
 
     .info-item {
         display: flex;
@@ -108,7 +109,7 @@
         flex-shrink: 0;
     }
 
-    /* Form Styles */
+    /* Form */
     .contact-form-wrap {
         padding: 3rem;
         background-color: #fff;
@@ -122,11 +123,11 @@
         transition: all 0.3s;
     }
 
-    .form-control:focus {
-        background-color: #fff;
-        border-color: var(--saigonbus-primary);
-        box-shadow: 0 0 0 0.25rem rgba(0, 131, 143, 0.2);
-    }
+        .form-control:focus {
+            background-color: #fff;
+            border-color: var(--saigonbus-primary);
+            box-shadow: 0 0 0 0.25rem rgba(0,131,143,0.2);
+        }
 
     .custom-label {
         font-weight: 600;
@@ -146,12 +147,12 @@
         width: 100%;
     }
 
-    .btn-accent:hover {
-        background-color: var(--saigonbus-accent-hover);
-        color: white;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 12px rgba(243, 156, 18, 0.25);
-    }
+        .btn-accent:hover {
+            background-color: var(--saigonbus-accent-hover);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(243,156,18,0.25);
+        }
 
     .text-brand {
         color: var(--saigonbus-primary) !important;
@@ -160,87 +161,202 @@
 
 <div class="container mt-4 mb-5">
 
-    <!-- Breadcrumb điều hướng DYNAMIC -->
-    <nav aria-label="breadcrumb" class="custom-breadcrumb-container">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb"
+         class="custom-breadcrumb-container">
+
         <ol class="breadcrumb align-items-center">
+
             <li class="breadcrumb-item">
-                <a href="#" id="dynamic-home-link">
-                    <i class="fas fa-spinner fa-spin me-1"></i> Đang tải...
+
+                <a href="#"
+                   id="dynamic-home-link">
+
+                    <i class="fas fa-spinner fa-spin me-1"></i>
+                    Loading...
                 </a>
             </li>
-            <li class="breadcrumb-item active text-brand fw-bold" aria-current="page">
-                Liên hệ hỗ trợ
+
+            <li class="breadcrumb-item active text-brand fw-bold"
+                aria-current="page">
+
+                Support Contact
             </li>
         </ol>
     </nav>
 
     <div class="card contact-card">
+
         <div class="row g-0">
-            <!-- Cột trái: Thông tin liên hệ tĩnh -->
+
+            <!-- LEFT SIDE -->
             <div class="col-md-5 col-lg-4">
+
                 <div class="contact-info-bg">
-                    <h3 class="fw-bold mb-4 border-bottom border-light border-opacity-25 pb-3">Thông tin liên hệ</h3>
-                    <p class="mb-5" style="opacity: 0.85;">
-                        Bạn cần hỗ trợ về hệ thống thuê xe SaigonRide? Đội ngũ kỹ thuật của chúng tôi luôn sẵn sàng giải đáp mọi thắc mắc.
+
+                    <h3 class="fw-bold mb-4 border-bottom border-light border-opacity-25 pb-3">
+                        Contact Information
+                    </h3>
+
+                    <p class="mb-5"
+                       style="opacity:0.85;">
+
+                        Need help with the SaigonRide vehicle rental system?
+                        Our technical support team is always ready
+                        to assist you.
                     </p>
 
+                    <!-- Address -->
                     <div class="info-item">
-                        <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
+
+                        <div class="info-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+
                         <div>
-                            <h6 class="fw-bold mb-1">Trụ sở điều hành</h6>
-                            <p class="mb-0" style="opacity: 0.85; font-size: 0.9rem;">Tòa nhà SaigonBus, Quận 1,<br />TP. Hồ Chí Minh, Việt Nam</p>
+
+                            <h6 class="fw-bold mb-1">
+                                Headquarters
+                            </h6>
+
+                            <p class="mb-0"
+                               style="opacity:0.85;font-size:0.9rem;">
+
+                                SaigonBus Building, District 1,<br />
+                                Ho Chi Minh City, Vietnam
+                            </p>
                         </div>
                     </div>
 
+                    <!-- Hotline -->
                     <div class="info-item">
-                        <div class="info-icon"><i class="fas fa-phone-alt"></i></div>
+
+                        <div class="info-icon">
+                            <i class="fas fa-phone-alt"></i>
+                        </div>
+
                         <div>
-                            <h6 class="fw-bold mb-1">Hotline hỗ trợ (24/7)</h6>
-                            <p class="mb-0 fw-bold fs-5 text-warning">028.38.546.110</p>
+
+                            <h6 class="fw-bold mb-1">
+                                Support Hotline (24/7)
+                            </h6>
+
+                            <p class="mb-0 fw-bold fs-5 text-warning">
+                                028.38.546.110
+                            </p>
                         </div>
                     </div>
 
+                    <!-- Email -->
                     <div class="info-item">
-                        <div class="info-icon"><i class="fas fa-envelope"></i></div>
+
+                        <div class="info-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+
                         <div>
-                            <h6 class="fw-bold mb-1">Email điện tử</h6>
-                            <p class="mb-0" style="opacity: 0.85; font-size: 0.9rem;">hotro@saigonride.vn<br />admin@saigonbus.com.vn</p>
+
+                            <h6 class="fw-bold mb-1">
+                                Email Address
+                            </h6>
+
+                            <p class="mb-0"
+                               style="opacity:0.85;font-size:0.9rem;">
+
+                                support@saigonride.vn<br />
+                                admin@saigonbus.com.vn
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Cột phải: Form gửi tin nhắn -->
+            <!-- RIGHT SIDE -->
             <div class="col-md-7 col-lg-8">
+
                 <div class="contact-form-wrap">
-                    <h3 class="fw-bold text-dark mb-1">Gửi yêu cầu hỗ trợ</h3>
-                    <p class="text-muted mb-4 pb-2 border-bottom">Chúng tôi sẽ phản hồi lại bạn trong vòng 24 giờ làm việc.</p>
+
+                    <h3 class="fw-bold text-dark mb-1">
+                        Send Support Request
+                    </h3>
+
+                    <p class="text-muted mb-4 pb-2 border-bottom">
+                        We will respond within 24 business hours.
+                    </p>
 
                     <form id="supportForm">
+
                         <div class="row">
+
+                            <!-- Name -->
                             <div class="col-md-6 mb-3">
-                                <label class="custom-label">Họ và tên <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="fullName" value="@ViewBag.FullName" placeholder="Nhập tên của bạn" required>
+
+                                <label class="custom-label">
+                                    Full Name
+                                    <span class="text-danger">*</span>
+                                </label>
+
+                                <input type="text"
+                                       class="form-control"
+                                       name="fullName"
+                                       value="@ViewBag.FullName"
+                                       placeholder="Enter your name"
+                                       required>
                             </div>
+
+                            <!-- Vehicle -->
                             <div class="col-md-6 mb-3">
-                                <label class="custom-label">Mã phương tiện/Giao dịch (Nếu có)</label>
-                                <input type="text" class="form-control" name="subject" placeholder="VD: #ST-1 hoặc #VH-15">
+
+                                <label class="custom-label">
+                                    Vehicle/Transaction ID (Optional)
+                                </label>
+
+                                <input type="text"
+                                       class="form-control"
+                                       name="subject"
+                                       placeholder="Ex: #ST-1 or #VH-15">
                             </div>
                         </div>
 
+                        <!-- Email -->
                         <div class="mb-3">
-                            <label class="custom-label">Địa chỉ Email <span class="text-danger">*</span></label>
-                            <input type="email" class="form-control" name="email" value="@ViewBag.Email" placeholder="name@example.com" required>
+
+                            <label class="custom-label">
+                                Email Address
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            <input type="email"
+                                   class="form-control"
+                                   name="email"
+                                   value="@ViewBag.Email"
+                                   placeholder="name@example.com"
+                                   required>
                         </div>
 
+                        <!-- Content -->
                         <div class="mb-4">
-                            <label class="custom-label">Nội dung cần hỗ trợ <span class="text-danger">*</span></label>
-                            <textarea class="form-control" name="content" rows="5" placeholder="Vui lòng mô tả chi tiết vấn đề bạn đang gặp phải (Lỗi quét mã, sai phí trừ tiền, báo hỏng xe...)" required></textarea>
+
+                            <label class="custom-label">
+                                Support Content
+                                <span class="text-danger">*</span>
+                            </label>
+
+                            <textarea class="form-control"
+                                      name="content"
+                                      rows="5"
+                                      placeholder="Please describe the issue in detail (QR scan error, incorrect payment charge, damaged vehicle report, etc.)"
+                                      required></textarea>
                         </div>
 
+                        <!-- Button -->
                         <div class="text-end">
-                            <button type="submit" class="btn btn-accent shadow-sm">
-                                <i class="fas fa-paper-plane me-2"></i> Gửi yêu cầu ngay
+
+                            <button type="submit"
+                                    class="btn btn-accent shadow-sm">
+
+                                <i class="fas fa-paper-plane me-2"></i>
+                                Submit Request
                             </button>
                         </div>
                     </form>
@@ -250,64 +366,121 @@
     </div>
 </div>
 
-<!-- SCRIPT ĐIỀU HƯỚNG THÔNG MINH -->
+<!-- SCRIPT -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
-    $(document).ready(function() {
-        $('#supportForm').on('submit', function(e) {
+
+    $(document).ready(function () {
+
+        // Submit Form
+        $('#supportForm').on('submit', function (e) {
+
             e.preventDefault();
-            
+
             var formData = {
-                subject: $('input[name="subject"]').val(),
-                content: $('textarea[name="content"]').val()
+
+                subject:
+                    $('input[name="subject"]').val(),
+
+                content:
+                    $('textarea[name="content"]').val()
             };
 
             $.ajax({
+
                 url: '@Url.Action("SubmitSupport", "Home")',
+
                 type: 'POST',
+
                 data: formData,
-                success: function(response) {
+
+                success: function (response) {
+
                     if (response.success) {
-                        alert('Gửi yêu cầu thành công! Đội ngũ SaigonRide sẽ liên hệ lại với bạn sớm nhất.');
-                        document.getElementById('dynamic-home-link').click();
+
+                        alert(
+                            'Request submitted successfully! The SaigonRide team will contact you soon.'
+                        );
+
+                        document.getElementById(
+                            'dynamic-home-link'
+                        ).click();
+
                     } else {
-                        alert('Có lỗi xảy ra, vui lòng thử lại sau.');
+
+                        alert(
+                            'An error occurred. Please try again later.'
+                        );
                     }
                 },
-                error: function() {
-                    alert('Lỗi kết nối máy chủ.');
+
+                error: function () {
+
+                    alert(
+                        'Server connection error.'
+                    );
                 }
             });
         });
 
-        var prevUrl = document.referrer.toLowerCase();
-        var homeLink = document.getElementById("dynamic-home-link");
+        // SMART NAVIGATION
+        var prevUrl =
+            document.referrer.toLowerCase();
 
-        // 1. Phân tích URL nguồn để biết người dùng đến từ Khách hay Admin
-        if (prevUrl.includes("/vehicles") ||
+        var homeLink =
+            document.getElementById("dynamic-home-link");
+
+        // Detect portal mode
+        if (
+            prevUrl.includes("/vehicles") ||
             prevUrl.includes("/stations") ||
             prevUrl.includes("/rentaltransactions") ||
             prevUrl.includes("/home/index") ||
-            (prevUrl !== "" && !prevUrl.includes("userdashboard") && !prevUrl.includes("portal")))
-        {
-            // Lưu trạng thái vào Session để nhớ nếu user F5 trang
-            sessionStorage.setItem("portalMode", "admin");
+            (
+                prevUrl !== "" &&
+                !prevUrl.includes("userdashboard") &&
+                !prevUrl.includes("portal")
+            )
+        ) {
+
+            sessionStorage.setItem(
+                "portalMode",
+                "admin"
+            );
         }
-        else if (prevUrl.includes("userdashboard") || prevUrl.includes("portal"))
-        {
-            sessionStorage.setItem("portalMode", "user");
+        else if (
+            prevUrl.includes("userdashboard") ||
+            prevUrl.includes("portal")
+        ) {
+
+            sessionStorage.setItem(
+                "portalMode",
+                "user"
+            );
         }
 
-        // 2. Lấy trạng thái hiện tại (Mặc định là User nếu gõ link trực tiếp)
-        var mode = sessionStorage.getItem("portalMode") || "user";
+        // Current mode
+        var mode =
+            sessionStorage.getItem("portalMode") || "user";
 
-        // 3. Đổi Link tương ứng
+        // Update link
         if (mode === "admin") {
-            homeLink.href = "@Url.Action("Index", "Home")";
-            homeLink.innerHTML = '<i class="fas fa-user-shield me-1"></i> Trang chủ Admin';
+
+            homeLink.href =
+                "@Url.Action("Index", "Home")";
+
+            homeLink.innerHTML =
+                '<i class="fas fa-user-shield me-1"></i> Admin Home';
+
         } else {
-            homeLink.href = "@Url.Action("UserDashboard", "Home")";
-            homeLink.innerHTML = '<i class="fas fa-home me-1"></i> Trang chủ Khách hàng';
+
+            homeLink.href =
+                "@Url.Action("UserDashboard", "Home")";
+
+            homeLink.innerHTML =
+                '<i class="fas fa-home me-1"></i> Customer Home';
         }
     });
+
 </script>
