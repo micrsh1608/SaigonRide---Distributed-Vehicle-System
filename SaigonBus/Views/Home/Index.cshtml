@@ -302,13 +302,8 @@
     }
 
     @@keyframes blink-dot {
-        0%, 100% {
-            opacity: 1;
-        }
-
-        50% {
-            opacity: 0.3;
-        }
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.3; }
     }
 
     /* Responsive Navbar */
@@ -350,13 +345,13 @@
 
         <div class="d-flex align-items-center nav-links-wrap" style="gap: 1.5rem;">
             <a href="@Url.Action("Index", "Home")" class="nav-link-custom active">
-                <i class="fas fa-home me-1"></i> <span data-i18n="admin_nav_home">Trang chủ</span>
+                <i class="fas fa-home me-1"></i> Trang chủ
             </a>
             <a href="@Url.Action("About", "Home")" class="nav-link-custom">
-                <i class="fas fa-info-circle me-1"></i> <span data-i18n="admin_nav_about">Về chúng tôi</span>
+                <i class="fas fa-info-circle me-1"></i> Về chúng tôi
             </a>
             <a href="@Url.Action("Contact", "Home")" class="nav-link-custom">
-                <i class="fas fa-headset me-1"></i> <span data-i18n="admin_nav_contact">Liên hệ hỗ trợ</span>
+                <i class="fas fa-headset me-1"></i> Liên hệ hỗ trợ
             </a>
 
             <!-- Nút Thời tiết realtime (Task 5) -->
@@ -369,7 +364,7 @@
             <!-- Nút quay về trang Khách Hàng -->
             <div class="border-start ps-3 ms-1">
                 <a href="@Url.Action("Portal", "Home")" class="btn-switch-mode shadow-sm">
-                    <i class="fas fa-exchange-alt me-2"></i> <span data-i18n="admin_switch_account">Chuyển tài khoản</span>
+                    <i class="fas fa-exchange-alt me-2"></i> Chuyển tài khoản
                 </a>
             </div>
         </div>
@@ -382,7 +377,7 @@
     </div>
 
     <h4 class="fw-bold text-dark mb-4 border-bottom pb-2">
-        <i class="fas fa-th-large text-muted me-2"></i> <span data-i18n="admin_section_title">Phân hệ Quản lý cốt lõi</span>
+        <i class="fas fa-th-large text-muted me-2"></i> Phân hệ Quản lý cốt lõi
     </h4>
 
     <!-- Lưới các chức năng chính -->
@@ -394,13 +389,13 @@
                 <div class="dash-icon icon-blue">
                     <i class="fas fa-bicycle"></i>
                 </div>
-                <div class="dash-title" data-i18n="admin_vehicle_title">Quản lý Phương tiện</div>
-                <div class="dash-desc" data-i18n="admin_vehicle_desc">
+                <div class="dash-title">Quản lý Phương tiện</div>
+                <div class="dash-desc">
                     Quản lý danh sách xe đạp thường, xe đạp điện và scooter. Theo dõi tình trạng bảo trì.
                 </div>
                 <div class="mt-auto">
                     <a href="@Url.Action("Index", "Vehicles")" class="btn btn-dash btn-primary-dash">
-                        <span data-i18n="admin_btn_access">Truy cập phân hệ</span> <i class="fas fa-arrow-right ms-1"></i>
+                        Truy cập phân hệ <i class="fas fa-arrow-right ms-1"></i>
                     </a>
                 </div>
             </div>
@@ -412,13 +407,13 @@
                 <div class="dash-icon icon-orange">
                     <i class="fas fa-map-marked-alt"></i>
                 </div>
-                <div class="dash-title" data-i18n="admin_station_title">Quản lý Trạm đỗ</div>
-                <div class="dash-desc" data-i18n="admin_station_desc">
+                <div class="dash-title">Quản lý Trạm đỗ</div>
+                <div class="dash-desc">
                     Giám sát sức chứa và kiểm soát tình trạng kho bãi (trạm đầy, trạm cạn).
                 </div>
                 <div class="mt-auto">
                     <a href="@Url.Action("Index", "Stations")" class="btn btn-dash btn-accent-dash">
-                        <span data-i18n="admin_btn_access">Truy cập phân hệ</span> <i class="fas fa-arrow-right ms-1"></i>
+                        Truy cập phân hệ <i class="fas fa-arrow-right ms-1"></i>
                     </a>
                 </div>
             </div>
@@ -430,13 +425,13 @@
                 <div class="dash-icon icon-green">
                     <i class="fas fa-exchange-alt"></i>
                 </div>
-                <div class="dash-title" data-i18n="admin_rental_title">Giao dịch Thuê xe</div>
-                <div class="dash-desc" data-i18n="admin_rental_desc">
+                <div class="dash-title">Giao dịch Thuê xe</div>
+                <div class="dash-desc">
                     Quản lý quy trình nhận/trả xe của cá nhân. Theo dõi doanh thu và lịch sử di chuyển.
                 </div>
                 <div class="mt-auto">
                     <a href="@Url.Action("Index", "RentalTransactions")" class="btn btn-dash btn-outline-dash">
-                        <span data-i18n="admin_btn_access">Truy cập phân hệ</span> <i class="fas fa-arrow-right ms-1"></i>
+                        Truy cập phân hệ <i class="fas fa-arrow-right ms-1"></i>
                     </a>
                 </div>
             </div>
@@ -449,13 +444,13 @@
                 <div class="dash-icon icon-purple">
                     <i class="fas fa-users"></i>
                 </div>
-                <div class="dash-title" data-i18n="admin_customer_title">Quản lý Khách hàng</div>
-                <div class="dash-desc" data-i18n="admin_customer_desc">
+                <div class="dash-title">Quản lý Khách hàng</div>
+                <div class="dash-desc">
                     Quản lý tài khoản, lịch sử nạp tiền và điểm thưởng của khách hàng địa phương/du khách.
                 </div>
                 <div class="mt-auto">
                     <a href="@Url.Action("Index", "Customers")" class="btn btn-dash btn-purple-dash">
-                        <span data-i18n="admin_btn_access">Truy cập phân hệ</span> <i class="fas fa-arrow-right ms-1"></i>
+                        Truy cập phân hệ <i class="fas fa-arrow-right ms-1"></i>
                     </a>
                 </div>
             </div>
@@ -467,13 +462,13 @@
                 <div class="dash-icon icon-cyan">
                     <i class="fas fa-users-cog"></i>
                 </div>
-                <div class="dash-title" data-i18n="admin_group_title">Giao dịch Thuê Nhóm</div>
-                <div class="dash-desc" data-i18n="admin_group_desc">
+                <div class="dash-title">Giao dịch Thuê Nhóm</div>
+                <div class="dash-desc">
                     Theo dõi và xử lý các cuốc xe hội nhóm (Một tài khoản đại diện thuê nhiều xe cùng lúc).
                 </div>
                 <div class="mt-auto">
                     <a href="@Url.Action("Index", "RentalTransactionsGroup")" class="btn btn-dash btn-cyan-dash">
-                        <span data-i18n="admin_btn_access">Truy cập phân hệ</span> <i class="fas fa-arrow-right ms-1"></i>
+                        Truy cập phân hệ <i class="fas fa-arrow-right ms-1"></i>
                     </a>
                 </div>
             </div>
@@ -485,13 +480,13 @@
                 <div class="dash-icon icon-red">
                     <i class="fas fa-headset"></i>
                 </div>
-                <div class="dash-title" data-i18n="admin_support_title">Yêu cầu Hỗ trợ</div>
-                <div class="dash-desc" data-i18n="admin_support_desc">
+                <div class="dash-title">Yêu cầu Hỗ trợ</div>
+                <div class="dash-desc">
                     Xử lý các yêu cầu từ khách hàng, phản hồi lỗi xe hỏng, khiếu nại cước phí và sự cố.
                 </div>
                 <div class="mt-auto">
                     <a href="@Url.Action("Index", "Supports")" class="btn btn-dash btn-red-dash">
-                        <span data-i18n="admin_btn_access">Truy cập phân hệ</span> <i class="fas fa-arrow-right ms-1"></i>
+                        Truy cập phân hệ <i class="fas fa-arrow-right ms-1"></i>
                     </a>
                 </div>
             </div>
@@ -503,13 +498,13 @@
                 <div class="dash-icon icon-sky">
                     <i class="fas fa-cloud-sun"></i>
                 </div>
-                <div class="dash-title" data-i18n="admin_weather_title">Thời tiết & GPS</div>
-                <div class="dash-desc" data-i18n="admin_weather_desc">
+                <div class="dash-title">Thời tiết & GPS</div>
+                <div class="dash-desc">
                     Xem thời tiết realtime theo vị trí GPS. Dự báo theo giờ, dự báo 7 ngày và chỉ số chất lượng không khí AQI.
                 </div>
                 <div class="mt-auto">
                     <a href="@Url.Action("Weather", "Home")" class="btn btn-dash btn-sky-dash">
-                        <span data-i18n="admin_btn_weather">Xem thời tiết</span> <i class="fas fa-arrow-right ms-1"></i>
+                        Xem thời tiết <i class="fas fa-arrow-right ms-1"></i>
                     </a>
                 </div>
             </div>
@@ -519,7 +514,7 @@
 
     <!-- Footer -->
     <div class="text-center mt-5 pt-3 border-top text-muted">
-        <small><span data-i18n="admin_footer_text">Đồ án Phát triển phần mềm MVC - Nhóm SaigonRide</span> &copy; @DateTime.Now.Year</small>
+        <small>Đồ án Phát triển phần mềm MVC - Nhóm SaigonRide &copy; @DateTime.Now.Year</small>
     </div>
 
 </div>

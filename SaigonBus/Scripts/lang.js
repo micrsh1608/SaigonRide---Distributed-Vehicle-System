@@ -1,57 +1,34 @@
 let currentLang = localStorage.getItem("saigonride_lang") || "vi";
 
-const stationNameMap = {
-    'Trạm Metro Bến Thành (Quận 1)': 'Ben Thanh Metro Station (District 1)',
-    'Trạm Ký túc xá TDTU (Quận 7)': 'TDTU Dormitory Station (District 7)',
-    'Trạm Vincom Thảo Điền (TP. Thủ Đức)': 'Vincom Thao Dien Station (Thu Duc City)',
-    'Trạm Phố đi bộ Nguyễn Huệ (Quận 1)': 'Nguyen Hue Walking Street Station (District 1)',
-    'Trạm Hồ Con Rùa (Quận 3)': 'Turtle Lake Station (District 3)',
-    'Trạm Bưu điện Trung tâm (Quận 1)': 'Central Post Office Station (District 1)',
-    'Trạm Công viên Lê Văn Tám (Quận 1)': 'Le Van Tam Park Station (District 1)',
-    'Trạm Crescent Mall (Quận 7)': 'Crescent Mall Station (District 7)',
-    'Trạm SC VivoCity (Quận 7)': 'SC VivoCity Station (District 7)',
-    'Trạm Landmark 81 (Bình Thạnh)': 'Landmark 81 Station (Binh Thanh)',
-    'Trạm Làng Đại học (TP. Thủ Đức)': 'University Village Station (Thu Duc City)',
-    'Trạm Bến xe Miền Đông mới (TP. Thủ Đức)': 'New Eastern Bus Terminal Station (Thu Duc City)',
-    'Trạm Sân bay Tân Sơn Nhất (Tân Bình)': 'Tan Son Nhat Airport Station (Tan Binh)',
-    'Trạm Chợ Lớn (Quận 5)': 'Cho Lon Station (District 5)',
-    'Metro Bến Thành ': 'Ben Thanh Metro',
-    'Metro Bến Thành': 'Ben Thanh Metro',
-};
-
-function translateStationName(name) {
-    const lang = (typeof currentLang !== 'undefined') ? currentLang : 'vi';
-    if (lang === 'en') {
-        if (stationNameMap[name]) return stationNameMap[name];
-        if (stationNameMap[name.trim()]) return stationNameMap[name.trim()];
-    }
-    return name;
-}
-
 const translations = {
 
     vi: {
+        /* Navigation */
         nav_home: "Trang chủ",
         nav_about: "Về chúng tôi",
         nav_support: "Hỗ trợ",
 
+        /* User menu */
         menu_myaccount: "Tài khoản của tôi",
         menu_profile: "Hồ sơ cá nhân",
         menu_topup: "Nạp tiền ví",
         menu_language: "Ngôn ngữ",
         menu_logout: "Đăng xuất an toàn",
 
+        /* Hero section */
         hero_service: "Dịch vụ 24/7",
         hero_location: "Đang ở TP.HCM",
         hero_title: "Trải nghiệm di chuyển xanh",
         hero_subtitle: "Mở khóa xe đạp, xe điện và scooter nhanh chóng với mã QR chỉ trong 5 giây.",
 
+        /* Buttons */
         btn_rent: "Thuê xe ngay",
         btn_group_rent: "Thuê xe nhóm",
         btn_find_station: "Tìm trạm & Xe",
         btn_topup_more: "Nạp thêm tiền",
         btn_checkout: "Trả xe",
 
+        /* Stations section */
         section_stations: "Trạm đỗ & Xe gần bạn",
         station_near_you: "Gần bạn",
         station_capacity: "Sức chứa",
@@ -59,27 +36,35 @@ const translations = {
         station_not_found: "Không tìm thấy trạm đỗ.",
         station_view_detail: "Xem chi tiết xe đang đỗ",
 
+        /* Station detail modal */
         station_empty_title: "Trạm tạm hết xe",
         station_empty_desc: "Hiện chưa có xe khả dụng tại trạm này. Vui lòng thử trạm lân cận hoặc quay lại sau.",
         station_find_other: "Tìm trạm khác",
 
+        /* Vehicle types */
         vtype_bike: "Xe đạp",
         vtype_ebike: "Xe điện",
         vtype_scooter: "Scooter",
         vtype_manual_note: "Xe đạp cơ — không cần sạc",
 
+        /* Battery */
         bat_good: "Tốt",
         bat_mid: "Trung bình",
         bat_low: "Yếu",
+
+        /* Vehicle actions */
         btn_rent_vehicle: "Thuê",
         btn_reserve: "Giữ chỗ",
 
+        /* Wallet */
         wallet_balance: "SỐ DƯ KHẢ DỤNG",
 
+        /* Rental status */
         status_title: "Trạng thái thuê xe",
         status_no_trip: "Chưa có chuyến đi",
         status_scan_qr: "Quét mã QR tại trạm để bắt đầu.",
 
+        /* Map popup */
         map_you_are_here: "Bạn đang ở đây",
         map_vehicles: "xe",
         map_choose_vehicle: "Chọn xe tại trạm này",
@@ -87,12 +72,15 @@ const translations = {
         map_route_label: "Chuyến đi dự kiến",
         map_distance: "Khoảng cách",
 
+        /* Notifications / incentives */
         notif_discount: "Ưu đãi 15% — trạm gần hết xe",
         notif_navigate: "Dẫn đường",
         notif_empty: "Hiện chưa có ưu đãi",
 
+        /* Weather */
         weather_rain_alert: "Trời đang mưa — hãy cân nhắc trước khi thuê xe!",
 
+        /* Misc */
         dist_label: "Khoảng cách",
         per_minute: "đ/phút",
         loading: "Đang tải...",
@@ -137,31 +125,6 @@ const translations = {
         promo_code_invalid: "Mã khuyến mãi không hợp lệ.",
         invoice_id: "Mã hóa đơn"
 
-
-        admin_nav_home: "Trang chủ",
-        admin_nav_about: "Về chúng tôi",
-        admin_nav_contact: "Liên hệ hỗ trợ",
-        admin_switch_account: "Chuyển tài khoản",
-        admin_section_title: "Phân hệ Quản lý cốt lõi",
-
-        admin_vehicle_title: "Quản lý Phương tiện",
-        admin_vehicle_desc: "Quản lý danh sách xe đạp thường, xe đạp điện và scooter. Theo dõi tình trạng bảo trì.",
-        admin_station_title: "Quản lý Trạm đỗ",
-        admin_station_desc: "Giám sát sức chứa và kiểm soát tình trạng kho bãi (trạm đầy, trạm cạn).",
-        admin_rental_title: "Giao dịch Thuê xe",
-        admin_rental_desc: "Quản lý quy trình nhận/trả xe của cá nhân. Theo dõi doanh thu và lịch sử di chuyển.",
-        admin_customer_title: "Quản lý Khách hàng",
-        admin_customer_desc: "Quản lý tài khoản, lịch sử nạp tiền và điểm thưởng của khách hàng địa phương/du khách.",
-        admin_group_title: "Giao dịch Thuê Nhóm",
-        admin_group_desc: "Theo dõi và xử lý các cuốc xe hội nhóm (Một tài khoản đại diện thuê nhiều xe cùng lúc).",
-        admin_support_title: "Yêu cầu Hỗ trợ",
-        admin_support_desc: "Xử lý các yêu cầu từ khách hàng, phản hồi lỗi xe hỏng, khiếu nại cước phí và sự cố.",
-        admin_weather_title: "Thời tiết & GPS",
-        admin_weather_desc: "Xem thời tiết realtime theo vị trí GPS. Dự báo theo giờ, dự báo 7 ngày và chỉ số chất lượng không khí AQI.",
-        admin_btn_access: "Truy cập phân hệ",
-        admin_btn_weather: "Xem thời tiết",
-        admin_footer_text: "Đồ án Phát triển phần mềm MVC - Nhóm SaigonRide",
-        search_placeholder: "Tìm kiếm trạm đỗ (VD: Bến Thành)...",
     },
 
     en: {
@@ -287,32 +250,6 @@ const translations = {
         promo_code_invalid: "Invalid promo code.",
         invoice_id: "Invoice ID"
 
-
-        /* ── Admin Dashboard ── */
-        admin_nav_home: "Home",
-        admin_nav_about: "About Us",
-        admin_nav_contact: "Contact Support",
-        admin_switch_account: "Switch Account",
-        admin_section_title: "Core Management Modules",
-
-        admin_vehicle_title: "Vehicle Management",
-        admin_vehicle_desc: "Manage the list of regular bikes, e-bikes and scooters. Track maintenance status.",
-        admin_station_title: "Station Management",
-        admin_station_desc: "Monitor capacity and control station status (full or empty).",
-        admin_rental_title: "Rental Transactions",
-        admin_rental_desc: "Manage individual vehicle pickup/return process. Track revenue and travel history.",
-        admin_customer_title: "Customer Management",
-        admin_customer_desc: "Manage accounts, top-up history and reward points for local customers and tourists.",
-        admin_group_title: "Group Rental Transactions",
-        admin_group_desc: "Track and process group rentals (one account renting multiple vehicles at once).",
-        admin_support_title: "Support Requests",
-        admin_support_desc: "Handle customer requests, broken vehicle reports, fee complaints and incidents.",
-        admin_weather_title: "Weather & GPS",
-        admin_weather_desc: "View real-time weather by GPS location. Hourly forecast, 7-day forecast and AQI index.",
-        admin_btn_access: "Access Module",
-        admin_btn_weather: "View Weather",
-        admin_footer_text: "MVC Software Development Project - SaigonRide Team",
-        search_placeholder: "Search stations (e.g. Ben Thanh)...",
     }
 };
 
@@ -321,7 +258,6 @@ function t(key) {
     const dict = translations[lang] || translations.vi;
     return dict[key] || key;
 }
-
 function renderStationsList() {
     const filter = document.getElementById('station-search').value.toLowerCase().trim();
     const listObj = document.getElementById('stations-render-area');
@@ -362,13 +298,12 @@ function renderStationsList() {
         const fillPct = s.capacity > 0 ? Math.round((s.currentCount / s.capacity) * 100) : 0;
         const fillColor = fillPct >= 50 ? 'bg-success' : fillPct >= 20 ? 'bg-warning' : 'bg-danger';
         const isMatch = filter && s.name.toLowerCase().includes(filter);
-        const displayName = translateStationName(s.name);
 
         listObj.insertAdjacentHTML('beforeend', `
             <div class="station-card-list${isMatch ? ' station-card-highlight' : ''}">
                 <div class="station-header d-flex justify-content-between align-items-start">
                     <div>
-                        <h5 class="fw-bold m-0 text-primary">${_highlightText(displayName, filter)}</h5>
+                        <h5 class="fw-bold m-0 text-primary">${_highlightText(s.name, filter)}</h5>
                         <span class="text-danger fw-bold small">
                             <i class="fas fa-location-arrow"></i> ${s.dist || t('station_near_you')}
                         </span>
@@ -411,7 +346,7 @@ function renderStationsList() {
 function viewStationVehicles(stationId) {
     currentStartStationId = stationId;
     const st = stationsData.find(x => x.id === stationId);
-    document.getElementById('sd-name').innerText = translateStationName(st.name);
+    document.getElementById('sd-name').innerText = st.name;
     document.getElementById('sd-dist').innerText = st.dist || t('station_near_you');
 
     const vList = document.getElementById('sd-vehicle-list');
@@ -530,7 +465,7 @@ function updateIncentiveUI(data) {
         listContainer.innerHTML = promoStations.map(s => `
             <div class="card mb-3 border-warning" style="background:#fffbeb;">
                 <div class="card-body p-3">
-                    <h6>${translateStationName(s.StationName || s.name || '')}</h6>
+                    <h6>${s.StationName}</h6>
                     <span class="badge bg-warning text-dark">
                         ${t('notif_discount')}
                     </span>
@@ -574,8 +509,6 @@ function _resetMarker(idx) {
 function applyLanguage(lang) {
     currentLang = lang;
     localStorage.setItem("saigonride_lang", lang);
-    const searchEl = document.getElementById('station-search');
-    if (searchEl) searchEl.placeholder = dict['search_placeholder'] || '';
 
     const dict = translations[lang] || translations.vi;
     document.querySelectorAll("[data-i18n]").forEach(el => {
@@ -586,24 +519,7 @@ function applyLanguage(lang) {
     updateLangButtons(lang);
     document.documentElement.lang = lang === "en" ? "en" : "vi";
 
+    // ── THÊM: re-render các UI động khi đổi ngôn ngữ ──────────────
     if (typeof renderStationsList === 'function') renderStationsList();
-    if (typeof populateGroupStations === 'function') populateGroupStations();
-    if (typeof updateIncentiveUI === 'function' && typeof stationsData !== 'undefined') {
-        updateIncentiveUI(stationsData);
-    }
-    if (typeof renderStationsOnMap === 'function' && typeof stationsData !== 'undefined') {
-        renderStationsOnMap(stationsData);
-    }
+    if (typeof updateIncentiveUI === 'function') updateIncentiveUI(stationsData);
 }
-
-document.addEventListener('DOMContentLoaded', function () {
-    const saved = localStorage.getItem('saigonride_lang') || 'vi';
-    currentLang = saved;
-    const dict = translations[saved] || translations.vi;
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        if (dict[key]) el.textContent = dict[key];
-    });
-    document.documentElement.lang = saved === 'en' ? 'en' : 'vi';
-    if (typeof updateLangButtons === 'function') updateLangButtons(saved);
-});

@@ -1,11 +1,10 @@
 ﻿@model List<SaigonBus.Models.Feedback>
 @{
-    ViewBag.Title = "About Us";
+    ViewBag.Title = "Về chúng tôi";
 }
 
-<!-- FontAwesome -->
-<link rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<!-- Nhúng thư viện FontAwesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
 <style>
     body {
@@ -23,7 +22,7 @@
         background-color: #ffffff;
         border-radius: 10px;
         padding: 0.8rem 1.5rem;
-        box-shadow: 0 0.25rem 0.5rem rgba(0,0,0,0.05);
+        box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.05);
         border: 1px solid rgba(0,0,0,0.03);
         margin-bottom: 1.5rem;
         display: inline-flex;
@@ -63,13 +62,13 @@
     .about-card {
         border-radius: 15px;
         border: none;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
         overflow: hidden;
         background-color: #fff;
     }
 
     .about-header {
-        background: linear-gradient( 135deg, var(--saigonbus-primary) 0%, var(--saigonbus-primary-dark) 100% );
+        background: linear-gradient(135deg, var(--saigonbus-primary) 0%, var(--saigonbus-primary-dark) 100%);
         color: white;
         padding: 4rem 2rem;
         text-align: center;
@@ -105,145 +104,66 @@
 
 <div class="container mt-4 mb-5">
 
-    <!-- Breadcrumb -->
-    <nav aria-label="breadcrumb"
-         class="custom-breadcrumb-container">
-
+    <!-- Breadcrumb điều hướng DYNAMIC -->
+    <nav aria-label="breadcrumb" class="custom-breadcrumb-container">
         <ol class="breadcrumb align-items-center">
-
             <li class="breadcrumb-item">
-
-                <a href="#"
-                   id="dynamic-home-link-about">
-
-                    <i class="fas fa-spinner fa-spin me-1"></i>
-                    Loading...
+                <a href="#" id="dynamic-home-link-about">
+                    <i class="fas fa-spinner fa-spin me-1"></i> Đang tải...
                 </a>
             </li>
-
-            <li class="breadcrumb-item active fw-bold"
-                aria-current="page"
-                style="color: var(--saigonbus-primary);">
-
-                About Us
+            <li class="breadcrumb-item active fw-bold" aria-current="page" style="color: var(--saigonbus-primary);">
+                Về chúng tôi
             </li>
         </ol>
     </nav>
 
-    <!-- Main Card -->
     <div class="card about-card">
-
         <div class="about-header">
-
-            <h1 class="fw-bold mb-3">
-                <i class="fas fa-leaf text-warning me-2"></i>
-                SaigonRide Project
-            </h1>
-
-            <p class="fs-5 mb-0 opacity-75">
-                A smart and eco-friendly transportation sharing platform
-                in Ho Chi Minh City.
-            </p>
+            <h1 class="fw-bold mb-3"><i class="fas fa-leaf text-warning me-2"></i> Dự án SaigonRide</h1>
+            <p class="fs-5 mb-0 opacity-75">Nền tảng chia sẻ phương tiện di chuyển thông minh và thân thiện với môi trường tại TP.Hồ Chí Minh.</p>
         </div>
 
         <div class="card-body p-4 p-md-5">
-
             <div class="row align-items-center mb-5">
-
                 <div class="col-lg-6 mb-4 mb-lg-0">
-
-                    <h3 class="fw-bold text-dark mb-3">
-                        Our Story
-                    </h3>
-
-                    <p class="text-muted"
-                       style="line-height:1.8;">
-
-                        Inspired by the goal of reducing traffic congestion
-                        and environmental pollution,
-                        <strong>SaigonRide</strong>
-                        was developed to provide a flexible and affordable
-                        transportation solution for both residents and tourists
-                        in Ho Chi Minh City.
+                    <h3 class="fw-bold text-dark mb-3">Câu chuyện của chúng tôi</h3>
+                    <p class="text-muted" style="line-height: 1.8;">
+                        Bắt nguồn từ ý tưởng giảm thiểu ùn tắc giao thông và ô nhiễm môi trường, <strong>SaigonRide</strong> được phát triển nhằm cung cấp một giải pháp di chuyển linh hoạt, chi phí thấp cho người dân và du khách tại TP.Hồ Chí Minh.
                     </p>
-
-                    <p class="text-muted"
-                       style="line-height:1.8;">
-
-                        The system integrates GPS tracking and smart IoT locks,
-                        allowing users to easily locate, rent,
-                        and return vehicles at any station
-                        within the network.
+                    <p class="text-muted" style="line-height: 1.8;">
+                        Hệ thống ứng dụng công nghệ định vị GPS và khóa thông minh IoT, giúp người dùng dễ dàng tìm kiếm, thuê và trả xe tại bất kỳ trạm đỗ nào trong mạng lưới.
                     </p>
                 </div>
-
                 <div class="col-lg-6">
-
                     <div class="mission-box shadow-sm">
-
-                        <h5 class="fw-bold text-dark mb-2">
-
-                            <i class="fas fa-bullseye text-warning me-2"></i>
-                            Vision & Mission
-                        </h5>
-
-                        <p class="mb-0 text-muted"
-                           style="line-height:1.6;">
-
-                            Building a green transportation ecosystem,
-                            helping Ho Chi Minh City become one of the leading
-                            smart and sustainable cities in Southeast Asia.
+                        <h5 class="fw-bold text-dark mb-2"><i class="fas fa-bullseye text-warning me-2"></i> Tầm nhìn & Sứ mệnh</h5>
+                        <p class="mb-0 text-muted" style="line-height: 1.6;">
+                            Xây dựng một hệ sinh thái giao thông xanh, đưa TP.HCM trở thành một trong những đô thị thông minh và phát triển bền vững hàng đầu khu vực Đông Nam Á.
                         </p>
                     </div>
                 </div>
             </div>
 
-            <!-- Statistics -->
-            <h4 class="fw-bold text-center mb-4 text-dark">
-                Our system is continuously expanding
-            </h4>
-
+            <!-- Thống kê -->
+            <h4 class="fw-bold text-center mb-4 text-dark">Hệ thống đang không ngừng mở rộng</h4>
             <div class="row g-4">
-
                 <div class="col-md-4">
-
                     <div class="stat-box border rounded-3 shadow-sm">
-
-                        <div class="stat-number">
-                            150+
-                        </div>
-
-                        <div class="stat-text mt-2">
-                            Smart Stations
-                        </div>
+                        <div class="stat-number">150+</div>
+                        <div class="stat-text mt-2">Trạm đỗ thông minh</div>
                     </div>
                 </div>
-
                 <div class="col-md-4">
-
                     <div class="stat-box border rounded-3 shadow-sm">
-
-                        <div class="stat-number">
-                            1,200+
-                        </div>
-
-                        <div class="stat-text mt-2">
-                            Vehicles (Bikes & Scooters)
-                        </div>
+                        <div class="stat-number">1,200+</div>
+                        <div class="stat-text mt-2">Phương tiện (Xe đạp & Scooter)</div>
                     </div>
                 </div>
-
                 <div class="col-md-4">
-
                     <div class="stat-box border rounded-3 shadow-sm">
-
-                        <div class="stat-number">
-                            50,000+
-                        </div>
-
-                        <div class="stat-text mt-2">
-                            Registered Users
-                        </div>
+                        <div class="stat-number">50,000+</div>
+                        <div class="stat-text mt-2">Người dùng đăng ký</div>
                     </div>
                 </div>
             </div>
@@ -251,82 +171,50 @@
     </div>
 </div>
 
-<!-- SMART NAVIGATION SCRIPT -->
+<!-- SCRIPT ĐIỀU HƯỚNG THÔNG MINH -->
 <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var prevUrl = document.referrer.toLowerCase();
+        var homeLink = document.getElementById("dynamic-home-link-about");
 
-    document.addEventListener("DOMContentLoaded", function () {
-
-        var prevUrl =
-            document.referrer.toLowerCase();
-
-        var homeLink =
-            document.getElementById("dynamic-home-link-about");
-
-        // Detect Admin/User
-        if (
-            prevUrl.includes("/vehicles") ||
+        // 1. Phân tích URL nguồn để biết người dùng đến từ Khách hay Admin
+        if (prevUrl.includes("/vehicles") ||
             prevUrl.includes("/stations") ||
             prevUrl.includes("/rentaltransactions") ||
             prevUrl.includes("/home/index") ||
-            (
-                prevUrl !== "" &&
-                !prevUrl.includes("userdashboard") &&
-                !prevUrl.includes("portal")
-            )
-        ) {
-
-            sessionStorage.setItem(
-                "portalMode",
-                "admin"
-            );
+            (prevUrl !== "" && !prevUrl.includes("userdashboard") && !prevUrl.includes("portal")))
+        {
+            // Lưu trạng thái vào Session để nhớ nếu user F5 trang
+            sessionStorage.setItem("portalMode", "admin");
         }
-        else if (
-            prevUrl.includes("userdashboard") ||
-            prevUrl.includes("portal")
-        ) {
-
-            sessionStorage.setItem(
-                "portalMode",
-                "user"
-            );
+        else if (prevUrl.includes("userdashboard") || prevUrl.includes("portal"))
+        {
+            sessionStorage.setItem("portalMode", "user");
         }
 
-        // Current mode
-        var mode =
-            sessionStorage.getItem("portalMode") || "user";
+        // 2. Lấy trạng thái hiện tại (Mặc định là User nếu gõ link trực tiếp)
+        var mode = sessionStorage.getItem("portalMode") || "user";
 
-        // Update link
+        // 3. Đổi Link tương ứng
         if (mode === "admin") {
-
-            homeLink.href =
-                "@Url.Action("Index", "Home")";
-
-            homeLink.innerHTML =
-                '<i class="fas fa-user-shield me-1"></i> Admin Home';
-
+            homeLink.href = "@Url.Action("Index", "Home")";
+            homeLink.innerHTML = '<i class="fas fa-user-shield me-1"></i> Trang chủ Admin';
         } else {
-
-            homeLink.href =
-                "@Url.Action("UserDashboard", "Home")";
-
-            homeLink.innerHTML =
-                '<i class="fas fa-home me-1"></i> Customer Home';
+            homeLink.href = "@Url.Action("UserDashboard", "Home")";
+            homeLink.innerHTML = '<i class="fas fa-home me-1"></i> Trang chủ Khách hàng';
         }
     });
-
 </script>
 
-<!-- FEEDBACK -->
+
 <div class="mt-5">
 
     <h3 class="fw-bold text-center mb-4">
-
-        What do customers say about SaigonRide?
+        Khách hàng nói gì về SaigonRide?
     </h3>
 
     <div class="row justify-content-center">
 
-        <!-- Card 1 -->
         <div class="col-md-4 mb-4">
 
             <div class="card border-0 shadow-sm h-100">
@@ -334,7 +222,6 @@
                 <div class="card-body text-center">
 
                     <div class="mb-3 text-warning fs-5">
-
                         <i class="fas fa-star"></i>
                         <i class="fas fa-star"></i>
                         <i class="fas fa-star"></i>
@@ -343,21 +230,21 @@
                     </div>
 
                     <p class="text-muted fst-italic">
-
-                        "The bikes are very clean and easy to rent."
+                        "Xe rất sạch và dễ thuê."
                     </p>
 
                     <hr />
 
                     <h6 class="fw-bold mb-0">
-
-                        Nguyen Van A
+                        Nguyễn Văn A
                     </h6>
+
                 </div>
+
             </div>
+
         </div>
 
-        <!-- Card 2 -->
         <div class="col-md-4 mb-4">
 
             <div class="card border-0 shadow-sm h-100">
@@ -365,7 +252,6 @@
                 <div class="card-body text-center">
 
                     <div class="mb-3 text-warning fs-5">
-
                         <i class="fas fa-star"></i>
                         <i class="fas fa-star"></i>
                         <i class="fas fa-star"></i>
@@ -373,21 +259,21 @@
                     </div>
 
                     <p class="text-muted fst-italic">
-
-                        "The app is convenient and easy to use."
+                        "Ứng dụng tiện lợi và dễ sử dụng."
                     </p>
 
                     <hr />
 
                     <h6 class="fw-bold mb-0">
-
-                        Tran Minh B
+                        Trần Minh B
                     </h6>
+
                 </div>
+
             </div>
+
         </div>
 
-        <!-- Card 3 -->
         <div class="col-md-4 mb-4">
 
             <div class="card border-0 shadow-sm h-100">
@@ -395,7 +281,6 @@
                 <div class="card-body text-center">
 
                     <div class="mb-3 text-warning fs-5">
-
                         <i class="fas fa-star"></i>
                         <i class="fas fa-star"></i>
                         <i class="fas fa-star"></i>
@@ -404,18 +289,21 @@
                     </div>
 
                     <p class="text-muted fst-italic">
-
-                        "Affordable pricing and environmentally friendly."
+                        "Giá thuê hợp lý và rất thân thiện môi trường."
                     </p>
 
                     <hr />
 
                     <h6 class="fw-bold mb-0">
-
-                        Le Hoang C
+                        Lê Hoàng C
                     </h6>
+
                 </div>
+
             </div>
+
         </div>
+
     </div>
+
 </div>

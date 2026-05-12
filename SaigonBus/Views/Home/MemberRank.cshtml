@@ -2,28 +2,18 @@
     Layout = null;
 }
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xếp hạng thành viên - Saigon EcoRide</title>
 
-    <title>Member Ranking - Saigon EcoRide</title>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-          rel="stylesheet">
-
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-
-    <link rel="preconnect"
-          href="https://fonts.googleapis.com">
-
-    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap"
-          rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <style>
-
         :root {
             --sg-primary: #0f8b7f;
             --sg-primary-dark: #0a6e63;
@@ -45,6 +35,8 @@
             color: var(--sg-text);
         }
 
+
+
         .member-dashboard {
             max-width: 1400px;
             margin: auto;
@@ -52,7 +44,7 @@
         }
 
         .title-block {
-            background: linear-gradient( 135deg, #0f8b7f, #0a6e63 );
+            background: linear-gradient(135deg, #0f8b7f, #0a6e63);
             border-radius: 24px;
             padding: 24px 34px !important;
             margin-bottom: 20px;
@@ -63,9 +55,10 @@
                 color: white;
                 margin: 0;
                 font-size: 30px;
+                font-weight: 700;
+                letter-spacing: -0.5px;
                 text-align: center;
                 font-weight: 900;
-                letter-spacing: -0.5px;
             }
 
         .breadcrumb-container {
@@ -73,7 +66,7 @@
             border-radius: 12px;
             padding: 16px 24px;
             margin-bottom: 24px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
             display: flex;
             align-items: center;
         }
@@ -168,27 +161,26 @@
         }
 
         .point-label {
-            color: rgba(255,255,255,0.78);
-            font-size: 15px;
-            font-weight: 600;
-            margin-top: 4px;
+            font-size: 14px;
+            color: var(--sg-muted);
         }
 
         .progress {
-            height: 16px;
-            background: #dbeafe;
+            height: 12px;
+            background: rgba(255,255,255,0.2);
             border-radius: 999px;
+            overflow: hidden;
         }
 
         .progress-bar {
-            background: linear-gradient( 90deg, #06b6d4, #00897b );
+            background: linear-gradient(90deg, #facc15, #f59e0b);
             border-radius: 999px;
         }
 
         .benefit-card {
             position: relative;
             overflow: hidden;
-            background: linear-gradient( 145deg, #ffffff, #f8fafc );
+            background: linear-gradient(145deg, #ffffff, #f8fafc);
             border-radius: 24px;
             border: 1px solid #edf2f7;
             padding: 24px !important;
@@ -223,27 +215,27 @@
         }
 
         .rank-bronze {
-            background: linear-gradient( 135deg, #b87333, #8c5523 );
+            background: linear-gradient(135deg, #b87333, #8c5523);
             color: white;
         }
 
         .rank-silver {
-            background: linear-gradient( 135deg, #cbd5e1, #94a3b8 );
+            background: linear-gradient(135deg, #cbd5e1, #94a3b8);
             color: white;
         }
 
         .rank-gold {
-            background: linear-gradient( 135deg, #facc15, #f59e0b );
+            background: linear-gradient(135deg, #facc15, #f59e0b);
             color: white;
         }
 
         .rank-diamond {
-            background: linear-gradient( 135deg, #06b6d4, #0284c7 );
+            background: linear-gradient(135deg, #06b6d4, #0284c7);
             color: white;
         }
 
         .rank-header-card {
-            background: linear-gradient( 135deg, #0f8b7f, #0a6e63 );
+            background: linear-gradient(135deg, #0f8b7f, #0a6e63);
             color: white;
             border: none;
         }
@@ -252,19 +244,44 @@
             color: rgba(255,255,255,0.78);
             font-size: 15px;
             font-weight: 600;
+            letter-spacing: 0.3px;
         }
 
-        .progress-text,
-        .progress-percent {
-            color: white;
+        .point-label {
+            color: rgba(255,255,255,0.78);
+            font-size: 15px;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        .progress-text {
+            color: rgba(255,255,255,0.9);
             font-size: 15px;
             font-weight: 700;
+        }
+
+        .progress-percent {
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 800;
+        }
+
+
+        .progress {
+            height: 16px;
+            background: #dbeafe;
+            border-radius: 999px;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, #06b6d4, #00897b);
+            border-radius: 999px;
         }
 
         .rank-card {
             position: relative;
             overflow: hidden;
-            background: linear-gradient( 145deg, #ffffff, #f8fafc );
+            background: linear-gradient(145deg, #ffffff, #f8fafc);
             border-radius: 26px;
             border: 1px solid #edf2f7;
             padding: 28px 20px !important;
@@ -296,6 +313,7 @@
             .rank-card .fw-bold {
                 font-size: 24px;
                 font-weight: 900 !important;
+                letter-spacing: -0.5px;
             }
 
             .rank-card small {
@@ -353,7 +371,7 @@
                 width: 60%;
                 height: 4px;
                 border-radius: 999px;
-                background: linear-gradient( 90deg, #14b8a6, transparent );
+                background: linear-gradient(90deg, #14b8a6, transparent);
             }
 
         .active-rank {
@@ -361,8 +379,13 @@
             box-shadow: 0 0 0 6px rgba(20,184,166,0.12), 0 20px 40px rgba(15,23,42,0.12);
         }
 
-        @@media (max-width: 992px) {
+        @@keyframes shine {
+            100% {
+                transform: translateX(200%);
+            }
+        }
 
+        @@media (max-width: 992px) {
             .member-dashboard {
                 padding: 16px;
             }
@@ -373,76 +396,69 @@
         }
     </style>
 </head>
-
 <body>
-
-    <!-- Breadcrumb -->
     <div class="member-dashboard">
-
         <div class="breadcrumb-container">
-
             <ul class="breadcrumb-custom">
-
                 <li>
-                    <a href="@Url.Action("UserDashboard", "Home")"
-                       class="breadcrumb-item-custom">
-
+                    <a href="@Url.Action("UserDashboard", "Home")" class="breadcrumb-item-custom">
                         <i class="fas fa-home"></i>
-                        Customer Home
+                        Trang chủ Khách hàng
                     </a>
                 </li>
-
+                </li>
                 <li class="breadcrumb-separator">
                     <i class="fas fa-chevron-right"></i>
                 </li>
-
                 <li>
-                    <span class="breadcrumb-item-custom active">
-                        Member Ranking
-                    </span>
+                    <span class="breadcrumb-item-custom active">Xếp hạng thành viên</span>
                 </li>
             </ul>
         </div>
     </div>
 
-    <!-- Main -->
     <div class="member-dashboard">
-
         <div class="card rank-header-card p-4 mb-4 position-relative overflow-hidden">
-
             <div class="title-block">
-                <h1>Member Ranking</h1>
+                <h1>Xếp hạng thành viên</h1>
             </div>
+
+            <div class="rank-bg"></div>
+
+            <div class="floating-light light-1"></div>
+            <div class="floating-light light-2"></div>
+
+            <div class="bg-circle bg-primary"></div>
+            <div class="bg-circle bg-info"></div>
 
             <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
 
                 <div>
-
                     <div class="rank-subtitle mb-3">
-                        Current Rank
+                        Hạng hiện tại
                     </div>
 
                     @{
                         string rankName = ViewBag.CurrentRankName != null
                             ? ViewBag.CurrentRankName.ToString().ToUpper()
-                            : "BRONZE";
+                            : "HẠNG ĐỒNG";
 
                         string rankClass = "rank-bronze";
                         string rankIcon = "fa-shield-halved";
 
                         switch (rankName)
                         {
-                            case "SILVER":
+                            case "HẠNG BẠC":
                                 rankClass = "rank-silver";
                                 rankIcon = "fa-dragon";
                                 break;
 
-                            case "GOLD":
+                            case "HẠNG VÀNG":
                                 rankClass = "rank-gold";
                                 rankIcon = "fa-crown";
                                 break;
 
-                            case "DIAMOND":
+                            case "KIM CƯƠNG":
                                 rankClass = "rank-diamond";
                                 rankIcon = "fa-gem";
                                 break;
@@ -450,7 +466,6 @@
                     }
 
                     <div class="rank-badge @rankClass">
-
                         <i class="fas @rankIcon"></i>
                         @rankName
                     </div>
@@ -463,161 +478,93 @@
                     </div>
 
                     <div class="point-label">
-                        Total Accumulated Points
+                        Tổng điểm tích lũy
                     </div>
+
                 </div>
+
             </div>
 
-            <!-- Progress -->
             <div class="progress-wrapper mt-4">
 
                 <div class="d-flex justify-content-between align-items-center mb-2">
 
                     <span class="progress-text">
-                        Progress to @ViewBag.NextRankName
+                        Tiến độ lên @ViewBag.NextRankName
                     </span>
 
                     <span class="progress-percent">
                         @ViewBag.ProgressPercentage%
                     </span>
+
                 </div>
 
                 <div class="progress">
-
                     <div class="progress-bar"
                          style="width:@ViewBag.ProgressPercentage%">
                     </div>
                 </div>
+
             </div>
+
         </div>
 
-        <!-- Benefits -->
-        <h5 class="mb-3">
-            EXCLUSIVE BENEFITS
-        </h5>
-
+        <h5 class="mb-3">QUYỀN LỢI ĐẶC QUYỀN</h5>
         <div class="row g-3">
-
             <div class="col-md-4">
-
                 <div class="benefit-card p-3 d-flex align-items-center gap-3 border rounded">
-
                     <div class="benefit-icon icon-yellow">
                         <i class="fas fa-bolt"></i>
                     </div>
-
                     <div>
-
-                        <div class="fw-bold">
-                            Priority Vehicle Unlock
-                        </div>
-
-                        <div class="text-secondary small">
-                            Faster processing for premium members
-                        </div>
+                        <div class="fw-bold">Ưu tiên mở khóa xe</div>
+                        <div class="text-secondary small">Xử lý nhanh hơn cho thành viên cao cấp</div>
                     </div>
                 </div>
             </div>
-
             <div class="col-md-4">
-
                 <div class="benefit-card p-3 d-flex align-items-center gap-3 border rounded">
-
                     <div class="benefit-icon icon-red">
                         <i class="fas fa-gift"></i>
                     </div>
-
                     <div>
-
-                        <div class="fw-bold">
-                            Exclusive Vouchers
-                        </div>
-
-                        <div class="text-secondary small">
-                            Monthly promotions and discount codes
-                        </div>
+                        <div class="fw-bold">Voucher độc quyền</div>
+                        <div class="text-secondary small">Ưu đãi và mã giảm giá hàng tháng</div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Rank Levels -->
-        <h5 class="mt-4 mb-3">
-            MEMBER TIERS
-        </h5>
-
+        <h5 class="mt-4 mb-3">CẤP BẬC THÀNH VIÊN</h5>
         <div class="row g-3">
-
-            <!-- Bronze -->
             <div class="col-md-2">
-
                 <div class="rank-card active-rank text-center bronze">
-
-                    <i class="fas fa-shield-halved fa-2x"></i>
-
-                    <div class="fw-bold mt-2">
-                        BRONZE
-                    </div>
-
-                    <small>
-                        From 0 points
-                    </small>
+                    <i class="fas fa-shield-halved fa-2x text-secondary"></i>
+                    <div class="fw-bold mt-2">HẠNG ĐỒNG</div>
+                    <small>0 điểm trở lên</small>
                 </div>
             </div>
-
-            <!-- Silver -->
             <div class="col-md-2">
-
                 <div class="rank-card text-center p-3 border rounded silver">
-
-                    <i class="fas fa-dragon fa-2x"></i>
-
-                    <div class="fw-bold mt-2">
-                        SILVER
-                    </div>
-
-                    <small>
-                        1,000 points
-                    </small>
+                    <i class="fas fa-dragon fa-2x text-secondary"></i>
+                    <div class="fw-bold mt-2">HẠNG BẠC</div>
+                    <small>1,000 điểm</small>
                 </div>
             </div>
-
-            <!-- Gold -->
             <div class="col-md-2">
-
                 <div class="rank-card text-center p-3 border rounded gold">
-
-                    <i class="fas fa-crown fa-2x"></i>
-
-                    <div class="fw-bold mt-2">
-                        GOLD
-                    </div>
-
-                    <small>
-                        2,500 points
-                    </small>
+                    <i class="fas fa-crown fa-2x text-warning"></i>
+                    <div class="fw-bold mt-2">HẠNG VÀNG</div>
+                    <small>2,500 điểm</small>
                 </div>
             </div>
-
-            <!-- Diamond -->
             <div class="col-md-2">
-
                 <div class="rank-card text-center p-3 border rounded diamond">
-
-                    <i class="fas fa-gem fa-2x"></i>
-
-                    <div class="fw-bold mt-2">
-                        DIAMOND
-                    </div>
-
-                    <small>
-                        5,000 points
-                    </small>
+                    <i class="fas fa-gem fa-2x text-info"></i>
+                    <div class="fw-bold mt-2">KIM CƯƠNG</div>
+                    <small>5,000 điểm</small>
                 </div>
             </div>
-
         </div>
-    </div>
-
 </body>
 </html>

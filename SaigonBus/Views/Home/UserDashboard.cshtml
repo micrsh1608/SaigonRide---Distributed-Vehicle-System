@@ -1452,7 +1452,7 @@
             const selectEndGroup = document.getElementById('group-end-station');
             const selectEndSingle = document.getElementById('single-end-station');
 
-            const options = stationsData.map(s => `<option value="${s.id}">${translateStationName(s.name)} (${s.currentCount}/${s.capacity})</option>`).join('');
+            const options = stationsData.map(s => `<option value="${s.id}">${s.name} (${s.currentCount}/${s.capacity})</option>`).join('');
 
             if (selectStart) selectStart.innerHTML = options;
             if (selectEndGroup) selectEndGroup.innerHTML = options;
@@ -1477,27 +1477,23 @@
             const listObj = document.getElementById('stations-render-area');
             listObj.innerHTML = '';
             let filtered = stationsData.filter(s => s.name.toLowerCase().includes(filter));
-            if (filtered.length === 0) { listObj.innerHTML = `<div class="p-5 text-center text-muted border rounded-4 bg-white"><i class="fas fa-search-minus fs-1 mb-3 opacity-25"></i><br>${t('station_not_found')}</div>`; return; }
+            if (filtered.length === 0) { listObj.innerHTML = `<div class="p-5 text-center text-muted border rounded-4 bg-white"><i class="fas fa-search-minus fs-1 mb-3 opacity-25"></i><br>Không tìm thấy trạm đỗ.</div>`; return; }
 
             filtered.forEach(s => {
                 let counts = { bike: 0, ebike: 0, scooter: 0 };
                 s.vehicles.forEach(v => counts[v.type]++);
-                const fillPct = s.capacity > 0 ? Math.round((s.currentCount / s.capacity) * 100) : 0;
-                const fillColor = fillPct >= 50 ? 'bg-success' : fillPct >= 20 ? 'bg-warning' : 'bg-danger';
-                const displayName = translateStationName(s.name);
                 let html = `
                     <div class="station-card-list">
                         <div class="station-header d-flex justify-content-between align-items-start">
                             <div>
-                                <h5 class="fw-bold m-0 text-primary">${displayName}</h5>
-                                <span class="text-danger fw-bold small"><i class="fas fa-location-arrow"></i> ${t('station_near_you')}</span>
+                                <h5 class="fw-bold m-0 text-primary">${s.name}</h5>
+<span class="text-danger fw-bold small"><i class="fas fa-location-arrow"></i> ${s.dist}</span>
                             </div>
                             <div class="text-end">
-                                <div class="fw-bold text-dark" style="font-size: 0.85rem;">${t('station_capacity')}: ${s.currentCount}/${s.capacity}</div>
+<div class="fw-bold text-dark" style="font-size: 0.85rem;">${t('station_capacity')}: ${s.currentCount}/${s.capacity}</div>
                                 <div class="progress mt-1" style="height: 6px; width: 80px; margin-left: auto;">
-                                    <div class="progress-bar ${fillColor}" style="width: ${fillPct}%"></div>
+                                    <div class="progress-bar bg-success" style="width: ${(s.currentCount/s.capacity)*100}%"></div>
                                 </div>
-                                <div style="font-size:0.7rem;color:#6b7280;margin-top:2px;">${fillPct}% ${t('station_full_pct')}</div>
                             </div>
                         </div>
                         <div class="vehicle-type-grid">
@@ -1516,30 +1512,16 @@
         function viewStationVehicles(stationId) {
             currentStartStationId = stationId;
             let st = stationsData.find(x => x.id === stationId);
-            document.getElementById('sd-name').innerText = translateStationName(st.name);
-            document.getElementById('sd-dist').innerText = st.dist || t('station_near_you');
+            document.getElementById('sd-name').innerText = st.name;
+            document.getElementById('sd-dist').innerText = st.dist;
             let vList = document.getElementById('sd-vehicle-list');
             vList.innerHTML = '';
-
-            if (!st.vehicles || st.vehicles.length === 0) {
-                vList.innerHTML = `
-                    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:36px 20px;gap:12px;text-align:center;">
-                        <div style="width:72px;height:72px;background:#fef2f2;border-radius:50%;display:flex;align-items:center;justify-content:center;">
-                            <i class="fas fa-bicycle" style="font-size:28px;color:#fca5a5;"></i>
-                        </div>
-                        <div style="font-weight:800;font-size:1.05rem;color:#374151;">${t('station_empty_title')}</div>
-                        <div style="font-size:0.85rem;color:#9ca3af;max-width:220px;line-height:1.5;">${t('station_empty_desc')}</div>
-                        <button class="btn btn-outline-secondary btn-sm rounded-pill mt-2" onclick="closeModal('station-detail-modal')">
-                            <i class="fas fa-search me-1"></i>${t('station_find_other')}
-                        </button>
-                    </div>`;
-                openModal('station-detail-modal');
-                return;
-            }
 
             st.vehicles.forEach(v => {
                 let icon = v.type==='bike'?'fa-bicycle':v.type==='ebike'?'fa-bolt':'fa-motorcycle';
                 let color = v.type==='bike'?'text-success':v.type==='ebike'?'text-warning':'text-primary';
+
+                // Cập nhật đơn giá: 500 cho xe đạp, 1500 cho xe điện, 1000 cho scooter
                 let actualPrice = (v.type === 'ebike') ? 1500 : (v.type === 'bike' ? 500 : 1000);
                 let batHtml = v.bat ? `<span class="badge ${v.bat>20?'bg-success':'bg-danger'} me-2"><i class="fas fa-battery-half"></i> ${v.bat}%</span>` : '';
 
@@ -1549,16 +1531,12 @@
                             <div class="bike-img"><i class="fas ${icon} ${color}"></i></div>
                             <div>
                                 <div class="fw-bold" style="font-size: 1.1rem;">${v.name} <span class="text-muted small">(${v.id})</span></div>
-                                <div class="mt-2">${batHtml}<span class="badge bg-white text-dark border"><i class="fas fa-tag text-danger"></i> ${v.price}${t('per_minute')}</span></div>
+                                <div class="mt-2">${batHtml}<span class="badge bg-white text-dark border"><i class="fas fa-tag text-danger"></i> ${v.price}đ/phút</span></div>
                             </div>
                         </div>
                         <div class="d-flex flex-column gap-2">
-                            <button class="btn btn-primary fw-bold px-3 rounded-pill btn-sm" onclick="selectVehicleToRent('${v.name}', ${actualPrice})">
-                                <i class="fas fa-key me-1"></i>${t('btn_rent_vehicle')}
-                            </button>
-                            <button class="btn btn-outline-warning fw-bold px-3 rounded-pill btn-sm" onclick="reserveVehicle(${v.id}, '${v.name}')">
-                                <i class="fas fa-clock me-1"></i>${t('btn_reserve')}
-                            </button>
+                            <button class="btn btn-primary fw-bold px-3 rounded-pill btn-sm" onclick="selectVehicleToRent('${v.name}', ${actualPrice})">Thuê</button>
+                            <button class="btn btn-outline-warning fw-bold px-3 rounded-pill btn-sm" onclick="reserveVehicle(${v.id}, '${v.name}')">Giữ chỗ</button>
                         </div>
                     </div>`;
             });
@@ -1769,7 +1747,7 @@
                                     <div class="mb-3">
                                         <label class="small fw-bold text-muted mb-1 text-uppercase" style="font-size: 0.6rem;">Trạm trả xe thực tế</label>
                                         <select id="return-station-${g.id}" class="form-select form-select-sm rounded-3">
-                                            ${stationsData.map(s => `<option value="${s.id}" ${s.id == g.endStationId ? 'selected' : ''}>${translateStationName(s.name)}</option>`).join('')}
+                                            ${stationsData.map(s => `<option value="${s.id}" ${s.id == g.endStationId ? 'selected' : ''}>${s.name}</option>`).join('')}
                                         </select>
                                     </div>
                                     <button class="btn btn-success btn-sm w-100 fw-bold py-2 rounded-3 shadow-sm" onclick="handleGroupReturn(${g.id})">
@@ -2094,8 +2072,6 @@
             document.documentElement.lang =
                 lang === "en" ? "en" : "vi";
             if (typeof renderStationsList === 'function') renderStationsList();
-            if (typeof populateGroupStations === 'function') populateGroupStations();
-            if (typeof updateIncentiveUI === 'function') updateIncentiveUI(stationsData);
             if (typeof renderStationsOnMap === 'function') renderStationsOnMap(stationsData);
         }
 
