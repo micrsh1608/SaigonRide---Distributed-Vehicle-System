@@ -378,6 +378,12 @@
                                     </div>
                                 `;
                 totalRow.insertAdjacentHTML('beforebegin', discountHtml);
+                                <div class="invoice-row text-danger fw-bold">
+                                    <span><i class="fas fa-gift me-2"></i>Giảm giá 15% (Hỗ trợ điều phối):</span>
+                                    <span>- ${formatVND(rideDiscount)}</span>
+                                </div>
+                            `;
+                totalRow.insertAdjacentHTML('beforebegin', discountHtml);
             }
 
             let formattedFinal = formatVND(rideFinal);
@@ -439,6 +445,12 @@
                                     <span>- ${formatVND(promoDiscount)}</span>
                                 </div>
                             `;
+            totalRow.insertAdjacentHTML('beforebegin', promoHtml);
+                            <div class="invoice-row text-success fw-bold" id="promo-row">
+                                <span><i class="fas fa-tag me-2"></i>Mã KM [${code}]:</span>
+                                <span>- ${formatVND(promoDiscount)}</span>
+                            </div>
+                        `;
             totalRow.insertAdjacentHTML('beforebegin', promoHtml);
 
             // Recalculate Final

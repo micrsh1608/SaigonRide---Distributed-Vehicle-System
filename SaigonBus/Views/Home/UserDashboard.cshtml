@@ -1452,7 +1452,7 @@
             const selectEndGroup = document.getElementById('group-end-station');
             const selectEndSingle = document.getElementById('single-end-station');
 
-            const options = stationsData.map(s => `<option value="${s.id}">${s.name} (${s.currentCount}/${s.capacity})</option>`).join('');
+            const options = stationsData.map(s => `<option value="${s.id}">${translateStationName(s.name)} (${s.currentCount}/${s.capacity})</option>`).join('');
 
             if (selectStart) selectStart.innerHTML = options;
             if (selectEndGroup) selectEndGroup.innerHTML = options;
@@ -1477,23 +1477,27 @@
             const listObj = document.getElementById('stations-render-area');
             listObj.innerHTML = '';
             let filtered = stationsData.filter(s => s.name.toLowerCase().includes(filter));
-            if (filtered.length === 0) { listObj.innerHTML = `<div class="p-5 text-center text-muted border rounded-4 bg-white"><i class="fas fa-search-minus fs-1 mb-3 opacity-25"></i><br>Không tìm thấy trạm đỗ.</div>`; return; }
+            if (filtered.length === 0) { listObj.innerHTML = `<div class="p-5 text-center text-muted border rounded-4 bg-white"><i class="fas fa-search-minus fs-1 mb-3 opacity-25"></i><br>${t('station_not_found')}</div>`; return; }
 
             filtered.forEach(s => {
                 let counts = { bike: 0, ebike: 0, scooter: 0 };
                 s.vehicles.forEach(v => counts[v.type]++);
+                const fillPct = s.capacity > 0 ? Math.round((s.currentCount / s.capacity) * 100) : 0;
+                const fillColor = fillPct >= 50 ? 'bg-success' : fillPct >= 20 ? 'bg-warning' : 'bg-danger';
+                const displayName = translateStationName(s.name);
                 let html = `
                     <div class="station-card-list">
                         <div class="station-header d-flex justify-content-between align-items-start">
                             <div>
-                                <h5 class="fw-bold m-0 text-primary">${s.name}</h5>
-<span class="text-danger fw-bold small"><i class="fas fa-location-arrow"></i> ${s.dist}</span>
+                                <h5 class="fw-bold m-0 text-primary">${displayName}</h5>
+                                <span class="text-danger fw-bold small"><i class="fas fa-location-arrow"></i> ${t('station_near_you')}</span>
                             </div>
                             <div class="text-end">
-<div class="fw-bold text-dark" style="font-size: 0.85rem;">${t('station_capacity')}: ${s.currentCount}/${s.capacity}</div>
+                                <div class="fw-bold text-dark" style="font-size: 0.85rem;">${t('station_capacity')}: ${s.currentCount}/${s.capacity}</div>
                                 <div class="progress mt-1" style="height: 6px; width: 80px; margin-left: auto;">
-                                    <div class="progress-bar bg-success" style="width: ${(s.currentCount/s.capacity)*100}%"></div>
+                                    <div class="progress-bar ${fillColor}" style="width: ${fillPct}%"></div>
                                 </div>
+                                <div style="font-size:0.7rem;color:#6b7280;margin-top:2px;">${fillPct}% ${t('station_full_pct')}</div>
                             </div>
                         </div>
                         <div class="vehicle-type-grid">
@@ -1512,16 +1516,30 @@
         function viewStationVehicles(stationId) {
             currentStartStationId = stationId;
             let st = stationsData.find(x => x.id === stationId);
-            document.getElementById('sd-name').innerText = st.name;
-            document.getElementById('sd-dist').innerText = st.dist;
+            document.getElementById('sd-name').innerText = translateStationName(st.name);
+            document.getElementById('sd-dist').innerText = st.dist || t('station_near_you');
             let vList = document.getElementById('sd-vehicle-list');
             vList.innerHTML = '';
+
+            if (!st.vehicles || st.vehicles.length === 0) {
+                vList.innerHTML = `
+                    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:36px 20px;gap:12px;text-align:center;">
+                        <div style="width:72px;height:72px;background:#fef2f2;border-radius:50%;display:flex;align-items:center;justify-content:center;">
+                            <i class="fas fa-bicycle" style="font-size:28px;color:#fca5a5;"></i>
+                        </div>
+                        <div style="font-weight:800;font-size:1.05rem;color:#374151;">${t('station_empty_title')}</div>
+                        <div style="font-size:0.85rem;color:#9ca3af;max-width:220px;line-height:1.5;">${t('station_empty_desc')}</div>
+                        <button class="btn btn-outline-secondary btn-sm rounded-pill mt-2" onclick="closeModal('station-detail-modal')">
+                            <i class="fas fa-search me-1"></i>${t('station_find_other')}
+                        </button>
+                    </div>`;
+                openModal('station-detail-modal');
+                return;
+            }
 
             st.vehicles.forEach(v => {
                 let icon = v.type==='bike'?'fa-bicycle':v.type==='ebike'?'fa-bolt':'fa-motorcycle';
                 let color = v.type==='bike'?'text-success':v.type==='ebike'?'text-warning':'text-primary';
-
-                // Cập nhật đơn giá: 500 cho xe đạp, 1500 cho xe điện, 1000 cho scooter
                 let actualPrice = (v.type === 'ebike') ? 1500 : (v.type === 'bike' ? 500 : 1000);
                 let batHtml = v.bat ? `<span class="badge ${v.bat>20?'bg-success':'bg-danger'} me-2"><i class="fas fa-battery-half"></i> ${v.bat}%</span>` : '';
 
@@ -1531,12 +1549,16 @@
                             <div class="bike-img"><i class="fas ${icon} ${color}"></i></div>
                             <div>
                                 <div class="fw-bold" style="font-size: 1.1rem;">${v.name} <span class="text-muted small">(${v.id})</span></div>
-                                <div class="mt-2">${batHtml}<span class="badge bg-white text-dark border"><i class="fas fa-tag text-danger"></i> ${v.price}đ/phút</span></div>
+                                <div class="mt-2">${batHtml}<span class="badge bg-white text-dark border"><i class="fas fa-tag text-danger"></i> ${v.price}${t('per_minute')}</span></div>
                             </div>
                         </div>
                         <div class="d-flex flex-column gap-2">
-                            <button class="btn btn-primary fw-bold px-3 rounded-pill btn-sm" onclick="selectVehicleToRent('${v.name}', ${actualPrice})">Thuê</button>
-                            <button class="btn btn-outline-warning fw-bold px-3 rounded-pill btn-sm" onclick="reserveVehicle(${v.id}, '${v.name}')">Giữ chỗ</button>
+                            <button class="btn btn-primary fw-bold px-3 rounded-pill btn-sm" onclick="selectVehicleToRent('${v.name}', ${actualPrice})">
+                                <i class="fas fa-key me-1"></i>${t('btn_rent_vehicle')}
+                            </button>
+                            <button class="btn btn-outline-warning fw-bold px-3 rounded-pill btn-sm" onclick="reserveVehicle(${v.id}, '${v.name}')">
+                                <i class="fas fa-clock me-1"></i>${t('btn_reserve')}
+                            </button>
                         </div>
                     </div>`;
             });
@@ -1747,7 +1769,7 @@
                                     <div class="mb-3">
                                         <label class="small fw-bold text-muted mb-1 text-uppercase" style="font-size: 0.6rem;">Trạm trả xe thực tế</label>
                                         <select id="return-station-${g.id}" class="form-select form-select-sm rounded-3">
-                                            ${stationsData.map(s => `<option value="${s.id}" ${s.id == g.endStationId ? 'selected' : ''}>${s.name}</option>`).join('')}
+                                            ${stationsData.map(s => `<option value="${s.id}" ${s.id == g.endStationId ? 'selected' : ''}>${translateStationName(s.name)}</option>`).join('')}
                                         </select>
                                     </div>
                                     <button class="btn btn-success btn-sm w-100 fw-bold py-2 rounded-3 shadow-sm" onclick="handleGroupReturn(${g.id})">
@@ -2072,6 +2094,8 @@
             document.documentElement.lang =
                 lang === "en" ? "en" : "vi";
             if (typeof renderStationsList === 'function') renderStationsList();
+            if (typeof populateGroupStations === 'function') populateGroupStations();
+            if (typeof updateIncentiveUI === 'function') updateIncentiveUI(stationsData);
             if (typeof renderStationsOnMap === 'function') renderStationsOnMap(stationsData);
         }
 
@@ -2162,42 +2186,42 @@
                 listContainer.innerHTML =
                     promoStations.map(s => `
 
-                        <div class="card mb-3 border-warning"
-                             style="background:#fffbeb;">
+                            <div class="card mb-3 border-warning"
+                                 style="background:#fffbeb;">
 
-                            <div class="card-body p-3">
+                                <div class="card-body p-3">
 
-                                <h6>${s.StationName}</h6>
+                                    <h6>${s.StationName}</h6>
 
-                                <span class="badge bg-warning text-dark">
-                                    -15%
-                                </span>
+                                    <span class="badge bg-warning text-dark">
+                                        -15%
+                                    </span>
 
-                                <button
-                                    class="btn btn-sm btn-warning w-100 mt-2"
-                                    onclick="focusOnMap(${s.Latitude}, ${s.Longitude})">
+                                    <button
+                                        class="btn btn-sm btn-warning w-100 mt-2"
+                                        onclick="focusOnMap(${s.Latitude}, ${s.Longitude})">
 
-                                    Dẫn đường
+                                        Dẫn đường
 
-                                </button>
+                                    </button>
+
+                                </div>
 
                             </div>
 
-                        </div>
-
-                    `).join("");
+                        `).join("");
 
             } else {
 
                 listContainer.innerHTML = `
 
-                        <div class="text-center py-3 text-muted">
+                            <div class="text-center py-3 text-muted">
 
-                            Hiện chưa có ưu đãi
+                                Hiện chưa có ưu đãi
 
-                        </div>
+                            </div>
 
-                    `;
+                        `;
             }
         }
 
@@ -2287,6 +2311,441 @@
 
         });
 
-    </script> 
+    </script>
+    <style>
+
+        /* CARD TRẠM XE */
+
+        body.dark-mode .station-card,
+        body.dark-mode .station-item,
+        body.dark-mode .station-box,
+        body.dark-mode .rental-station-card {
+            background: #1e1e1e !important;
+            border: 1px solid #2f2f2f !important;
+        }
+
+        /* BOX XE BÊN TRONG */
+
+        body.dark-mode .vehicle-box,
+        body.dark-mode .vehicle-item,
+        body.dark-mode .bike-box,
+        body.dark-mode .scooter-box,
+        body.dark-mode .battery-box {
+            background: #2a2a2a !important;
+            border-color: #3a3a3a !important;
+        }
+
+        /* TRẠNG THÁI THUÊ XE */
+
+        body.dark-mode .rental-status,
+        body.dark-mode .status-card,
+        body.dark-mode .trip-status-card {
+            background: #1e1e1e !important;
+            border-color: #333 !important;
+        }
+
+        /* NÚT XEM CHI TIẾT */
+
+        body.dark-mode .view-detail-btn,
+        body.dark-mode .detail-button,
+        body.dark-mode .btn-detail {
+            background: #2b2b2b !important;
+            color: #ffffff !important;
+        }
+
+        /* CHỮ BỊ MỜ */
+
+        body.dark-mode .text-muted,
+        body.dark-mode .opacity-50,
+        body.dark-mode .opacity-75,
+        body.dark-mode .small-text {
+            color: #d6d6d6 !important;
+            opacity: 1 !important;
+        }
+
+        /* FIX TITLE */
+
+        body.dark-mode .station-name,
+        body.dark-mode .station-title,
+        body.dark-mode .status-title {
+            color: #ffffff !important;
+        }
+
+        /* FIX SỨC CHỨA */
+
+        body.dark-mode .capacity-text,
+        body.dark-mode .capacity-label {
+            color: #f1f1f1 !important;
+        }
+
+        /* FIX THANH PROGRESS */
+
+        body.dark-mode .progress {
+            background: #333 !important;
+        }
+
+        body.dark-mode .progress-bar {
+            background: #00b894 !important;
+        }
+
+        /* FIX Ô TRẠNG THÁI CHƯA CÓ CHUYẾN ĐI */
+
+        body.dark-mode .empty-trip-box,
+        body.dark-mode .empty-state {
+            background: #232323 !important;
+            border-color: #333 !important;
+        }
+
+        /* FIX MÀU CHỮ SỐ XE */
+
+        body.dark-mode .vehicle-count,
+        body.dark-mode .bike-count,
+        body.dark-mode .count-number {
+            color: #ffffff !important;
+        }
+    </style>
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const darkBtn = document.getElementById("darkModeToggle");
+
+            // LOAD TRẠNG THÁI
+            if (localStorage.getItem("dashboardDarkMode") === "true") {
+                document.body.classList.add("dark-mode");
+            }
+
+            // TOGGLE DARK MODE
+            if (darkBtn) {
+
+                darkBtn.addEventListener("click", function (e) {
+
+                    e.preventDefault();
+
+                    document.body.classList.toggle("dark-mode");
+
+                    localStorage.setItem(
+                        "dashboardDarkMode",
+                        document.body.classList.contains("dark-mode")
+                    );
+
+                });
+
+            }
+
+        });
+
+    </script>
+    <style>
+
+        /* =========================
+           CLEAN DARK MODE FINAL
+        ========================= */
+
+        body.dark-mode {
+            background: #0f0f0f !important;
+            color: #ffffff !important;
+        }
+
+            /* ===== MAIN LAYOUT ===== */
+
+            body.dark-mode .container,
+            body.dark-mode .container-fluid,
+            body.dark-mode main,
+            body.dark-mode section,
+            body.dark-mode article,
+            body.dark-mode aside,
+            body.dark-mode .content,
+            body.dark-mode .dashboard-wrapper {
+                background: #0f0f0f !important;
+            }
+
+            /* ===== NAVBAR ===== */
+
+            body.dark-mode nav,
+            body.dark-mode header,
+            body.dark-mode .navbar,
+            body.dark-mode .topbar {
+                background: #181818 !important;
+                border-color: #2a2a2a !important;
+            }
+
+            /* ===== LOGO ===== */
+
+            body.dark-mode .navbar-brand,
+            body.dark-mode .logo-text {
+                color: #ffffff !important;
+            }
+
+            /* ===== DARK CARDS ===== */
+
+            body.dark-mode .card,
+            body.dark-mode .station-card,
+            body.dark-mode .station-wrapper,
+            body.dark-mode .station-container,
+            body.dark-mode .station-box,
+            body.dark-mode .vehicle-card,
+            body.dark-mode .info-card,
+            body.dark-mode .wallet-card,
+            body.dark-mode .status-card,
+            body.dark-mode .trip-status-card,
+            body.dark-mode .modal-content,
+            body.dark-mode .dropdown-menu,
+            body.dark-mode .bottom-nav,
+            body.dark-mode .bg-white,
+            body.dark-mode .list-group-item {
+                background: #1b1b1b !important;
+                border: 1px solid #2f2f2f !important;
+                box-shadow: none !important;
+            }
+
+            /* ===== VEHICLE BOX ===== */
+
+            body.dark-mode .vehicle-box,
+            body.dark-mode .bike-box,
+            body.dark-mode .scooter-box,
+            body.dark-mode .battery-box,
+            body.dark-mode .vehicle-item {
+                background: #252525 !important;
+                border: 1px solid #333 !important;
+            }
+
+            /* ===== SEARCH BAR ===== */
+
+            body.dark-mode .search-box,
+            body.dark-mode .search-container {
+                background: #ffffff !important;
+                border: none !important;
+            }
+
+                body.dark-mode .search-box input,
+                body.dark-mode .search-input,
+                body.dark-mode .search-box .form-control {
+                    background: #ffffff !important;
+                    color: #222 !important;
+                    border: none !important;
+                    box-shadow: none !important;
+                }
+
+                    body.dark-mode .search-box input::placeholder {
+                        color: #777 !important;
+                    }
+
+                body.dark-mode .search-box i {
+                    color: #666 !important;
+                }
+
+            /* ===== INPUT KHÁC ===== */
+
+            body.dark-mode textarea,
+            body.dark-mode select,
+            body.dark-mode .form-control:not(.search-box .form-control) {
+                background: #2a2a2a !important;
+                color: #ffffff !important;
+                border: 1px solid #444 !important;
+            }
+
+            /* ===== TEXT ===== */
+
+            body.dark-mode h1,
+            body.dark-mode h2,
+            body.dark-mode h3,
+            body.dark-mode h4,
+            body.dark-mode h5,
+            body.dark-mode h6,
+            body.dark-mode p,
+            body.dark-mode span,
+            body.dark-mode label,
+            body.dark-mode small,
+            body.dark-mode strong,
+            body.dark-mode li,
+            body.dark-mode a {
+                color: #f5f5f5 !important;
+                opacity: 1 !important;
+            }
+
+            /* ===== STATION TITLE ===== */
+
+            body.dark-mode .station-title,
+            body.dark-mode .station-name,
+            body.dark-mode .station-card h3,
+            body.dark-mode .station-card h4,
+            body.dark-mode .station-card h5,
+            body.dark-mode .station-card a {
+                color: #ffffff !important;
+            }
+
+            /* ===== NEARBY ===== */
+
+            body.dark-mode .nearby-label,
+            body.dark-mode .distance-label {
+                color: #ff6b6b !important;
+            }
+
+            /* ===== CAPACITY ===== */
+
+            body.dark-mode .capacity-text,
+            body.dark-mode .capacity-label {
+                color: #ffffff !important;
+            }
+
+            /* ===== VEHICLE NUMBER ===== */
+
+            body.dark-mode .vehicle-count,
+            body.dark-mode .count-number {
+                color: #ffffff !important;
+            }
+
+            /* ===== DETAIL BUTTON ===== */
+
+            body.dark-mode .view-detail-btn,
+            body.dark-mode .detail-btn,
+            body.dark-mode .station-detail-btn {
+                background: #2a2a2a !important;
+                color: #ffffff !important;
+                border: 1px solid #444 !important;
+            }
+
+            /* ===== EMPTY STATUS ===== */
+
+            body.dark-mode .empty-state,
+            body.dark-mode .empty-trip-box {
+                background: #202020 !important;
+                border-color: #333 !important;
+            }
+
+            /* ===== PROGRESS ===== */
+
+            body.dark-mode .progress {
+                background: #333 !important;
+            }
+
+            /* ===== BOTTOM NAV ===== */
+
+            body.dark-mode .bottom-nav {
+                background: #121212 !important;
+                border-top: 1px solid #2f2f2f !important;
+            }
+
+            /* ===== DROPDOWN ===== */
+
+            body.dark-mode .dropdown-item {
+                color: #ffffff !important;
+            }
+
+                body.dark-mode .dropdown-item:hover {
+                    background: #2a2a2a !important;
+                }
+
+            /* ===== DIVIDER ===== */
+
+            body.dark-mode hr,
+            body.dark-mode .dropdown-divider {
+                border-color: #444 !important;
+            }
+
+            /* ===== REMOVE FADE ===== */
+
+            body.dark-mode .station-card *,
+            body.dark-mode .trip-status-card *,
+            body.dark-mode .wallet-card * {
+                opacity: 1 !important;
+            }
+
+            /* ===== KEEP ICON COLORS ===== */
+
+            body.dark-mode .fa-bicycle {
+                color: #20c997 !important;
+            }
+
+            body.dark-mode .fa-bolt {
+                color: #ffc107 !important;
+            }
+
+            body.dark-mode .fa-motorcycle {
+                color: #0d6efd !important;
+            }
+
+            /* ===== BOOTSTRAP COLORS ===== */
+
+            body.dark-mode .text-primary {
+                color: #0d6efd !important;
+            }
+
+            body.dark-mode .text-success {
+                color: #20c997 !important;
+            }
+
+            body.dark-mode .text-danger {
+                color: #ff6b6b !important;
+            }
+
+            body.dark-mode .text-warning {
+                color: #ffc107 !important;
+            }
+
+            body.dark-mode .text-info {
+                color: #0dcaf0 !important;
+            }
+
+            /* ===== ICON FIX ===== */
+
+            body.dark-mode i,
+            body.dark-mode svg {
+                opacity: 1 !important;
+            }
+
+            /* ===== KEEP GREEN BUTTON ===== */
+
+            body.dark-mode .btn-success,
+            body.dark-mode .btn-primary,
+            body.dark-mode .green-card,
+            body.dark-mode .balance-card {
+                filter: brightness(1) !important;
+            }
+
+            /* ===== TOAST FIX ===== */
+
+            body.dark-mode .toast,
+            body.dark-mode .swal2-popup,
+            body.dark-mode .notification-toast {
+                background: #1f1f1f !important;
+                color: #ffffff !important;
+            }
+
+            /* ===== WALLET BUTTON FIX ===== */
+
+            body.dark-mode .wallet-card .btn,
+            body.dark-mode .wallet-card button,
+            body.dark-mode .wallet-card .btn-light {
+                background: #ffffff !important;
+                color: #008c7a !important;
+                border: none !important;
+                opacity: 1 !important;
+            }
+
+                body.dark-mode .wallet-card .btn i {
+                    color: #008c7a !important;
+                }
+                /* FIX CHỮ NẠP TIỀN */
+
+                body.dark-mode .wallet-card .btn,
+                body.dark-mode .wallet-card .btn span,
+                body.dark-mode .wallet-card .btn-light,
+                body.dark-mode .wallet-card .btn-light span,
+                body.dark-mode .wallet-card a {
+                    color: #008c7a !important;
+                    opacity: 1 !important;
+                    font-weight: 700 !important;
+                }
+
+                    /* FIX ICON */
+
+                    body.dark-mode .wallet-card .btn i,
+                    body.dark-mode .wallet-card .btn-light i {
+                        color: #008c7a !important;
+                    }
+    </style>
 </body>
 </html>
